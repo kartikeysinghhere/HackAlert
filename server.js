@@ -15,6 +15,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
+app.get('/', (req, res) => {                          
+  res.sendFile(__dirname + '/realhackito.html');       
+});   
+
 // ── Proxy hackathons API ──
 app.get('/api/hackathons', async (req, res) => {
   try {
