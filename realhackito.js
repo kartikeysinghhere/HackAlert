@@ -67,6 +67,7 @@ function renderHackathons(hackathons) {
         <h3>${hack.name}</h3>
       </div>
       <p><strong>📅 Date:</strong> ${startDate}</p>
+      <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
       <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
       <p><strong>💻 Mode:</strong> ${mode}</p>
       <a href="${hack.website}" target="_blank">Visit Website →</a>
