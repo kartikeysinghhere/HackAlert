@@ -231,11 +231,7 @@
   });
  
   // ── HIDE FLOATING BOT ON BOT PAGE ──
-  const _origGoTo = window.goTo;
-window.goTo = function(page) {
-  _origGoTo(page);
-  document.getElementById('floating-bot').style.display = page === 'bot' ? 'none' : 'flex';
-};
+ 
 </script>
 </body>
 </html>
