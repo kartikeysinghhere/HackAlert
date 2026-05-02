@@ -2,6 +2,14 @@
 const HACKATHON_API_URL = "/api/hackathons";
 let allHackathons = [];
 
+function getCountdown(dateStr) {
+  const diff = new Date(dateStr) - new Date();
+  if (diff <= 0) return "Ended";
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  return `${days}d ${hours}h left`;
+}
+
 // ── Auto-load on page ready ──
 window.addEventListener('DOMContentLoaded', () => {
   fetchHackathons();
@@ -118,6 +126,7 @@ function renderHackathonsSorted(matched, rest) {
         <h3>${hack.name}</h3>
       </div>
       <p><strong>📅 Date:</strong> ${startDate}</p>
+      <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
       <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
       <p><strong>💻 Mode:</strong> ${mode}</p>
       <a href="${hack.website}" target="_blank">Visit Website →</a>
