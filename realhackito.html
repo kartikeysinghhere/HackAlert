@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-R9L7Y94447"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-R9L7Y94447');
-</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9L7Y94447"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-R9L7Y94447');
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hack/Alert — Never Miss a Hackathon</title>
@@ -171,37 +170,28 @@
 <div class="page" id="page-dashboard">
   <div class="dash-header">
     <div>
-    <h2>Upcoming <span>Hackathons</span></h2>
-    <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Live data · Updated just now</p>
-  </div>
-  
-  <!-- ADD THIS SEARCH BAR -->
-  <input type="text" id="search-input" placeholder="🔍 Search hackathons..."
-    oninput="searchHackathons(this.value)"
-    style="
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border-light);
-      border-radius: 10px;
-      padding: 10px 16px;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 13px;
-      outline: none;
-      width: 260px;
-      transition: all 0.2s;
-    "
-    onfocus="this.style.borderColor='var(--accent)'; this.style.background='rgba(0,255,136,0.05)'"
-    onblur="this.style.borderColor='var(--border-light)'; this.style.background='rgba(255,255,255,0.05)'"
-  />
-
-  <div class="filter-bar">
-    <button class="filter-pill active" onclick="filterCards(this,'all')">All</button>
-    <button class="filter-pill" onclick="filterCards(this,'online')">🌐 Online</button>
-    <button class="filter-pill" onclick="filterCards(this,'hybrid')">🔀 Hybrid</button>
-    <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
-  </div>
-</div></p>
+      <h2>Upcoming <span>Hackathons</span></h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Live data · Updated just now</p>
     </div>
+ 
+    <input type="text" id="search-input" placeholder="🔍 Search hackathons..."
+      oninput="searchHackathons(this.value)"
+      style="
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border-light);
+        border-radius: 10px;
+        padding: 10px 16px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 13px;
+        outline: none;
+        width: 260px;
+        transition: all 0.2s;
+      "
+      onfocus="this.style.borderColor='var(--accent)'; this.style.background='rgba(0,255,136,0.05)'"
+      onblur="this.style.borderColor='var(--border-light)'; this.style.background='rgba(255,255,255,0.05)'"
+    />
+ 
     <div class="filter-bar">
       <button class="filter-pill active" onclick="filterCards(this,'all')">All</button>
       <button class="filter-pill" onclick="filterCards(this,'online')">🌐 Online</button>
@@ -209,6 +199,7 @@
       <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
     </div>
   </div>
+ 
   <div class="hackathon-grid" id="hackathon-grid"></div>
   <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
 </div>
@@ -266,9 +257,6 @@
       sendChat();
     }
   });
- 
-  // ── HIDE FLOATING BOT ON BOT PAGE ──
- 
 </script>
 </body>
 </html>
