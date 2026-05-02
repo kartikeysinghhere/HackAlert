@@ -19,6 +19,7 @@
     "express": "^5.2.1",
     "groq-sdk": "^1.1.2",
     "mysql2": "^3.22.3",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "resend": "^6.12.2"
   }
 }
