@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hackito — Never Miss a Hackathon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="realhackito.css">
+  <style>
+    /* Little Round Floating AI Bot Button */
+    #floating-bot {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: #00ff66;
+      color: #121212;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 255, 102, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      z-index: 1000;
+    }
+    #floating-bot:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 255, 102, 0.6);
+    }
+
+    /* Chat Message Bubbles */
+    .chat-msg { margin: 10px 0; padding: 12px 16px; border-radius: 12px; max-width: 75%; clear: both; font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.4; }
+    .chat-msg.user { background: #2a2a2a; color: #fff; float: right; border-bottom-right-radius: 0; }
+    .chat-msg.bot { background: #00ff66; color: #121212; float: left; border-bottom-left-radius: 0; }
+  </style>
+</head>
+
+<body>
+
+  <nav id="navbar">
+    <div class="nav-logo" onclick="goTo('landing')">Hack<span>/</span>ito</div>
+    <div class="nav-links" id="nav-auth">
+      <button class="nav-btn" onclick="goTo('login')">Login</button>
+      <button class="nav-btn cta" onclick="goTo('signup')">Sign Up →</button>
+    </div>
+    <div class="nav-links" id="nav-app" style="display:none;">
+      <button class="nav-btn" id="nb-hack" onclick="goTo('dashboard')">Hackathons</button>
+      <button class="nav-btn" id="nb-bot" onclick="goTo('bot')">💬 HackBot</button>
+      <button class="nav-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="page active" id="page-landing">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <section class="hero">
+      <div class="hero-badge">AI-Powered Hackathon Tracker</div>
+      <h1>Never Miss<br>A <span class="highlight">HACKATHON</span><br>Again<span class="highlight">!</span></h1>
+      <p>Hackito aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you.</p>
+      <div class="hero-actions">
+        <button class="btn-hero primary" onclick="goTo('signup')">Get Started — It's Free</button>
+        <button class="btn-hero secondary" onclick="goTo('dashboard')">Browse Hackathons</button>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">240+</div>
+        <div class="stat-label">Hackathons Listed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">18K</div>
+        <div class="stat-label">Devs Notified</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">₹50L+</div>
+        <div class="stat-label">Total Prize Pool</div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Chatbot</h3>
+        <p>Ask HackBot anything — "Show me online hackathons under 2 weeks" and get instant curated results.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Real-time Alerts</h3>
+        <p>Get notified the moment a new hackathon drops that matches your skills and interests.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Smart Filters</h3>
+        <p>Filter by mode, duration, prize, eligibility, tech stack, and more. Find your perfect hackathon.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>WhatsApp (Soon)</h3>
+        <p>Daily digest of fresh hackathons delivered to your WhatsApp. Never open another tab.</p>
+      </div>
+    </div>
+
+    <footer class="site-footer">© 2025 <span>Hackito</span> — Built for hackers, by hackers 🤍</footer>
+  </div>
+
+  <div class="page" id="page-login">
+    <div class="orb auth-orb1"></div>
+    <div class="orb auth-orb2"></div>
+    <div class="auth-box">
+      <div class="auth-logo">Hackito</div>
+      <h2 class="auth-title">Welcome back 👋</h2>
+      <p class="auth-sub">Log in to track your hackathons</p>
+
+      <form onsubmit="event.preventDefault(); loginUser();">
+        <label>Email address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" required />
+
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••" required />
+
+        <button type="submit" class="auth-submit">Log in →</button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a onclick="goTo('signup')">Sign up free</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-signup">
+    <div class="orb auth-orb1"></div>
+    <div class="orb auth-orb2"></div>
+    <div class="auth-box">
+      <div class="auth-logo">Hackito</div>
+      <h2 class="auth-title">Create account</h2>
+      <p class="auth-sub">Join 18,000+ devs tracking hackathons</p>
+
+      <form onsubmit="event.preventDefault(); signupUser();">
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="Kartikey Singh" required />
+
+        <label>Email address</label>
+        <input type="email" id="signup-email" placeholder="you@example.com" required />
+
+        <label>Password</label>
+        <input type="password" id="signup-pass" placeholder="Create a password" required />
+
+        <label style="margin-bottom:12px;">I'm interested in</label>
+        <div class="interests-grid">
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Web Dev</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> AI / ML</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Blockchain</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Cybersecurity</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Mobile Dev</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Open Source</label>
+        </div>
+
+        <button type="submit" class="auth-submit">Create Account →</button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a onclick="goTo('login')">Log in</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-dashboard">
+    <div class="dash-header">
+      <div>
+        <h2>Upcoming <span>Hackathons</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">24 hackathons found ·
+          Updated just now</p>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-pill active">All</button>
+        <button class="filter-pill" onclick="filterCards(this,'online')">🌐 Online</button>
+        <button class="filter-pill" onclick="filterCards(this,'hybrid')">🔀 Hybrid</button>
+        <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
+      </div>
+    </div>
+
+    <div class="hackathon-grid" id="hackathon-grid"></div>
+    <footer class="site-footer">© 2025 <span class="highlight"Hackito></span>— Built for hackers, by hackers 🤍</footer>
+  </div>
+
+  <div class="page" id="page-bot">
+    <div class="bot-header">
+      <div class="bot-avatar">🤖</div>
+      <div class="bot-info">
+        <h3>HackBot</h3>
+        <p>// AI Hackathon Assistant</p>
+      </div>
+      <div class="bot-status"></div>
+    </div>
+
+    <div class="chat-area" id="chat-area"></div>
+
+    <div class="quick-prompts">
+      <button class="quick-chip" onclick="quickSend(this)">Hackathons this month?</button>
+      <button class="quick-chip" onclick="quickSend(this)">Online hackathons with big prizes</button>
+      <button class="quick-chip" onclick="quickSend(this)">ML/AI themed hackathons</button>
+      <button class="quick-chip" onclick="quickSend(this)">Beginner-friendly ones</button>
+      <button class="quick-chip" onclick="quickSend(this)">Hackathons in India</button>
+    </div>
+
+    <div class="chat-input-wrap">
+      <input type="text" id="chat-input" placeholder="Ask me about any hackathon..."
+        onkeydown="if(event.key==='Enter')sendChat()" />
+      <button class="send-btn" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <div class="toast-icon" id="toast-icon"></div>
+    <div class="toast-title" id="toast-title"></div>
+    <div class="toast-msg" id="toast-msg"></div>
+  </div>
+
+  <!-- Floating Chatbot Button -->
+  <div id="floating-bot" onclick="goTo('bot')" title="Talk to HackBot">
+    🤖
+  </div>
+
+  <script src="realhackito.js"></script>
+</body>
+
+</html>
