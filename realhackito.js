@@ -27,10 +27,12 @@ async function fetchHackathons() {
     if (!allHackathons || allHackathons.length === 0) {
       allHackathons = getFallbackHackathons();
     }
+    allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
     renderHackathons(allHackathons);
   } catch (error) {
     console.error("API Error:", error);
     allHackathons = getFallbackHackathons();
+    allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
     renderHackathons(allHackathons);
   }
 }
@@ -212,6 +214,16 @@ async function sendChat() {
   input.value = '';
   appendMessage('user', message);
   showTyping();
+
+  // local smart reply
+if (message.toLowerCase().includes('nearest') || message.toLowerCase().includes('closest')) {
+  const next = allHackathons[0];
+  if (next) {
+    removeTyping();
+    appendMessage('bot', `🏆 Nearest hackathon is <strong>${next.name}</strong> on 📅 ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? '🌐 Online' : `📍 ${next.city}, ${next.country}`}. <a href="${next.website}" target="_blank">Visit →</a>`);
+    return;
+  }
+}
 
   try {
     const res = await fetch('/ask', {
