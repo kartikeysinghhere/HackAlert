@@ -62,6 +62,7 @@ function renderHackathons(hackathons) {
       <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
       <p><strong>💻 Mode:</strong> ${mode}</p>
       <a href="${hack.website}" target="_blank">Visit Website →</a>
+      <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
     `;
     grid.appendChild(card);
   });
@@ -120,6 +121,7 @@ function renderHackathonsSorted(matched, rest) {
       <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
       <p><strong>💻 Mode:</strong> ${mode}</p>
       <a href="${hack.website}" target="_blank">Visit Website →</a>
+      <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
     `;
     grid.appendChild(card);
   };
