@@ -72,6 +72,7 @@ function renderHackathons(hackathons) {
     if (daysLeft <= 5) card.classList.add('urgent');
     else if (daysLeft <= 20) card.classList.add('soon');
     card.innerHTML = `
+      ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         ${hack.logo
           ? `<img src="${hack.logo}" style="width:40px;height:40px;border-radius:8px;">`
@@ -88,7 +89,8 @@ function renderHackathons(hackathons) {
       ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="saveHackathon(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
+      <button onclick="navigator.clipboard.writeText('${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
+      <button onclick="toggleSave(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
   });
@@ -140,6 +142,7 @@ function renderHackathonsSorted(matched, rest) {
     if (dimmed) card.style.opacity = "0.35";
 
     card.innerHTML = `
+      ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         ${hack.logo
           ? `<img src="${hack.logo}" style="width:40px;height:40px;border-radius:8px;">`
@@ -156,7 +159,8 @@ function renderHackathonsSorted(matched, rest) {
       ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="saveHackathon(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
+      <button onclick="navigator.clipboard.writeText('${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
+      <button onclick="toggleSave(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
   };
@@ -388,15 +392,18 @@ function getFallbackHackathons() {
     { name:"ML Marathon",         start:"2026-06-10", city:"New York",      country:"USA",    virtual:true,  hybrid:false, website:"#" }
   ];
 }
-function saveHackathon(btn, name) {
+
+function toggleSave(btn, name) {
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
-  if (!saved.includes(name)) {
+  if (saved.includes(name)) {
+    saved = saved.filter(s => s !== name);
+    localStorage.setItem('saved', JSON.stringify(saved));
+    btn.textContent = '🔖 Save';
+    btn.style.borderColor = 'var(--border-light)';
+    btn.style.color = 'var(--muted)';
+  } else {
     saved.push(name);
     localStorage.setItem('saved', JSON.stringify(saved));
-    btn.textContent = '✅ Saved';
-    btn.style.borderColor = 'var(--accent)';
-    btn.style.color = 'var(--accent)';
-  } else {
     btn.textContent = '✅ Saved';
     btn.style.borderColor = 'var(--accent)';
     btn.style.color = 'var(--accent)';
