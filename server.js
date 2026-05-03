@@ -4,15 +4,37 @@ const cors = require('cors');
 const Groq = require('groq-sdk');
 const fetch = require('node-fetch');
 const { createClient } = require('@supabase/supabase-js');
-const { Resend } = require('resend');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+async function sendWelcomeEmail(name, email) {
+  await sgMail.send({
+    to: email,
+    from: 'kartikey97999@gmail.com', // verify this in SendGrid
+    subject: '🚀 Welcome to HackAlert!',
+    html: ` <div style="font-family: monospace; background: #080810; color: #e2e8f0; padding: 40px; border-radius: 12px; max-width: 600px;">
+    <h1 style="color: #00ff88;">Hack/Alert</h1>
+    <h2>Hey ${name}! 👋</h2>
+    <p>You're now part of 18,000+ developers who never miss a hackathon.</p>
+    <p style="color: #94a3b8;">Here's what you can do:</p>
+    <ul style="color: #94a3b8;">
+      <li>Browse 240+ upcoming hackathons</li>
+      <li>Ask HackBot anything</li>
+      <li>Filter by online, offline, or hybrid</li>
+    </ul>
+    <a href="https://hackalert-m2hg.onrender.com" style="background: #00ff88; color: #080810; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 20px;">Browse Hackathons →</a>
+    <p style="color: #475569; margin-top: 40px; font-size: 12px;">© 2025 HackAlert — Built for hackers, by hackers</p>
+  </div>`
+  });
+}
  
 const app = express();
 const PORT = 3000;
  
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-const resend = new Resend(process.env.RESEND_API_KEY);
- 
+  
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
