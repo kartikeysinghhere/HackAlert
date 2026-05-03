@@ -139,30 +139,7 @@ app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
   console.log(`✅ Supabase connected!`);
 });
- 
-// ── EMAIL: Welcome ──
-async function sendWelcomeEmail(name, email) {
-  await resend.emails.send({
-    from: 'HackAlert <onboarding@resend.dev>',
-    to: email,
-    subject: '🚀 Welcome to HackAlert!',
-    html: `
-      <div style="font-family: monospace; background: #080810; color: #e2e8f0; padding: 40px; border-radius: 12px; max-width: 600px;">
-        <h1 style="color: #00ff88;">Hack/Alert</h1>
-        <h2>Hey ${name}! 👋</h2>
-        <p>You're now part of 18,000+ developers who never miss a hackathon.</p>
-        <p style="color: #94a3b8;">Here's what you can do:</p>
-        <ul style="color: #94a3b8;">
-          <li>Browse 240+ upcoming hackathons</li>
-          <li>Ask HackBot anything</li>
-          <li>Filter by online, offline, or hybrid</li>
-        </ul>
-        <a href="https://hackalert-m2hg.onrender.com" style="background: #00ff88; color: #080810; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 20px;">Browse Hackathons →</a>
-        <p style="color: #475569; margin-top: 40px; font-size: 12px;">© 2025 HackAlert — Built for hackers, by hackers</p>
-      </div>
-    `
-  });
-}
+
  
 // ── EMAIL: New Hackathon Alert ──
 async function sendHackathonAlert(userEmail, userName, hackathon) {
