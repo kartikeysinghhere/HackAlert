@@ -68,6 +68,11 @@ function renderHackathons(hackathons) {
 
     const card = document.createElement("div");
     card.className = "feature-card";
+    card.style.cursor = "pointer";
+    card.onclick = (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+    openModal(hack);
+  };
     const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
     if (daysLeft <= 5) card.classList.add('urgent');
     else if (daysLeft <= 20) card.classList.add('soon');
@@ -138,6 +143,12 @@ function renderHackathonsSorted(matched, rest) {
 
     const card = document.createElement("div");
     card.className = "feature-card";
+    card.className = "feature-card";
+    card.style.cursor = "pointer";
+    card.onclick = (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+    openModal(hack);
+  };
     const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
     if (daysLeft <= 5) card.classList.add('urgent');
     else if (daysLeft <= 20) card.classList.add('soon');
@@ -497,4 +508,40 @@ function selectCountry(country) {
   if (list) list.style.display = 'none';
   if (country === 'All Countries') renderHackathons(allHackathons);
   else renderHackathons(allHackathons.filter(h => h.country === country));
+}
+
+function openModal(hack) {
+  const startDate = new Date(hack.start).toLocaleDateString(undefined, {month:'long',day:'numeric',year:'numeric'});
+  let mode = "📍 In-Person";
+  if (hack.virtual) mode = "🌐 Online";
+  if (hack.hybrid) mode = "🔀 Hybrid";
+
+  document.getElementById('modal-content').innerHTML = `
+    ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:20px;">` : ''}
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      ${hack.logo ? `<img src="${hack.logo}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
+      <div>
+        <h2 style="color:#fff;margin:0;">${hack.name}</h2>
+        <p style="color:var(--accent);font-family:var(--mono);font-size:12px;margin:4px 0;">${mode}</p>
+      </div>
+    </div>
+    <div style="display:grid;gap:12px;font-size:14px;color:var(--muted);">
+      <p>📅 <strong style="color:var(--text);">Date:</strong> ${startDate}</p>
+      <p>⏳ <strong style="color:var(--text);">Deadline:</strong> ${getCountdown(hack.start)}</p>
+      <p>🌎 <strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${hack.city}, ${hack.country}` : "TBA")}</p>
+      ${hack.state ? `<p>📍 <strong style="color:var(--text);">State:</strong> ${hack.state}</p>` : ''}
+      ${hack.mlhAssociated ? `<p>🎓 <strong style="color:var(--text);">MLH:</strong> Associated</p>` : ''}
+      ${hack.hack_club_event ? `<p>🏠 <strong style="color:var(--text);">Hack Club:</strong> Official Event ✅</p>` : ''}
+      ${hack.apac ? `<p>🌏 <strong style="color:var(--text);">Region:</strong> Asia Pacific</p>` : ''}
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
+      <a href="${hack.website}" target="_blank" style="background:var(--accent);color:#050508;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;font-family:var(--mono);">Register Now →</a>
+      <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">📲 WhatsApp</a>
+    </div>
+  `;
+  document.getElementById('hack-modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('hack-modal').style.display = 'none';
 }
