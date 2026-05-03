@@ -408,6 +408,7 @@ function toggleSave(btn, name) {
     btn.style.borderColor = 'var(--accent)';
     btn.style.color = 'var(--accent)';
   }
+  updateStats();
 }
 
 function copyLink(btn, url) {
