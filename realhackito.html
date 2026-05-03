@@ -99,7 +99,7 @@
     <h1>Never Miss<br>A <span class="highlight">HACKATHON</span><br>Again<span class="highlight">!</span></h1>
     <p>Hack/Alert aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you.</p>
     <div class="hero-actions">
-      <button class="btn-hero primary" onclick="goTo('signup')">Get Started — It's Free</button>
+      <button class="btn-hero primary" id="get-started-btn" onclick="goTo('signup')">Get Started — It's Free</button>
       <button class="btn-hero secondary" onclick="goTo('dashboard')">Browse Hackathons</button>
     </div>
   </section>
@@ -151,6 +151,10 @@
       <input type="email" id="signup-email" placeholder="you@example.com" required />
       <label>Password</label>
       <input type="password" id="signup-pass" placeholder="Create a password" required />
+      <label>Mobile Number</label>
+      <input type="tel" id="signup-mobile" placeholder="+91 9999999999" />
+      <label>College / University</label>
+      <input type="text" id="signup-college" placeholder="IIT Delhi" />
       <label style="margin-bottom:12px;">I'm interested in</label>
       <div class="interests-grid">
         <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Web Dev</label>

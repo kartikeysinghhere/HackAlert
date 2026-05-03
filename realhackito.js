@@ -12,7 +12,14 @@ function getCountdown(dateStr) {
 
 // ── Auto-load on page ready ──
 window.addEventListener('DOMContentLoaded', () => {
-  fetchHackathons();
+  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+  if (isLoggedIn) {
+    fetchHackathons();
+    document.getElementById('nav-auth').style.display = 'none';
+    document.getElementById('nav-app').style.display = 'flex';
+    const btn = document.getElementById('get-started-btn');
+    if (btn) btn.style.display = 'none';
+  }
   showWelcomeMessage();
 });
 
@@ -304,13 +311,15 @@ async function signupUser() {
   const name  = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
   const pass  = document.getElementById('signup-pass').value.trim();
-  if (!name || !email || !pass) return alert('Fill all fields');
+  const mobile = document.getElementById('signup-mobile').value.trim();
+  const college = document.getElementById('signup-college').value.trim();
+  if (!name || !email || !pass || !mobile || !college) return alert('Fill all fields');
 
   try {
     const res  = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, pass })
+      body: JSON.stringify({ name, email, pass, mobile, college })
     });
     const data = await res.json();
     if (res.ok) goTo('dashboard');
@@ -325,9 +334,12 @@ function toggleChip(el) {
 
 // ── Logout ──
 function logout() {
+  if (!confirm('Are you sure you want to log out?')) return;
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display  = 'none';
   localStorage.removeItem('loggedIn');
+  const btn = document.getElementById('get-started-btn');
+  if (btn) btn.style.display = '';
   goTo('landing');
 }
 
