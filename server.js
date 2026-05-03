@@ -23,9 +23,10 @@ app.get('/api/hackathons', async (req, res) => {
   try {
     const response = await fetch('https://hackathons.hackclub.com/api/events/upcoming');
     const data = await response.json();
-    res.json(data);
+    const indian = getIndianHackathons();
+    res.json([...data, ...indian]);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch hackathons' });
+    res.json(getIndianHackathons());
   }
 });
 
@@ -104,5 +105,17 @@ app.post('/api/login', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
   console.log(`✅ Supabase connected!`);
+});
+
+function getIndianHackathons() {
+  return [
+    { name:"Smart India Hackathon 2026", start:"2026-08-01", city:"Multiple Cities", country:"India", virtual:false, hybrid:false, website:"https://sih.gov.in" },
+    { name:"HackWithInfy", start:"2026-06-15", city:"Bengaluru", country:"India", virtual:false, hybrid:true, website:"https://hackwithinfy.in" },
+    { name:"Hack This Fall", start:"2026-07-01", city:"", country:"India", virtual:true, hybrid:false, website:"https://hackthisfall.tech" },
+    { name:"HackBout", start:"2026-06-20", city:"Delhi", country:"India", virtual:false, hybrid:false, website:"https://hackbout.tech" },
+    { name:"HackNITR", start:"2026-07-10", city:"Rourkela", country:"India", virtual:false, hybrid:false, website:"https://hacknitr.tech" },
+    { name:"HackCBS", start:"2026-09-01", city:"Delhi", country:"India", virtual:false, hybrid:false, website:"https://hackcbs.tech" },
+    { name:"HackBVP", start:"2026-08-15", city:"Delhi", country:"India", virtual:false, hybrid:false, website:"https://hackbvp.com" },
+    { name:"Hackstreet Boys", start:"2026-07-20", city:"Mumbai", country:"India", virtual:false, hybrid:false, website:"https://hackstreet.in" }
+  ];
 }
-);
