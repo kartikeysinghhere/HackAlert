@@ -75,6 +75,10 @@ function renderHackathons(hackathons) {
       <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
       <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
       <p><strong>💻 Mode:</strong> ${mode}</p>
+      ${hack.prize ? `<p><strong>🏆 Prize:</strong> ${hack.prize}</p>` : ''}
+      ${hack.team_size ? `<p><strong>👥 Team Size:</strong> ${hack.team_size}</p>` : ''}
+      ${hack.description ? `<p style="color:var(--muted);font-size:13px;margin-top:8px;">${hack.description.slice(0,120)}...</p>` : ''}
+      ${hack.themes && hack.themes.length ? `<p><strong>🏷️ Themes:</strong> ${hack.themes.join(', ')}</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
       <button onclick="saveHackathon(this, '${hack.name}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
@@ -139,6 +143,10 @@ function renderHackathonsSorted(matched, rest) {
       <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
       <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
       <p><strong>💻 Mode:</strong> ${mode}</p>
+      ${hack.prize ? `<p><strong>🏆 Prize:</strong> ${hack.prize}</p>` : ''}
+      ${hack.team_size ? `<p><strong>👥 Team Size:</strong> ${hack.team_size}</p>` : ''}
+      ${hack.description ? `<p style="color:var(--muted);font-size:13px;margin-top:8px;">${hack.description.slice(0,120)}...</p>` : ''}
+      ${hack.themes && hack.themes.length ? `<p><strong>🏷️ Themes:</strong> ${hack.themes.join(', ')}</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
       <button onclick="saveHackathon(this, '${hack.name}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
