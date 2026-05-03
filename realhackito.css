@@ -641,3 +641,41 @@ body.light .site-footer { background:#e2e8f0; }
 }
 .feature-card.urgent { border-color: rgba(239,68,68,0.8) !important; box-shadow: 0 0 25px rgba(239,68,68,0.3) !important; background: rgba(239,68,68,0.05) !important; }
 .feature-card.soon { border-color: rgba(234,179,8,0.8) !important; box-shadow: 0 0 25px rgba(234,179,8,0.3) !important; background: rgba(234,179,8,0.05) !important; }
+#page-login.active, #page-signup.active {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+}
+#page-teams {
+  padding-top: 70px;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+#page-profile, #page-teams, #page-dashboard {
+  padding-top: 70px;
+  min-height: 100vh;
+}
+
+#page-login.active, #page-signup.active {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  overflow-y: auto;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+#page-bot.active {
+  display: flex !important;
+  flex-direction: column;
+  height: 100vh;
+  padding-top: 70px;
+}
+
+.page { display: none !important; }
+.page.active { display: block !important; }
+
+#page-login, #page-signup { display: none !important; }
+#page-bot { display: none !important; }
