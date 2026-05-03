@@ -61,6 +61,9 @@ function renderHackathons(hackathons) {
 
     const card = document.createElement("div");
     card.className = "feature-card";
+    const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
+    if (daysLeft <= 5) card.classList.add('urgent');
+    else if (daysLeft <= 20) card.classList.add('soon');
     card.innerHTML = `
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         ${hack.logo
@@ -74,6 +77,7 @@ function renderHackathons(hackathons) {
       <p><strong>💻 Mode:</strong> ${mode}</p>
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
+      <button onclick="saveHackathon('${hack.name}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
   });
@@ -119,6 +123,9 @@ function renderHackathonsSorted(matched, rest) {
 
     const card = document.createElement("div");
     card.className = "feature-card";
+    const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
+    if (daysLeft <= 5) card.classList.add('urgent');
+    else if (daysLeft <= 20) card.classList.add('soon');
     if (dimmed) card.style.opacity = "0.35";
 
     card.innerHTML = `
