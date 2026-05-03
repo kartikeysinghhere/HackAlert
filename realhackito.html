@@ -85,6 +85,7 @@
     <div class="nav-links" id="nav-app" style="display:none;">
       <button class="nav-btn" id="nb-hack" onclick="goTo('dashboard')">Hackathons</button>
       <button class="nav-btn" id="nb-bot" onclick="goTo('bot')">💬 HackBot</button>
+      <button class="nav-btn" onclick="goTo('profile')">👤 Profile</button>
       <button class="nav-btn" onclick="logout()">Logout</button>
     </div>
   </div>
@@ -227,6 +228,36 @@
     <input type="text" id="chat-input" placeholder="Ask me about any hackathon..." />
     <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
   </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+  <div class="dash-header">
+    <div>
+      <h2>My <span>Profile</span></h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Your account details</p>
+    </div>
+  </div>
+
+  <div style="padding:32px 40px;display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1100px;">
+    
+    <!-- User Info Card -->
+    <div class="feature-card">
+      <h3 style="margin-bottom:20px;">👤 Account Info</h3>
+      <p><strong>📛 Name:</strong> <span id="profile-name">—</span></p>
+      <p style="margin-top:10px;"><strong>📧 Email:</strong> <span id="profile-email">—</span></p>
+      <p style="margin-top:10px;"><strong>📱 Mobile:</strong> <span id="profile-mobile">—</span></p>
+      <p style="margin-top:10px;"><strong>🎓 College:</strong> <span id="profile-college">—</span></p>
+    </div>
+
+    <!-- Saved Hackathons Card -->
+    <div class="feature-card">
+      <h3 style="margin-bottom:20px;">🔖 Saved Hackathons</h3>
+      <div id="saved-list"></div>
+    </div>
+
+  </div>
+  <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
 </div>
  
 <!-- TOAST -->

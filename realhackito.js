@@ -191,6 +191,7 @@ function goTo(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + pageId).classList.add('active');
   if (pageId === 'dashboard' && allHackathons.length === 0) fetchHackathons();
+  if (pageId === 'profile') loadProfile();
 }
 
 // ── Append message bubble to chat ──
@@ -299,6 +300,8 @@ async function loginUser() {
       document.getElementById('nav-auth').style.display = 'none';
       document.getElementById('nav-app').style.display  = 'flex';
       localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userName', data.user?.name || '');
       goTo('dashboard');
     } else {
       alert(data.error);
@@ -322,7 +325,14 @@ async function signupUser() {
       body: JSON.stringify({ name, email, pass, mobile, college })
     });
     const data = await res.json();
-    if (res.ok) goTo('dashboard');
+    if (res.ok) {
+    localStorage.setItem('loggedIn', 'true');
+    localStorage.setItem('userName', name);
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userMobile', mobile);
+    localStorage.setItem('userCollege', college);
+    goTo('dashboard');
+}
     else alert(data.error);
   } catch { alert('Server not running'); }
 }
@@ -330,6 +340,32 @@ async function signupUser() {
 // ── Toggle interest chip ──
 function toggleChip(el) {
   el.classList.toggle('selected');
+}
+
+function loadProfile() {
+  const name    = localStorage.getItem('userName') || '—';
+  const email   = localStorage.getItem('userEmail') || '—';
+  const mobile  = localStorage.getItem('userMobile') || '—';
+  const college = localStorage.getItem('userCollege') || '—';
+
+  document.getElementById('profile-name').textContent    = name;
+  document.getElementById('profile-email').textContent   = email;
+  document.getElementById('profile-mobile').textContent  = mobile;
+  document.getElementById('profile-college').textContent = college;
+
+  const saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  const list  = document.getElementById('saved-list');
+
+  if (saved.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted)">No hackathons saved yet.</p>';
+  } else {
+    list.innerHTML = saved.map(name => `
+      <div style="padding:8px 12px;margin-bottom:8px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <span>🔖 ${name}</span>
+        <button onclick="unsaveHackathon('${name}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
+      </div>
+    `).join('');
+  }
 }
 
 // ── Logout ──
@@ -365,4 +401,11 @@ function saveHackathon(btn, name) {
     btn.style.borderColor = 'var(--accent)';
     btn.style.color = 'var(--accent)';
   }
+}
+
+function unsaveHackathon(name) {
+  let saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  saved = saved.filter(s => s !== name);
+  localStorage.setItem('saved', JSON.stringify(saved));
+  loadProfile();
 }
