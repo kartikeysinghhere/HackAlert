@@ -21,12 +21,14 @@ app.get('/', (req, res) => {
 
 app.get('/api/hackathons', async (req, res) => {
   try {
-    const response = await fetch('https://hackathons.hackclub.com/api/events/upcoming');
-    const data = await response.json();
-    const indian = getIndianHackathons();
-    res.json([...data, ...indian]);
+    const [hackClub, supabaseRes] = await Promise.all([
+      fetch('https://hackathons.hackclub.com/api/events/upcoming').then(r => r.json()),
+      supabase.from('indian_hackathons').select('*')
+    ]);
+    const indian = supabaseRes.data || [];
+    res.json([...hackClub, ...indian]);
   } catch (err) {
-    res.json(getIndianHackathons());
+    res.status(500).json({ error: 'Failed' });
   }
 });
 
@@ -100,6 +102,75 @@ app.post('/api/login', async (req, res) => {
   if (error || !data) return res.status(401).json({ error: 'Invalid email or password' });
 
   res.json({ message: 'Login successful', user: { name: data.name, email: data.email } });
+});
+
+// ── Get all teams ──
+app.get('/api/teams', async (req, res) => {
+  const { data, error } = await supabase
+    .from('teams')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// ── Create team ──
+app.post('/api/teams/create', async (req, res) => {
+  const { name, leader_email, hackathon, skills, size } = req.body;
+  if (!name || !leader_email) return res.status(400).json({ error: 'Missing fields' });
+  const { data, error } = await supabase
+    .from('teams')
+    .insert([{ name, leader_email, hackathon, skills, size, slots_left: size - 1 }])
+    .select()
+    .single();
+  if (error) return res.status(500).json({ error: error.message });
+  await supabase.from('team_members').insert([{ team_id: data.id, user_email: leader_email }]);
+  res.json(data);
+});
+
+// ── Join team ──
+app.post('/api/teams/join', async (req, res) => {
+  const { team_id, user_email, user_name } = req.body;
+  const { data: team } = await supabase.from('teams').select('*').eq('id', team_id).single();
+  if (!team || team.slots_left <= 0) return res.status(400).json({ error: 'Team full' });
+  const { error } = await supabase.from('team_members').insert([{ team_id, user_email, user_name }]);
+  if (error) return res.status(500).json({ error: error.message });
+  await supabase.from('teams').update({ slots_left: team.slots_left - 1 }).eq('id', team_id);
+  res.json({ message: 'Joined successfully' });
+});
+
+// ── Get team messages ──
+app.get('/api/teams/:id/messages', async (req, res) => {
+  const { data, error } = await supabase
+    .from('team_messages')
+    .select('*')
+    .eq('team_id', req.params.id)
+    .order('sent_at', { ascending: true });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// ── Send team message ──
+app.post('/api/teams/:id/messages', async (req, res) => {
+  const { sender_email, sender_name, message } = req.body;
+  const banned = ['fuck','shit','ass','bastard','bitch','damn','crap'];
+  if (banned.some(w => message.toLowerCase().includes(w)))
+    return res.status(400).json({ error: 'Message contains inappropriate language' });
+  const { error } = await supabase.from('team_messages').insert([{
+    team_id: req.params.id, sender_email, sender_name, message
+  }]);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Sent' });
+});
+
+// ── Get team members ──
+app.get('/api/teams/:id/members', async (req, res) => {
+  const { data, error } = await supabase
+    .from('team_members')
+    .select('*')
+    .eq('team_id', req.params.id);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
 });
 
 app.listen(PORT, () => {
