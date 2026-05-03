@@ -211,12 +211,10 @@
   <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">⏰ Ended: <strong id="stat-ended" style="color:#ef4444;">0</strong></div>
   <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">🔖 Saved: <strong id="stat-saved" style="color:var(--accent2);">0</strong></div>
   <div style="margin-left:auto;position:relative;">
-  <input type="text" id="country-search" placeholder="🌍 Search country..." 
-    oninput="filterCountryList(this.value)"
-    onfocus="document.getElementById('country-list').style.display='block'"
-    onblur="setTimeout(()=>document.getElementById('country-list').style.display='none',200)"
-    style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:6px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;width:180px;">
-  <div id="country-list" style="display:none;position:absolute;top:36px;right:0;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;max-height:200px;overflow-y:auto;z-index:100;width:200px;"></div>
+  <select id="country-filter" onchange="filterByCountry(this.value)"
+    style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:6px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;width:200px;">
+    <option value="all">All Countries</option>
+  </select>
 </div>
 </div>
  

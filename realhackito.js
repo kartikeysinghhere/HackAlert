@@ -94,6 +94,8 @@ function renderHackathons(hackathons) {
     `;
     grid.appendChild(card);
   });
+  updateStats();      
+  buildCountryList(); 
 }
 
 // ── Search: matched cards sort to top, rest dimmed below ──
@@ -272,8 +274,12 @@ if (message.toLowerCase().includes('nearest') || message.toLowerCase().includes(
     removeTyping();
 
     // handle whatever key your backend returns
-    const reply = data.reply || data.message || data.response || data.answer || data.text || JSON.stringify(data);
+    const reply = data.answer || data.reply || data.message || data.response || data.text || JSON.stringify(data);
     appendMessage('bot', reply);
+    if (data.action === 'filter' && data.filterType) {
+    const pill = document.querySelector(`.filter-pill[onclick*="${data.filterType}"]`);
+    if (pill) filterCards(pill, data.filterType);
+  }
   } catch (err) {
     removeTyping();
     appendMessage('bot', "⚠️ Couldn't reach the server. Make sure the backend is running.");
@@ -409,6 +415,7 @@ function toggleSave(btn, name) {
     btn.style.color = 'var(--accent)';
   }
   updateStats();
+  buildCountryList();
 }
 
 function copyLink(btn, url) {
@@ -432,28 +439,10 @@ function unsaveHackathon(name) {
 
 function updateStats() {
   const now = new Date();
-  const total    = allHackathons.length;
-  const upcoming = allHackathons.filter(h => new Date(h.start) > now).length;
-  const ended    = allHackathons.filter(h => new Date(h.start) <= now).length;
-  const saved    = JSON.parse(localStorage.getItem('saved') || '[]').length;
-
-  document.getElementById('stat-total').textContent    = total;
-  document.getElementById('stat-upcoming').textContent = upcoming;
-  document.getElementById('stat-ended').textContent    = ended;
-  document.getElementById('stat-saved').textContent    = saved;
-
-  const countries = [...new Set(allHackathons
-    .filter(h => h.country)
-    .map(h => h.country))].sort();
-
-  const select = document.getElementById('country-filter');
-  select.innerHTML = '<option value="all">🌍 All Countries</option>';
-  countries.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
-    select.appendChild(opt);
-  });
+  document.getElementById('stat-total').textContent = allHackathons.length;
+  document.getElementById('stat-upcoming').textContent = allHackathons.filter(h => new Date(h.start) > now).length;
+  document.getElementById('stat-ended').textContent = allHackathons.filter(h => new Date(h.start) <= now).length;
+  document.getElementById('stat-saved').textContent = JSON.parse(localStorage.getItem('saved') || '[]').length;
 }
 
 function filterByCountry(country) {
@@ -467,4 +456,45 @@ function filterByCountry(country) {
   } else {
     renderHackathons(allHackathons.filter(h => h.country === country));
   }
+}
+
+function buildCountryList() {
+  const countries = ['All Countries','Afghanistan','Albania','Algeria','Argentina',
+    'Australia','Austria','Azerbaijan','Bangladesh','Belarus','Belgium','Bolivia',
+    'Brazil','Cambodia','Canada','Chile','China','Colombia','Croatia','Czech Republic',
+    'Denmark','Ecuador','Egypt','Estonia','Ethiopia','Finland','France','Georgia',
+    'Germany','Ghana','Greece','Hungary','India','Indonesia','Iran','Iraq','Ireland',
+    'Israel','Italy','Japan','Jordan','Kazakhstan','Kenya','Kuwait','Latvia','Lebanon',
+    'Lithuania','Malaysia','Mexico','Morocco','Myanmar','Nepal','Netherlands',
+    'New Zealand','Nigeria','Norway','Pakistan','Peru','Philippines','Poland',
+    'Portugal','Romania','Russia','Saudi Arabia','Serbia','Singapore','Slovakia',
+    'Slovenia','South Africa','South Korea','Spain','Sri Lanka','Sweden','Switzerland',
+    'Taiwan','Thailand','Turkey','Uganda','Ukraine','United Arab Emirates',
+    'United Kingdom','United States','Uruguay','Uzbekistan','Venezuela','Vietnam','Zimbabwe'];
+
+  const list = document.getElementById('country-list');
+  if (!list) return;
+  list.innerHTML = countries.map(c => `
+    <div onmousedown="selectCountry('${c}')"
+      style="padding:8px 12px;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--muted);"
+      onmouseover="this.style.color='var(--accent)'"
+      onmouseout="this.style.color='var(--muted)'">${c}</div>
+  `).join('');
+}
+
+function filterCountryList(q) {
+  const list = document.getElementById('country-list');
+  list.style.display = 'block';
+  list.querySelectorAll('div').forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(q.toLowerCase()) ? 'block' : 'none';
+  });
+}
+
+function selectCountry(country) {
+  const input = document.getElementById('country-search');
+  if (input) input.value = country === 'All Countries' ? '' : country;
+  const list = document.getElementById('country-list');
+  if (list) list.style.display = 'none';
+  if (country === 'All Countries') renderHackathons(allHackathons);
+  else renderHackathons(allHackathons.filter(h => h.country === country));
 }

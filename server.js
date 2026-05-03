@@ -5,7 +5,9 @@ const Groq = require('groq-sdk');
 const fetch = require('node-fetch');
 const { createClient } = require('@supabase/supabase-js');
 const sgMail = require('@sendgrid/mail');
+const { Resend } = require('resend');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendWelcomeEmail(name, email) {
   await sgMail.send({
