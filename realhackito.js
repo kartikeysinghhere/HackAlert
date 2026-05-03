@@ -197,7 +197,8 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot'];
+  if (pageId === 'teams') loadTeams();
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {
@@ -544,4 +545,109 @@ function openModal(hack) {
 
 function closeModal() {
   document.getElementById('hack-modal').style.display = 'none';
+}
+
+// ── TEAMS ──
+let currentTeamId = null;
+let chatInterval = null;
+
+async function loadTeams() {
+  const grid = document.getElementById('teams-grid');
+  grid.innerHTML = '<p style="color:#aaa;padding:20px;">Loading teams...</p>';
+  const res = await fetch('/api/teams');
+  const teams = await res.json();
+  if (!teams.length) { grid.innerHTML = '<p style="color:#aaa;padding:20px;">No teams yet. Create one!</p>'; return; }
+  grid.innerHTML = teams.map(t => `
+    <div class="feature-card">
+      <h3>${t.name}</h3>
+      <p style="color:var(--muted);font-size:13px;">🏆 ${t.hackathon || 'Open'}</p>
+      <p style="font-size:13px;margin-top:8px;">🛠 ${t.skills || 'Any'}</p>
+      <p style="font-size:13px;">👥 ${t.slots_left} slots left / ${t.size}</p>
+      <p style="font-size:12px;color:var(--muted);">Leader: ${t.leader_email}</p>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button onclick="joinTeam(${t.id})" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join</button>
+        <button onclick="openTeamChat(${t.id},'${t.name}')" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showCreateTeam() {
+  document.getElementById('create-team-modal').style.display = 'flex';
+}
+function hideCreateTeam() {
+  document.getElementById('create-team-modal').style.display = 'none';
+}
+
+async function createTeam() {
+  const name = document.getElementById('team-name').value.trim();
+  const hackathon = document.getElementById('team-hackathon').value.trim();
+  const skills = document.getElementById('team-skills').value.trim();
+  const size = parseInt(document.getElementById('team-size').value);
+  const leader_email = localStorage.getItem('userEmail');
+  if (!name || !leader_email) return alert('Fill team name and make sure you are logged in');
+  const res = await fetch('/api/teams/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, hackathon, skills, size, leader_email })
+  });
+  if (res.ok) { hideCreateTeam(); loadTeams(); }
+  else { const d = await res.json(); alert(d.error); }
+}
+
+async function joinTeam(teamId) {
+  const user_email = localStorage.getItem('userEmail');
+  const user_name = localStorage.getItem('userName');
+  if (!user_email) return alert('Please login first');
+  const res = await fetch('/api/teams/join', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ team_id: teamId, user_email, user_name })
+  });
+  const d = await res.json();
+  alert(res.ok ? '✅ Joined successfully!' : d.error);
+  if (res.ok) loadTeams();
+}
+
+async function openTeamChat(teamId, teamName) {
+  currentTeamId = teamId;
+  document.getElementById('chat-team-name').textContent = teamName;
+  document.getElementById('team-chat-modal').style.display = 'flex';
+  await loadTeamMessages();
+  chatInterval = setInterval(loadTeamMessages, 5000);
+}
+
+function closeTeamChat() {
+  document.getElementById('team-chat-modal').style.display = 'none';
+  clearInterval(chatInterval);
+  currentTeamId = null;
+}
+
+async function loadTeamMessages() {
+  const area = document.getElementById('team-chat-area');
+  const res = await fetch(`/api/teams/${currentTeamId}/messages`);
+  const msgs = await res.json();
+  area.innerHTML = msgs.map(m => `
+    <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 14px;">
+      <strong style="color:var(--accent);font-size:12px;">${m.sender_name || m.sender_email}</strong>
+      <p style="font-size:14px;margin-top:4px;color:var(--text);">${m.message}</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(m.sent_at).toLocaleTimeString()}</p>
+    </div>
+  `).join('');
+  area.scrollTop = area.scrollHeight;
+}
+
+async function sendTeamMessage() {
+  const input = document.getElementById('team-msg-input');
+  const message = input.value.trim();
+  if (!message) return;
+  const sender_email = localStorage.getItem('userEmail');
+  const sender_name = localStorage.getItem('userName');
+  input.value = '';
+  await fetch(`/api/teams/${currentTeamId}/messages`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sender_email, sender_name, message })
+  });
+  loadTeamMessages();
 }
