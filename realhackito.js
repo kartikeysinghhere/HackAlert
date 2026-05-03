@@ -428,3 +428,42 @@ function unsaveHackathon(name) {
   localStorage.setItem('saved', JSON.stringify(saved));
   loadProfile();
 }
+
+function updateStats() {
+  const now = new Date();
+  const total    = allHackathons.length;
+  const upcoming = allHackathons.filter(h => new Date(h.start) > now).length;
+  const ended    = allHackathons.filter(h => new Date(h.start) <= now).length;
+  const saved    = JSON.parse(localStorage.getItem('saved') || '[]').length;
+
+  document.getElementById('stat-total').textContent    = total;
+  document.getElementById('stat-upcoming').textContent = upcoming;
+  document.getElementById('stat-ended').textContent    = ended;
+  document.getElementById('stat-saved').textContent    = saved;
+
+  const countries = [...new Set(allHackathons
+    .filter(h => h.country)
+    .map(h => h.country))].sort();
+
+  const select = document.getElementById('country-filter');
+  select.innerHTML = '<option value="all">🌍 All Countries</option>';
+  countries.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    select.appendChild(opt);
+  });
+}
+
+function filterByCountry(country) {
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-pill').classList.add('active');
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) searchInput.value = '';
+
+  if (country === 'all') {
+    renderHackathons(allHackathons);
+  } else {
+    renderHackathons(allHackathons.filter(h => h.country === country));
+  }
+}

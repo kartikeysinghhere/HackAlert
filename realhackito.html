@@ -204,6 +204,16 @@
       <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
     </div>
   </div>
+
+  <div id="dash-stats" style="display:flex;gap:24px;padding:16px 40px;border-bottom:1px solid var(--border);flex-wrap:wrap;">
+  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">📦 Total: <strong id="stat-total" style="color:var(--text);">0</strong></div>
+  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">✅ Upcoming: <strong id="stat-upcoming" style="color:var(--accent);">0</strong></div>
+  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">⏰ Ended: <strong id="stat-ended" style="color:#ef4444;">0</strong></div>
+  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">🔖 Saved: <strong id="stat-saved" style="color:var(--accent2);">0</strong></div>
+  <select id="country-filter" onchange="filterByCountry(this.value)" style="margin-left:auto;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:6px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;">
+    <option value="all">🌍 All Countries</option>
+  </select>
+</div>
  
   <div class="hackathon-grid" id="hackathon-grid"></div>
   <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
