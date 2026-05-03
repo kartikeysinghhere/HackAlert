@@ -81,7 +81,7 @@ function renderHackathons(hackathons) {
       ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="saveHackathon(this, '${hack.name}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
+      <button onclick="saveHackathon(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
   });
@@ -149,7 +149,7 @@ function renderHackathonsSorted(matched, rest) {
       ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="saveHackathon(this, '${hack.name}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
+      <button onclick="saveHackathon(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
   };
