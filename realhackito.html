@@ -222,7 +222,6 @@
   </div>
 </div>
 </div>
-</div>
  
   <div class="hackathon-grid" id="hackathon-grid"></div>
   <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
@@ -297,25 +296,25 @@
     <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showCreateTeam()">+ Create Team</button>
   </div>
 
-  <!-- Create Team Form -->
-  <div id="create-team-form" style="display:none;padding:24px 40px;background:var(--card);border-bottom:1px solid var(--border);">
-    <h3 style="margin-bottom:16px;">Create New Team</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px;">
-      <input id="team-name" placeholder="Team Name" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-      <input id="team-hackathon" placeholder="Target Hackathon" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-      <input id="team-skills" placeholder="Skills needed (e.g. React, ML)" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-      <select id="team-size" style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+  <!-- CREATE TEAM MODAL -->
+<div id="create-team-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+  <div style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;">
+    <button onclick="hideCreateTeam()" style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+    <h3 style="margin-bottom:24px;color:#fff;">Create New Team</h3>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <input id="team-name" placeholder="Team Name *" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+      <input id="team-hackathon" placeholder="Target Hackathon" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+      <input id="team-skills" placeholder="Skills needed (e.g. React, ML)" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+      <select id="team-size" style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
         <option value="2">2 Members</option>
         <option value="3">3 Members</option>
         <option value="4" selected>4 Members</option>
         <option value="5">5 Members</option>
       </select>
-    </div>
-    <div style="margin-top:16px;display:flex;gap:12px;">
-      <button onclick="createTeam()" class="btn-hero primary" style="padding:10px 24px;font-size:13px;">Create →</button>
-      <button onclick="hideCreateTeam()" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 24px;border-radius:10px;cursor:pointer;font-family:var(--mono);font-size:13px;">Cancel</button>
+      <button onclick="createTeam()" style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Create Team →</button>
     </div>
   </div>
+</div>
 
   <!-- Teams Grid -->
   <div id="teams-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:24px 40px;"></div>
