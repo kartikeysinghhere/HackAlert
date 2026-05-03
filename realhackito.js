@@ -141,6 +141,7 @@ function renderHackathonsSorted(matched, rest) {
       <p><strong>💻 Mode:</strong> ${mode}</p>
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
+      <button onclick="saveHackathon('${hack.name}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
   };
@@ -320,4 +321,14 @@ function getFallbackHackathons() {
     { name:"India HackFest",      start:"2026-06-01", city:"Bangalore",     country:"India",  virtual:false, hybrid:false, website:"#" },
     { name:"ML Marathon",         start:"2026-06-10", city:"New York",      country:"USA",    virtual:true,  hybrid:false, website:"#" }
   ];
+}
+function saveHackathon(name) {
+  let saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  if (!saved.includes(name)) {
+    saved.push(name);
+    localStorage.setItem('saved', JSON.stringify(saved));
+    alert(`✅ "${name}" saved!`);
+  } else {
+    alert(`Already saved!`);
+  }
 }
