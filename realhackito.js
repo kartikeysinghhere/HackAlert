@@ -89,7 +89,7 @@ function renderHackathons(hackathons) {
       ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="navigator.clipboard.writeText('${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
+      <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
       <button onclick="toggleSave(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
@@ -159,7 +159,7 @@ function renderHackathonsSorted(matched, rest) {
       ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="navigator.clipboard.writeText('${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
+      <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
       <button onclick="toggleSave(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
     `;
     grid.appendChild(card);
@@ -409,6 +409,18 @@ function toggleSave(btn, name) {
     btn.style.color = 'var(--accent)';
   }
 }
+
+function copyLink(btn, url) {
+  navigator.clipboard.writeText(url);
+  btn.textContent = '✅ Copied!';
+  btn.style.borderColor = 'var(--accent)';
+  btn.style.color = 'var(--accent)';
+  setTimeout(() => {
+    btn.textContent = '🔗 Copy';
+    btn.style.borderColor = 'var(--border-light)';
+    btn.style.color = 'var(--muted)';
+  }, 2000);
+} 
 
 function unsaveHackathon(name) {
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
