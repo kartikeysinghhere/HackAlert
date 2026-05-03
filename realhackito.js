@@ -173,6 +173,14 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
+  const protectedPages = ['dashboard', 'bot'];
+  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+  if (protectedPages.includes(pageId) && !isLoggedIn) {
+    goTo('login');
+    return;
+  }
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + pageId).classList.add('active');
   if (pageId === 'dashboard' && allHackathons.length === 0) fetchHackathons();
@@ -283,6 +291,7 @@ async function loginUser() {
     if (res.ok) {
       document.getElementById('nav-auth').style.display = 'none';
       document.getElementById('nav-app').style.display  = 'flex';
+      localStorage.setItem('loggedIn', 'true');
       goTo('dashboard');
     } else {
       alert(data.error);
@@ -318,6 +327,7 @@ function toggleChip(el) {
 function logout() {
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display  = 'none';
+  localStorage.removeItem('loggedIn');
   goTo('landing');
 }
 
