@@ -596,7 +596,7 @@ async function createTeam() {
   else { const d = await res.json(); alert(d.error); }
 }
 
-async function joinTeam(teamId) {
+async function joinTeam(teamId, teamName) {
   const user_email = localStorage.getItem('userEmail');
   const user_name = localStorage.getItem('userName');
   if (!user_email) return alert('Please login first');
@@ -615,6 +615,29 @@ async function openTeamChat(teamId, teamName) {
   document.getElementById('chat-team-name').textContent = teamName;
   document.getElementById('team-chat-modal').style.display = 'flex';
   await loadTeamMessages();
+
+  const currentUserEmail = localStorage.getItem('userEmail');
+
+  // Fetch team details to check leader and members
+  const teamRes = await fetch(`/api/teams`); // Fetch all teams to find the specific one
+  const allTeams = await teamRes.json();
+  const currentTeam = allTeams.find(t => t.id === teamId);
+
+  const membersRes = await fetch(`/api/teams/${teamId}/members`);
+  const members = await membersRes.json();
+  const isMember = members.some(member => member.user_email === currentUserEmail);
+  const isLeader = currentTeam && currentTeam.leader_email === currentUserEmail;
+
+  const teamActionsDiv = document.getElementById('team-chat-actions');
+  if (teamActionsDiv) {
+    teamActionsDiv.innerHTML = ''; // Clear previous buttons
+    if (isMember && !isLeader) {
+      teamActionsDiv.innerHTML += `<button onclick="leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Leave Team</button>`;
+    }
+  }
+
+
+
   chatInterval = setInterval(loadTeamMessages, 5000);
 }
 
@@ -652,6 +675,36 @@ async function sendTeamMessage() {
   });
   loadTeamMessages();
 }
+
+async function leaveTeam(teamId) {
+  if (!confirm('Are you sure you want to leave this team?')) return;
+
+  const user_email = localStorage.getItem('userEmail');
+  if (!user_email) {
+    showToast('❌', 'Error', 'You must be logged in to leave a team.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/teams/${teamId}/members/${user_email}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      showToast('✅', 'Left Team', 'You have successfully left the team.');
+      closeTeamChat();
+      loadTeams();
+    } else {
+      showToast('❌', 'Failed to Leave', data.error);
+    }
+  } catch (error) {
+    console.error('Error leaving team:', error);
+    showToast('❌', 'Error', 'Server error while leaving team.');
+  }
+}
+
 function showToast(icon, title, msg) {
   document.getElementById('toast-icon').textContent = icon;
   document.getElementById('toast-title').textContent = title;
@@ -664,3 +717,141 @@ window.addEventListener('scroll', () => {
   document.getElementById('back-top').style.display = 
     window.scrollY > 400 ? 'block' : 'none';
 });
+
+// ── Hackathon Card Functions (Moved for better organization) ──
+function toggleSave(btn, name) {
+  let saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  showToast('🔖', saved.includes(name) ? 'Removed' : 'Saved!', name);
+  if (saved.includes(name)) {
+    saved = saved.filter(s => s !== name);
+    localStorage.setItem('saved', JSON.stringify(saved));
+    btn.textContent = '🔖 Save';
+    btn.style.borderColor = 'var(--border-light)';
+    btn.style.color = 'var(--muted)';
+  } else {
+    saved.push(name);
+    localStorage.setItem('saved', JSON.stringify(saved));
+    btn.textContent = '✅ Saved';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+  }
+  updateStats();
+  buildCountryList();
+}
+
+function copyLink(btn, url) {
+  navigator.clipboard.writeText(url);
+  btn.textContent = '✅ Copied!';
+  btn.style.borderColor = 'var(--accent)';
+  btn.style.color = 'var(--accent)';
+  setTimeout(() => {
+    btn.textContent = '🔗 Copy';
+    btn.style.borderColor = 'var(--border-light)';
+    btn.style.color = 'var(--muted)';
+  }, 2000);
+} 
+
+function unsaveHackathon(name) {
+  let saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  saved = saved.filter(s => s !== name);
+  localStorage.setItem('saved', JSON.stringify(saved));
+  loadProfile();
+}
+
+function updateStats() {
+  const now = new Date();
+  document.getElementById('stat-total').textContent = allHackathons.length;
+  document.getElementById('stat-upcoming').textContent = allHackathons.filter(h => new Date(h.start) > now).length;
+  document.getElementById('stat-ended').textContent = allHackathons.filter(h => new Date(h.start) <= now).length;
+  document.getElementById('stat-saved').textContent = JSON.parse(localStorage.getItem('saved') || '[]').length;
+}
+
+function filterByCountry(country) {
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-pill').classList.add('active');
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) searchInput.value = '';
+
+  if (country === 'all') {
+    renderHackathons(allHackathons);
+  } else {
+    renderHackathons(allHackathons.filter(h => h.country === country));
+  }
+}
+
+function buildCountryList() {
+  const countries = ['All Countries','Afghanistan','Albania','Algeria','Argentina',
+    'Australia','Austria','Azerbaijan','Bangladesh','Belarus','Belgium','Bolivia',
+    'Brazil','Cambodia','Canada','Chile','China','Colombia','Croatia','Czech Republic',
+    'Denmark','Ecuador','Egypt','Estonia','Ethiopia','Finland','France','Georgia',
+    'Germany','Ghana','Greece','Hungary','India','Indonesia','Iran','Iraq','Ireland',
+    'Israel','Italy','Japan','Jordan','Kazakhstan','Kenya','Kuwait','Latvia','Lebanon',
+    'Lithuania','Malaysia','Mexico','Morocco','Myanmar','Nepal','Netherlands',
+    'New Zealand','Nigeria','Norway','Pakistan','Peru','Philippines','Poland',
+    'Portugal','Romania','Russia','Saudi Arabia','Serbia','Singapore','Slovakia',
+    'Slovenia','South Africa','South Korea','Spain','Sri Lanka','Sweden','Switzerland',
+    'Taiwan','Thailand','Turkey','Uganda','Ukraine','United Arab Emirates',
+    'United Kingdom','United States','Uruguay','Uzbekistan','Venezuela','Vietnam','Zimbabwe'];
+
+  const list = document.getElementById('country-list');
+  if (!list) return;
+  list.innerHTML = countries.map(c => `
+    <div onmousedown="selectCountry('${c}')"
+      style="padding:8px 12px;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--muted);"
+      onmouseover="this.style.color='var(--accent)'"
+      onmouseout="this.style.color='var(--muted)'">${c}</div>
+  `).join('');
+}
+
+function filterCountryList(q) {
+  const list = document.getElementById('country-list');
+  list.style.display = 'block';
+  list.querySelectorAll('div').forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(q.toLowerCase()) ? 'block' : 'none';
+  });
+}
+
+function selectCountry(country) {
+  const input = document.getElementById('country-search');
+  if (input) input.value = country === 'All Countries' ? '' : country;
+  const list = document.getElementById('country-list');
+  if (list) list.style.display = 'none';
+  if (country === 'All Countries') renderHackathons(allHackathons);
+  else renderHackathons(allHackathons.filter(h => h.country === country));
+}
+
+function openModal(hack) {
+  const startDate = new Date(hack.start).toLocaleDateString(undefined, {month:'long',day:'numeric',year:'numeric'});
+  let mode = "📍 In-Person";
+  if (hack.virtual) mode = "🌐 Online";
+  if (hack.hybrid) mode = "🔀 Hybrid";
+
+  document.getElementById('modal-content').innerHTML = `
+    ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:20px;">` : ''}
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      ${hack.logo ? `<img src="${hack.logo}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
+      <div>
+        <h2 style="color:#fff;margin:0;">${hack.name}</h2>
+        <p style="color:var(--accent);font-family:var(--mono);font-size:12px;margin:4px 0;">${mode}</p>
+      </div>
+    </div>
+    <div style="display:grid;gap:12px;font-size:14px;color:var(--muted);">
+      <p>📅 <strong style="color:var(--text);">Date:</strong> ${startDate}</p>
+      <p>⏳ <strong style="color:var(--text);">Deadline:</strong> ${getCountdown(hack.start)}</p>
+      <p>🌎 <strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${hack.city}, ${hack.country}` : "TBA")}</p>
+      ${hack.state ? `<p>📍 <strong style="color:var(--text);">State:</strong> ${hack.state}</p>` : ''}
+      ${hack.mlhAssociated ? `<p>🎓 <strong style="color:var(--text);">MLH:</strong> Associated</p>` : ''}
+      ${hack.hack_club_event ? `<p>🏠 <strong style="color:var(--text);">Hack Club:</strong> Official Event ✅</p>` : ''}
+      ${hack.apac ? `<p>🌏 <strong style="color:var(--text);">Region:</strong> Asia Pacific</p>` : ''}
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
+      <a href="${hack.website}" target="_blank" style="background:var(--accent);color:#050508;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;font-family:var(--mono);">Register Now →</a>
+      <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">📲 WhatsApp</a>
+    </div>
+  `;
+  document.getElementById('hack-modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('hack-modal').style.display = 'none';
+}

@@ -129,12 +129,12 @@ app.get('/api/teams', async (req, res) => {
 app.post('/api/teams/create', async (req, res) => {
   const { name, leader_email, hackathon, skills, size } = req.body;
   if (!name || !leader_email) return res.status(400).json({ error: 'Missing fields' });
-  const { data, error } = await supabase
+  const { data, error: teamInsertError } = await supabase
     .from('teams')
     .insert([{ name, leader_email, hackathon, skills, size, slots_left: size - 1 }])
     .select()
     .single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (teamInsertError) return res.status(500).json({ error: teamInsertError.message });
   await supabase.from('team_members').insert([{ team_id: data.id, user_email: leader_email }]);
   res.json(data);
 });
@@ -145,7 +145,10 @@ app.post('/api/teams/join', async (req, res) => {
   const { data: team } = await supabase.from('teams').select('*').eq('id', team_id).single();
   if (!team || team.slots_left <= 0) return res.status(400).json({ error: 'Team full' });
   const { error } = await supabase.from('team_members').insert([{ team_id, user_email, user_name }]);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) {
+    if (error.code === '23505') return res.status(400).json({ error: 'You are already a member of this team.' });
+    return res.status(500).json({ error: error.message });
+  }
   await supabase.from('teams').update({ slots_left: team.slots_left - 1 }).eq('id', team_id);
   res.json({ message: 'Joined successfully' });
 });
@@ -182,6 +185,64 @@ app.get('/api/teams/:id/members', async (req, res) => {
     .eq('team_id', req.params.id);
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
+});
+
+// DELETE /api/teams/:team_id/members/:user_email - Leave team
+app.delete('/api/teams/:team_id/members/:user_email', async (req, res) => {
+  const { team_id, user_email } = req.params;
+
+  // Check if the user trying to leave is the leader
+  const { data: team, error: teamError } = await supabase
+    .from('teams')
+    .select('leader_email, slots_left')
+    .eq('id', team_id)
+    .single();
+
+  if (teamError || !team) {
+    return res.status(404).json({ error: 'Team not found' });
+  }
+
+  if (team.leader_email === user_email) {
+    return res.status(403).json({ error: 'Team leader cannot leave the team. Please delete the team instead.' });
+  }
+
+  const { error: deleteError } = await supabase
+    .from('team_members')
+    .delete()
+    .eq('team_id', team_id)
+    .eq('user_email', user_email);
+
+  if (deleteError) {
+    return res.status(500).json({ error: deleteError.message });
+  }
+
+  // Increment slots_left
+  const { error: updateError } = await supabase
+    .from('teams')
+    .update({ slots_left: team.slots_left + 1 })
+    .eq('id', team_id);
+
+  if (updateError) {
+    console.error('Error updating slots_left after member left:', updateError.message);
+  }
+
+  res.json({ message: 'Successfully left the team' });
+});
+
+// DELETE /api/teams/:team_id - Delete team (leader only)
+app.delete('/api/teams/:team_id', async (req, res) => {
+  const { team_id } = req.params;
+  const { user_email } = req.body; // Expecting user_email for leader verification
+
+  const { data: team, error: teamError } = await supabase.from('teams').select('leader_email').eq('id', team_id).single();
+  if (teamError || !team) return res.status(404).json({ error: 'Team not found' });
+  if (team.leader_email !== user_email) return res.status(403).json({ error: 'Only the team leader can delete the team.' });
+
+  await supabase.from('team_messages').delete().eq('team_id', team_id);
+  await supabase.from('team_members').delete().eq('team_id', team_id);
+  const { error: deleteTeamError } = await supabase.from('teams').delete().eq('id', team_id);
+  if (deleteTeamError) return res.status(500).json({ error: deleteTeamError.message });
+  res.json({ message: 'Team deleted successfully' });
 });
 
 app.listen(PORT, () => {
