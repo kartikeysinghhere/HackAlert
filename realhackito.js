@@ -412,6 +412,7 @@ function getFallbackHackathons() {
 }
 
 function toggleSave(btn, name) {
+  showToast('🔖', saved.includes(name) ? 'Removed' : 'Saved!', hack.name);
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
   if (saved.includes(name)) {
     saved = saved.filter(s => s !== name);
@@ -652,3 +653,15 @@ async function sendTeamMessage() {
   });
   loadTeamMessages();
 }
+function showToast(icon, title, msg) {
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+window.addEventListener('scroll', () => {
+  document.getElementById('back-top').style.display = 
+    window.scrollY > 400 ? 'block' : 'none';
+});

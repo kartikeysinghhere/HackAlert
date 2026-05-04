@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -87,9 +88,10 @@ app.post('/api/signup', async (req, res) => {
   const { name, email, pass, mobile, college } = req.body;
   if (!name || !email || !pass) return res.status(400).json({ error: 'All fields required' });
 
+  const hashed = await bcrypt.hash(pass, 10);
   const { error } = await supabase
     .from('users')
-    .insert([{ name, email, password: pass, mobile, college }]);
+    .insert([{ name, email, password: hashed, mobile, college }]);
 
   if (error) {
     if (error.code === '23505') return res.status(400).json({ error: 'Email already exists' });
@@ -107,10 +109,9 @@ app.post('/api/login', async (req, res) => {
     .from('users')
     .select('*')
     .eq('email', email)
-    .eq('password', pass)
     .single();
 
-  if (error || !data) return res.status(401).json({ error: 'Invalid email or password' });
+  if (error || !data || !(await bcrypt.compare(pass, data.password))) return res.status(401).json({ error: 'Invalid email or password' });
 
   res.json({ message: 'Login successful', user: { name: data.name, email: data.email } });
 });
