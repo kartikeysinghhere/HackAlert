@@ -512,6 +512,7 @@ function selectCountry(country) {
 }
 
 function openModal(hack) {
+  href="${hack.website || '#'}"
   const startDate = new Date(hack.start).toLocaleDateString(undefined, {month:'long',day:'numeric',year:'numeric'});
   let mode = "📍 In-Person";
   if (hack.virtual) mode = "🌐 Online";
