@@ -26,7 +26,18 @@ app.get('/api/hackathons', async (req, res) => {
       supabase.from('indian_hackathons').select('*')
     ]);
     const indian = supabaseRes.data || [];
-    res.json([...hackClub, ...indian]);
+    const all = [...hackClub, ...indian];
+    
+    // Remove duplicates by name
+    const seen = new Set();
+    const unique = all.filter(h => {
+      const key = h.name.toLowerCase().trim();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    
+    res.json(unique);
   } catch (err) {
     res.status(500).json({ error: 'Failed' });
   }
@@ -73,12 +84,12 @@ app.post('/ask', async (req, res) => {
 });
 
 app.post('/api/signup', async (req, res) => {
-  const { name, email, pass } = req.body;
+  const { name, email, pass, mobile, college } = req.body;
   if (!name || !email || !pass) return res.status(400).json({ error: 'All fields required' });
 
   const { error } = await supabase
     .from('users')
-    .insert([{ name, email, password: pass }]);
+    .insert([{ name, email, password: pass, mobile, college }]);
 
   if (error) {
     if (error.code === '23505') return res.status(400).json({ error: 'Email already exists' });
