@@ -85,7 +85,7 @@ app.post('/ask', async (req, res) => {
 
 app.post('/api/signup', async (req, res) => {
   const { name, email, pass, mobile, college } = req.body;
-  if (!name || !email || !pass) return res.status(400).json({ error: 'All fields required' });
+  if (!name || !email || !pass) return res.status(400).json({ error: 'Name, Email, and Password are required.' });
 
   const hashed = await bcrypt.hash(pass, 10);
   const { error } = await supabase

@@ -325,10 +325,14 @@ async function loginUser() {
       localStorage.setItem('userEmail', email);
       localStorage.setItem('userName', data.user?.name || '');
       goTo('dashboard');
+      showToast('🎉', 'Login Successful!', `Welcome back, ${data.user?.name || 'user'}!`);
     } else {
-      alert(data.error);
+      showToast('❌', 'Login Failed', data.error || 'Something went wrong during login.');
     }
-  } catch { alert('Server not running'); }
+  } catch (err) {
+    console.error('Login error:', err);
+    showToast('❌', 'Server Error', 'Could not connect to the server. Please try again.');
+  }
 }
 
 // ── Signup ──
@@ -336,9 +340,9 @@ async function signupUser() {
   const name  = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
   const pass  = document.getElementById('signup-pass').value.trim();
-  const mobile = document.getElementById('signup-mobile').value.trim();
-  const college = document.getElementById('signup-college').value.trim();
-  if (!name || !email || !pass || !mobile || !college) return alert('Fill all fields');
+  const mobile = document.getElementById('signup-mobile').value.trim() || null; // Ensure null for optional empty fields
+  const college = document.getElementById('signup-college').value.trim() || null; // Ensure null for optional empty fields
+  if (!name || !email || !pass) return alert('Name, Email, and Password are required.');
 
   try {
     const res  = await fetch('/api/signup', {
@@ -349,14 +353,18 @@ async function signupUser() {
     const data = await res.json();
     if (res.ok) {
     localStorage.setItem('loggedIn', 'true');
-    localStorage.setItem('userName', name);
+    localStorage.setItem('userName', name); // Ensure this is set
     localStorage.setItem('userEmail', email);
-    localStorage.setItem('userMobile', mobile);
-    localStorage.setItem('userCollege', college);
+    localStorage.setItem('userMobile', mobile || ''); // Store empty string if null
+    localStorage.setItem('userCollege', college || ''); // Store empty string if null
     goTo('dashboard');
+    showToast('🥳', 'Signup Successful!', `Welcome to Hack/Alert, ${name}!`);
 }
-    else alert(data.error);
-  } catch { alert('Server not running'); }
+    else showToast('❌', 'Signup Failed', data.error || 'Something went wrong during signup.');
+  } catch (err) {
+    console.error('Signup error:', err);
+    showToast('❌', 'Server Error', 'Could not connect to the server. Please try again.');
+  }
 }
 
 // ── Toggle interest chip ──
@@ -559,16 +567,23 @@ async function loadTeams() {
   const teams = await res.json();
   if (!teams.length) { grid.innerHTML = '<p style="color:#aaa;padding:20px;">No teams yet. Create one!</p>'; return; }
   grid.innerHTML = teams.map(t => `
-    <div class="feature-card">
-      <h3>${t.name}</h3>
-      <p style="color:var(--muted);font-size:13px;">🏆 ${t.hackathon || 'Open'}</p>
-      <p style="font-size:13px;margin-top:8px;">🛠 ${t.skills || 'Any'}</p>
-      <p style="font-size:13px;">👥 ${t.slots_left} slots left / ${t.size}</p>
-      <p style="font-size:12px;color:var(--muted);">Leader: ${t.leader_email}</p>
-      <div style="display:flex;gap:8px;margin-top:12px;">
-        <button onclick="joinTeam(${t.id})" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join</button>
-        <button onclick="openTeamChat(${t.id},'${t.name}')" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
+    <div class="feature-card"> <!-- Use feature-card as per your existing CSS for consistency -->
+      <h3 style="margin-bottom: 8px;">${t.name}</h3>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">🏆 ${t.hackathon || 'Open Hackathon'}</p>
+      <p style="font-size:13px;margin-bottom:4px;">🛠 ${t.skills || 'Any skills welcome'}</p>
+      <p style="font-size:13px;margin-bottom:8px;">👥 ${t.slots_left} slots left / ${t.size} total</p>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Leader: ${t.leader_email}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        ${t.leader_email === currentUserEmail
+          ? `<button onclick="deleteTeam(${t.id})" class="btn-primary" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Delete Team</button>`
+          : `<button onclick="joinTeam(${t.id}, '${t.name}')" class="btn-primary" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join Team</button>`
+        }
+        <button onclick="openTeamChat(${t.id},'${t.name}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
       </div>
+    </div>
+    <!-- Additional style for feature-card to look good -->
+    <style> .feature-card { padding: 20px; border-radius: 12px; } </style>
+    
     </div>
   `).join('');
 }
@@ -619,10 +634,9 @@ async function openTeamChat(teamId, teamName) {
   const currentUserEmail = localStorage.getItem('userEmail');
 
   // Fetch team details to check leader and members
-  const teamRes = await fetch(`/api/teams`); // Fetch all teams to find the specific one
-  const allTeams = await teamRes.json();
-  const currentTeam = allTeams.find(t => t.id === teamId);
-
+  const teamRes = await fetch(`/api/teams/${teamId}`); // Fetch specific team
+  const currentTeam = await teamRes.json();
+  
   const membersRes = await fetch(`/api/teams/${teamId}/members`);
   const members = await membersRes.json();
   const isMember = members.some(member => member.user_email === currentUserEmail);
