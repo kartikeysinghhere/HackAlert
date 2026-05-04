@@ -412,8 +412,8 @@ function getFallbackHackathons() {
 }
 
 function toggleSave(btn, name) {
-  showToast('🔖', saved.includes(name) ? 'Removed' : 'Saved!', hack.name);
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  showToast('🔖', saved.includes(name) ? 'Removed' : 'Saved!', name);
   if (saved.includes(name)) {
     saved = saved.filter(s => s !== name);
     localStorage.setItem('saved', JSON.stringify(saved));
@@ -513,7 +513,6 @@ function selectCountry(country) {
 }
 
 function openModal(hack) {
-  href="${hack.website || '#'}"
   const startDate = new Date(hack.start).toLocaleDateString(undefined, {month:'long',day:'numeric',year:'numeric'});
   let mode = "📍 In-Person";
   if (hack.virtual) mode = "🌐 Online";

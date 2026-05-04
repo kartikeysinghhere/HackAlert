@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             console.log('Sending question to server:', question);
-            const response = await fetch('http://localhost:3000/ask', { // use full URL for clarity
             const response = await fetch('/ask', { // use relative URL for production compatibility
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
