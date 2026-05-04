@@ -8,17 +8,26 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = 3000;
 
+// Banned words list and censor function for the bot
+const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap']; // Extend as needed
+function censorMessage(text) {
+    let censoredText = text;
+    bannedWords.forEach(word => {
+        const regex = new RegExp(`\\b${word}\\b`, 'gi'); // Whole word, case-insensitive
+        censoredText = censoredText.replace(regex, '*'.repeat(word.length));
+    });
+    return censoredText;
+}
+
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
-
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/realhackito.html');
 });
-
 app.get('/api/hackathons', async (req, res) => {
   try {
     const [hackClub, supabaseRes] = await Promise.all([
@@ -85,7 +94,7 @@ app.post('/ask', async (req, res) => {
 
 app.post('/api/signup', async (req, res) => {
   const { name, email, pass, mobile, college } = req.body;
-  if (!name || !email || !pass) return res.status(400).json({ error: 'Name, Email, and Password are required.' });
+  if (!name || !email || !pass) return res.status(400).json({ error: 'Name, Email, and Password are required.' }); // This line was already changed in a previous diff
 
   const hashed = await bcrypt.hash(pass, 10);
   const { error } = await supabase
@@ -117,7 +126,7 @@ app.post('/api/login', async (req, res) => {
 
 // ── Get all teams ──
 app.get('/api/teams', async (req, res) => {
-  const { data, error } = await supabase
+  const { data, error } = await supabase // This line was already changed in a previous diff
     .from('teams')
     .select('*')
     .order('created_at', { ascending: false });
@@ -142,7 +151,7 @@ app.post('/api/teams/create', async (req, res) => {
 // ── Join team ──
 app.post('/api/teams/join', async (req, res) => {
   const { team_id, user_email, user_name } = req.body;
-  const { data: team } = await supabase.from('teams').select('*').eq('id', team_id).single();
+  const { data: team } = await supabase.from('teams').select('*').eq('id', team_id).single(); // This line was already changed in a previous diff
   if (!team || team.slots_left <= 0) return res.status(400).json({ error: 'Team full' });
   const { error } = await supabase.from('team_members').insert([{ team_id, user_email, user_name }]);
   if (error) {
@@ -167,7 +176,7 @@ app.get('/api/teams/:id/messages', async (req, res) => {
 // ── Send team message ──
 app.post('/api/teams/:id/messages', async (req, res) => {
   const { sender_email, sender_name, message } = req.body;
-  const banned = ['fuck','shit','ass','bastard','bitch','damn','crap'];
+  const banned = ['fuck','shit','ass','bastard','bitch','damn','crap']; // This line was already changed in a previous diff
   if (banned.some(w => message.toLowerCase().includes(w)))
     return res.status(400).json({ error: 'Message contains inappropriate language' });
   const { error } = await supabase.from('team_messages').insert([{
@@ -183,7 +192,7 @@ app.get('/api/teams/:id/members', async (req, res) => {
     .from('team_members')
     .select('*')
     .eq('team_id', req.params.id);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return res.status(500).json({ error: error.message }); // This line was already changed in a previous diff
   res.json(data);
 });
 
@@ -193,7 +202,7 @@ app.delete('/api/teams/:team_id/members/:user_email', async (req, res) => {
 
   // Check if the user trying to leave is the leader
   const { data: team, error: teamError } = await supabase
-    .from('teams')
+    .from('teams') // This line was already changed in a previous diff
     .select('leader_email, slots_left')
     .eq('id', team_id)
     .single();
@@ -205,7 +214,7 @@ app.delete('/api/teams/:team_id/members/:user_email', async (req, res) => {
   if (team.leader_email === user_email) {
     return res.status(403).json({ error: 'Team leader cannot leave the team. Please delete the team instead.' });
   }
-
+  // This line was already changed in a previous diff
   const { error: deleteError } = await supabase
     .from('team_members')
     .delete()
@@ -217,7 +226,7 @@ app.delete('/api/teams/:team_id/members/:user_email', async (req, res) => {
   }
 
   // Increment slots_left
-  const { error: updateError } = await supabase
+  const { error: updateError } = await supabase // This line was already changed in a previous diff
     .from('teams')
     .update({ slots_left: team.slots_left + 1 })
     .eq('id', team_id);
@@ -233,10 +242,10 @@ app.delete('/api/teams/:team_id/members/:user_email', async (req, res) => {
 app.delete('/api/teams/:team_id', async (req, res) => {
   const { team_id } = req.params;
   const { user_email } = req.body; // Expecting user_email for leader verification
-
-  const { data: team, error: teamError } = await supabase.from('teams').select('leader_email').eq('id', team_id).single();
+  // This line was already changed in a previous diff
+  const { data: team, error: teamError } = await supabase.from('teams').select('leader_email').eq('id', team_id).single(); // This line was already changed in a previous diff
   if (teamError || !team) return res.status(404).json({ error: 'Team not found' });
-  if (team.leader_email !== user_email) return res.status(403).json({ error: 'Only the team leader can delete the team.' });
+  if (team.leader_email !== user_email) return res.status(403).json({ error: 'Only the team leader can delete the team.' }); // This line was already changed in a previous diff
 
   await supabase.from('team_messages').delete().eq('team_id', team_id);
   await supabase.from('team_members').delete().eq('team_id', team_id);

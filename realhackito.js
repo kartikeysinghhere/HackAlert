@@ -2,6 +2,17 @@
 const HACKATHON_API_URL = "/api/hackathons";
 let allHackathons = [];
 
+// Add chatHistory array for the bot
+let chatHistory = [];
+
+// Banned words list and censor function
+const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap']; // Extend as needed
+function censorMessage(text) {
+    let censoredText = text;
+    bannedWords.forEach(word => { const regex = new RegExp(`\\b${word}\\b`, 'gi'); censoredText = censoredText.replace(regex, '*'.repeat(word.length)); });
+    return censoredText;
+}
+
 function getCountdown(dateStr) {
   const diff = new Date(dateStr) - new Date();
   if (diff <= 0) return "Ended";
@@ -219,10 +230,13 @@ function appendMessage(role, text) {
   msg.className = `msg ${role}`;
   msg.innerHTML = `
     <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
-    <div class="msg-bubble">${text}</div>
+    <div class="msg-bubble">${censorMessage(text)}</div> <!-- Censor for display -->
   `;
   area.appendChild(msg);
   area.scrollTop = area.scrollHeight;
+  
+  // Store the (potentially censored) message in chatHistory
+  chatHistory.push({ role: role === 'user' ? 'user' : 'assistant', content: censorMessage(text) });
 }
 
 // ── Show typing indicator ──
@@ -251,7 +265,8 @@ function removeTyping() {
 // ── Welcome message on load ──
 function showWelcomeMessage() {
   setTimeout(() => {
-    appendMessage('bot', "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!");
+    const welcomeMsg = "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
+    appendMessage('bot', welcomeMsg); // This will add to chatHistory
   }, 600);
 }
 
@@ -264,9 +279,10 @@ async function sendChat() {
   input.value = '';
   appendMessage('user', message);
   showTyping();
-
+  
   // local smart reply
-if (message.toLowerCase().includes('nearest') || message.toLowerCase().includes('closest')) {
+  const censoredMessageForLocalReply = censorMessage(message).toLowerCase();
+  if (censoredMessageForLocalReply.includes('nearest') || censoredMessageForLocalReply.includes('closest')) {
   const next = allHackathons[0];
   if (next) {
     removeTyping();
@@ -279,7 +295,7 @@ if (message.toLowerCase().includes('nearest') || message.toLowerCase().includes(
     const res = await fetch('/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({ messages: chatHistory }) // Send full history (already censored)
     });
 
     const data = await res.json();
