@@ -53,18 +53,26 @@ app.get('/api/hackathons', async (req, res) => {
 });
 
 app.post('/ask', async (req, res) => {
-  const { message } = req.body;
-  if (!message) return res.status(400).json({ error: 'No message provided' });
+  const { messages } = req.body; // Expecting an array of messages now
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: 'No messages provided' });
+  }
 
-  const text = message.toLowerCase();
+  // Apply censoring to all messages in the history for robustness
+  const censoredMessages = messages.map(msg => ({
+      ...msg,
+      content: censorMessage(msg.content)
+  }));
+
+  const lastUserMessageContent = censoredMessages[censoredMessages.length - 1].content.toLowerCase();
   let action = null;
   let filterType = null;
 
-  if (text.includes('offline') || text.includes('in person')) {
+  if (lastUserMessageContent.includes('offline') || lastUserMessageContent.includes('in person')) {
     action = 'filter'; filterType = 'offline';
-  } else if (text.includes('online') || text.includes('virtual')) {
+  } else if (lastUserMessageContent.includes('online') || lastUserMessageContent.includes('virtual')) {
     action = 'filter'; filterType = 'online';
-  } else if (text.includes('hybrid')) {
+  } else if (lastUserMessageContent.includes('hybrid')) {
     action = 'filter'; filterType = 'hybrid';
   }
 
@@ -76,7 +84,7 @@ app.post('/ask', async (req, res) => {
           role: 'system',
           content: 'You are HackBot, an AI assistant for HackAlert — a hackathon tracking platform. Help developers find and register for hackathons. Be concise, enthusiastic, and use relevant emojis. Keep responses under 100 words.'
         },
-        { role: 'user', content: message }
+        ...censoredMessages // Pass the entire (censored) conversation history
       ]
     });
 

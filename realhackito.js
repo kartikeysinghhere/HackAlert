@@ -60,6 +60,8 @@ function renderHackathons(hackathons) {
   const grid = document.getElementById("hackathon-grid");
   grid.innerHTML = "";
 
+  const savedList = JSON.parse(localStorage.getItem('saved') || '[]');
+
   if (hackathons.length === 0) {
     const query = document.getElementById('search-input')?.value || '';
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`;
@@ -87,6 +89,8 @@ function renderHackathons(hackathons) {
     const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
     if (daysLeft <= 5) card.classList.add('urgent');
     else if (daysLeft <= 20) card.classList.add('soon');
+
+    const isSaved = savedList.some(s => s.name === hack.name);
     card.innerHTML = `
       ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -106,7 +110,7 @@ function renderHackathons(hackathons) {
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
       <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-      <button onclick="toggleSave(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
+      <button onclick="toggleSave(this)" data-name="${hack.name}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
     `;
     grid.appendChild(card);
   });
@@ -142,6 +146,8 @@ function renderHackathonsSorted(matched, rest) {
   const grid = document.getElementById("hackathon-grid");
   grid.innerHTML = "";
 
+  const savedList = JSON.parse(localStorage.getItem('saved') || '[]');
+
   const render = (hack, dimmed) => {
     let mode = "📍 In-Person";
     if (hack.virtual) mode = "🌐 Online";
@@ -165,6 +171,8 @@ function renderHackathonsSorted(matched, rest) {
     else if (daysLeft <= 20) card.classList.add('soon');
     if (dimmed) card.style.opacity = "0.35";
 
+    const isSaved = savedList.some(s => s.name === hack.name);
+
     card.innerHTML = `
       ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -184,7 +192,7 @@ function renderHackathonsSorted(matched, rest) {
       <a href="${hack.website}" target="_blank">Visit Website →</a>
       <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
       <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-      <button onclick="toggleSave(this, this.dataset.name)" data-name="${hack.name}" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔖 Save</button>
+      <button onclick="toggleSave(this)" data-name="${hack.name}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
     `;
     grid.appendChild(card);
   };
@@ -236,6 +244,7 @@ function appendMessage(role, text) {
   area.scrollTop = area.scrollHeight;
   
   // Store the (potentially censored) message in chatHistory
+  if (role === 'bot' && chatHistory.some(m => m.content === text)) return; // Avoid duplicate welcome
   chatHistory.push({ role: role === 'user' ? 'user' : 'assistant', content: censorMessage(text) });
 }
 
@@ -266,7 +275,7 @@ function removeTyping() {
 function showWelcomeMessage() {
   setTimeout(() => {
     const welcomeMsg = "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
-    appendMessage('bot', welcomeMsg); // This will add to chatHistory
+    appendMessage('bot', welcomeMsg);
   }, 600);
 }
 
@@ -279,8 +288,8 @@ async function sendChat() {
   input.value = '';
   appendMessage('user', message);
   showTyping();
-  
-  // local smart reply
+
+  // local smart reply using censored message
   const censoredMessageForLocalReply = censorMessage(message).toLowerCase();
   if (censoredMessageForLocalReply.includes('nearest') || censoredMessageForLocalReply.includes('closest')) {
   const next = allHackathons[0];
@@ -295,7 +304,7 @@ async function sendChat() {
     const res = await fetch('/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: chatHistory }) // Send full history (already censored)
+      body: JSON.stringify({ messages: chatHistory }) // Send full history
     });
 
     const data = await res.json();
@@ -405,13 +414,42 @@ function loadProfile() {
   if (saved.length === 0) {
     list.innerHTML = '<p style="color:var(--muted)">No hackathons saved yet.</p>';
   } else {
-    list.innerHTML = saved.map(name => `
+    list.innerHTML = saved.map(hack => `
       <div style="padding:8px 12px;margin-bottom:8px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-        <span>🔖 ${name}</span>
-        <button onclick="unsaveHackathon('${name}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
+        <span>🔖 ${hack.name}</span>
+        <button onclick="unsaveHackathon('${hack.name}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
       </div>
     `).join('');
   }
+
+  // --- Interactive Roadmap ---
+  const roadmapDiv = document.getElementById('roadmap-list');
+  if (!roadmapDiv) return;
+  if (saved.length === 0) {
+    roadmapDiv.innerHTML = '<p style="color:var(--muted)">Save some hackathons to see your roadmap!</p>';
+    return;
+  }
+
+  // Sort by start date for the timeline
+  saved.sort((a, b) => new Date(a.start) - new Date(b.start));
+  const now = new Date();
+
+  roadmapDiv.innerHTML = saved.map(hack => {
+    const hackDate = new Date(hack.start);
+    const isUpcoming = hackDate > now;
+    const dateString = hackDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
+    return `
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);">
+        <div style="font-family: var(--mono); font-size: 12px; text-align: center; color: ${isUpcoming ? 'var(--accent)' : 'var(--muted)'}; width: 60px; flex-shrink: 0;">
+          <div style="font-weight: 700; font-size: 14px;">${dateString.split(' ')[1] || dateString.split('.')[0]}</div>
+          <div>${dateString.split(' ')[0] || dateString.split('.')[1]}</div>
+        </div>
+        <div style="flex: 1; font-size: 14px;">${hack.name}</div>
+        <button onclick="unsaveHackathon('${hack.name}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
+      </div>
+    `;
+  }).join('');
 }
 
 // ── Logout ──
@@ -435,27 +473,31 @@ function getFallbackHackathons() {
   ];
 }
 
-function toggleSave(btn, name) {
+function toggleSave(btn) {
+  const name = btn.dataset.name;
+  const start = btn.dataset.start;
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
-  showToast('🔖', saved.includes(name) ? 'Removed' : 'Saved!', name);
-  if (saved.includes(name)) {
-    saved = saved.filter(s => s !== name);
-    localStorage.setItem('saved', JSON.stringify(saved));
+  const existingIndex = saved.findIndex(s => s.name === name);
+
+  showToast('🔖', existingIndex > -1 ? 'Removed' : 'Saved!', name);
+
+  if (existingIndex > -1) {
+    saved.splice(existingIndex, 1);
     btn.textContent = '🔖 Save';
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
   } else {
-    saved.push(name);
-    localStorage.setItem('saved', JSON.stringify(saved));
+    saved.push({ name, start });
     btn.textContent = '✅ Saved';
     btn.style.borderColor = 'var(--accent)';
     btn.style.color = 'var(--accent)';
   }
+  localStorage.setItem('saved', JSON.stringify(saved));
   updateStats();
-  buildCountryList();
+  loadProfile(); // Update profile page if it's active
 }
 
-function copyLink(btn, url) {
+function copyLink(btn, url) { // This function was present in the original file, keeping it.
   navigator.clipboard.writeText(url);
   btn.textContent = '✅ Copied!';
   btn.style.borderColor = 'var(--accent)';
@@ -469,7 +511,7 @@ function copyLink(btn, url) {
 
 function unsaveHackathon(name) {
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
-  saved = saved.filter(s => s !== name);
+  saved = saved.filter(s => s.name !== name);
   localStorage.setItem('saved', JSON.stringify(saved));
   loadProfile();
 }
@@ -581,6 +623,8 @@ async function loadTeams() {
   grid.innerHTML = '<p style="color:#aaa;padding:20px;">Loading teams...</p>';
   const res = await fetch('/api/teams');
   const teams = await res.json();
+  const currentUserEmail = localStorage.getItem('userEmail');
+
   if (!teams.length) { grid.innerHTML = '<p style="color:#aaa;padding:20px;">No teams yet. Create one!</p>'; return; }
   grid.innerHTML = teams.map(t => `
     <div class="feature-card"> <!-- Use feature-card as per your existing CSS for consistency -->
@@ -614,14 +658,18 @@ function hideCreateTeam() {
 async function createTeam() {
   const name = document.getElementById('team-name').value.trim();
   const hackathon = document.getElementById('team-hackathon').value.trim();
-  const skills = document.getElementById('team-skills').value.trim();
+  const skills = document.getElementById('team-skills').value.trim(); // Can be empty
   const size = parseInt(document.getElementById('team-size').value);
+  const vibe_tags = document.getElementById('team-vibe-tags').value.trim(); // Can be empty
   const leader_email = localStorage.getItem('userEmail');
-  if (!name || !leader_email) return alert('Fill team name and make sure you are logged in');
+  if (!name || !leader_email || isNaN(size)) {
+    showToast('❌', 'Error', 'Team Name and Team Size are required.');
+    return;
+  }
   const res = await fetch('/api/teams/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, hackathon, skills, size, leader_email })
+    body: JSON.stringify({ name, hackathon, skills, size, leader_email, vibe_tags })
   });
   if (res.ok) { hideCreateTeam(); loadTeams(); }
   else { const d = await res.json(); alert(d.error); }
@@ -630,15 +678,22 @@ async function createTeam() {
 async function joinTeam(teamId, teamName) {
   const user_email = localStorage.getItem('userEmail');
   const user_name = localStorage.getItem('userName');
-  if (!user_email) return alert('Please login first');
+  if (!user_email) {
+    showToast('⚠️', 'Not Logged In', 'Please login first to join a team.');
+    return;
+  }
   const res = await fetch('/api/teams/join', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ team_id: teamId, user_email, user_name })
   });
   const d = await res.json();
-  alert(res.ok ? '✅ Joined successfully!' : d.error);
-  if (res.ok) loadTeams();
+  if (res.ok) {
+    showToast('✅', 'Joined Team!', `You have successfully joined ${teamName}.`);
+    loadTeams();
+  } else {
+    showToast('❌', 'Failed to Join', d.error);
+  }
 }
 
 async function openTeamChat(teamId, teamName) {
@@ -657,6 +712,11 @@ async function openTeamChat(teamId, teamName) {
   const members = await membersRes.json();
   const isMember = members.some(member => member.user_email === currentUserEmail);
   const isLeader = currentTeam && currentTeam.leader_email === currentUserEmail;
+
+  const membersListDiv = document.getElementById('team-members-list');
+  if (membersListDiv) {
+      membersListDiv.innerHTML = '👥 ' + members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${m.user_name || m.user_email}</span>`).join('');
+  }
 
   const teamActionsDiv = document.getElementById('team-chat-actions');
   if (teamActionsDiv) {
