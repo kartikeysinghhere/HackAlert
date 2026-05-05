@@ -127,7 +127,10 @@ app.post('/api/login', async (req, res) => {
     .eq('email', email)
     .single();
 
-  if (error || !data || !(await bcrypt.compare(pass, data.password))) return res.status(401).json({ error: 'Invalid email or password' });
+  if (error || !data) return res.status(401).json({ error: 'Invalid email or password' });
+
+  const match = await bcrypt.compare(pass, data.password);
+  if (!match) return res.status(401).json({ error: 'Invalid email or password' });
 
   res.json({ message: 'Login successful', user: { name: data.name, email: data.email } });
 });
@@ -271,6 +274,14 @@ app.delete('/api/teams/:team_id', async (req, res) => {
   const { error: deleteTeamError } = await supabase.from('teams').delete().eq('id', team_id);
   if (deleteTeamError) return res.status(500).json({ error: deleteTeamError.message });
   res.json({ message: 'Team deleted successfully' });
+});
+
+app.delete('/api/teams/:id', async (req, res) => {
+  const { leader_email } = req.body;
+  const { data: team } = await supabase.from('teams').select('*').eq('id', req.params.id).single();
+  if (!team || team.leader_email !== leader_email) return res.status(403).json({ error: 'Not authorized' });
+  await supabase.from('teams').delete().eq('id', req.params.id);
+  res.json({ message: 'Deleted' });
 });
 
 app.listen(PORT, () => {

@@ -55,12 +55,60 @@ async function fetchHackathons() {
   }
 }
 
+// ── Create single hackathon card element ──
+function createHackathonCard(hack, isDimmed = false) {
+  const savedList = JSON.parse(localStorage.getItem('saved') || '[]');
+  let mode = "📍 In-Person";
+  if (hack.virtual) mode = "🌐 Online";
+  if (hack.hybrid) mode = "🔀 Hybrid";
+
+  const startDate = new Date(hack.start).toLocaleDateString(undefined, {
+    month: 'short', day: 'numeric', year: 'numeric'
+  });
+
+  const location = hack.city ? `${hack.city}, ${hack.country}` : "TBA";
+
+  const card = document.createElement("div");
+  card.className = "feature-card";
+  card.style.cursor = "pointer";
+  card.onclick = (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+    openModal(hack);
+  };
+  const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
+  if (daysLeft <= 5) card.classList.add('urgent');
+  else if (daysLeft <= 20) card.classList.add('soon');
+  if (isDimmed) card.style.opacity = "0.35";
+
+  const isSaved = savedList.some(s => s.name === hack.name);
+  card.innerHTML = `
+    ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+      ${hack.logo
+        ? `<img src="${hack.logo}" style="width:40px;height:40px;border-radius:8px;">`
+        : `<div class="feature-icon">💻</div>`}
+      <h3>${hack.name}</h3>
+    </div>
+    <p><strong>📅 Date:</strong> ${startDate}</p>
+    <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
+    <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
+    <p><strong>💻 Mode:</strong> ${mode}</p>
+    ${hack.state ? `<p><strong>📍 State:</strong> ${hack.state}</p>` : ''}
+    ${hack.mlhAssociated ? `<p><strong>🎓 MLH:</strong> Associated</p>` : ''}
+    ${hack.hack_club_event ? `<p><strong>🏠 Hack Club:</strong> Official Event ✅</p>` : ''}
+    ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
+    <a href="${hack.website}" target="_blank">Visit Website →</a>
+    <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
+    <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
+    <button onclick="toggleSave(this)" data-name="${hack.name}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
+  `;
+  return card;
+}
+
 // ── Render hackathon cards ──
 function renderHackathons(hackathons) {
   const grid = document.getElementById("hackathon-grid");
   grid.innerHTML = "";
-
-  const savedList = JSON.parse(localStorage.getItem('saved') || '[]');
 
   if (hackathons.length === 0) {
     const query = document.getElementById('search-input')?.value || '';
@@ -69,50 +117,7 @@ function renderHackathons(hackathons) {
   }
 
   hackathons.forEach(hack => {
-    let mode = "📍 In-Person";
-    if (hack.virtual) mode = "🌐 Online";
-    if (hack.hybrid) mode = "🔀 Hybrid";
-
-    const startDate = new Date(hack.start).toLocaleDateString(undefined, {
-      month: 'short', day: 'numeric', year: 'numeric'
-    });
-
-    const location = hack.city ? `${hack.city}, ${hack.country}` : "TBA";
-
-    const card = document.createElement("div");
-    card.className = "feature-card";
-    card.style.cursor = "pointer";
-    card.onclick = (e) => {
-    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
-    openModal(hack);
-  };
-    const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
-    if (daysLeft <= 5) card.classList.add('urgent');
-    else if (daysLeft <= 20) card.classList.add('soon');
-
-    const isSaved = savedList.some(s => s.name === hack.name);
-    card.innerHTML = `
-      ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        ${hack.logo
-          ? `<img src="${hack.logo}" style="width:40px;height:40px;border-radius:8px;">`
-          : `<div class="feature-icon">💻</div>`}
-        <h3>${hack.name}</h3>
-      </div>
-      <p><strong>📅 Date:</strong> ${startDate}</p>
-      <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
-      <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
-      <p><strong>💻 Mode:</strong> ${mode}</p>
-      ${hack.state ? `<p><strong>📍 State:</strong> ${hack.state}</p>` : ''}
-      ${hack.mlhAssociated ? `<p><strong>🎓 MLH:</strong> Associated</p>` : ''}
-      ${hack.hack_club_event ? `<p><strong>🏠 Hack Club:</strong> Official Event ✅</p>` : ''}
-      ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
-      <a href="${hack.website}" target="_blank">Visit Website →</a>
-      <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-      <button onclick="toggleSave(this)" data-name="${hack.name}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
-    `;
-    grid.appendChild(card);
+    grid.appendChild(createHackathonCard(hack));
   });
   updateStats();      
   buildCountryList(); 
@@ -145,60 +150,15 @@ function searchHackathons(query) {
 function renderHackathonsSorted(matched, rest) {
   const grid = document.getElementById("hackathon-grid");
   grid.innerHTML = "";
+  
+  if (matched.length === 0 && rest.length === 0) {
+    const query = document.getElementById('search-input')?.value || '';
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found for "<strong>${query}</strong>"</div>`;
+    return;
+  }
 
-  const savedList = JSON.parse(localStorage.getItem('saved') || '[]');
-
-  const render = (hack, dimmed) => {
-    let mode = "📍 In-Person";
-    if (hack.virtual) mode = "🌐 Online";
-    if (hack.hybrid) mode = "🔀 Hybrid";
-
-    const startDate = new Date(hack.start).toLocaleDateString(undefined, {
-      month: 'short', day: 'numeric', year: 'numeric'
-    });
-    const location = hack.city ? `${hack.city}, ${hack.country}` : "TBA";
-
-    const card = document.createElement("div");
-    card.className = "feature-card";
-    card.className = "feature-card";
-    card.style.cursor = "pointer";
-    card.onclick = (e) => {
-    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
-    openModal(hack);
-  };
-    const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
-    if (daysLeft <= 5) card.classList.add('urgent');
-    else if (daysLeft <= 20) card.classList.add('soon');
-    if (dimmed) card.style.opacity = "0.35";
-
-    const isSaved = savedList.some(s => s.name === hack.name);
-
-    card.innerHTML = `
-      ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        ${hack.logo
-          ? `<img src="${hack.logo}" style="width:40px;height:40px;border-radius:8px;">`
-          : `<div class="feature-icon">💻</div>`}
-        <h3>${hack.name}</h3>
-      </div>
-      <p><strong>📅 Date:</strong> ${startDate}</p>
-      <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
-      <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
-      <p><strong>💻 Mode:</strong> ${mode}</p>
-      ${hack.state ? `<p><strong>📍 State:</strong> ${hack.state}</p>` : ''}
-      ${hack.mlhAssociated ? `<p><strong>🎓 MLH:</strong> Associated</p>` : ''}
-      ${hack.hack_club_event ? `<p><strong>🏠 Hack Club:</strong> Official Event ✅</p>` : ''}
-      ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
-      <a href="${hack.website}" target="_blank">Visit Website →</a>
-      <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-      <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-      <button onclick="toggleSave(this)" data-name="${hack.name}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
-    `;
-    grid.appendChild(card);
-  };
-
-  matched.forEach(h => render(h, false));
-  rest.forEach(h => render(h, true));
+  matched.forEach(h => grid.appendChild(createHackathonCard(h, false)));
+  rest.forEach(h => grid.appendChild(createHackathonCard(h, true)));
 }
 
 // ── Filter hackathon cards ──
@@ -655,7 +615,6 @@ async function createTeam() {
   const hackathon = document.getElementById('team-hackathon').value.trim();
   const skills = document.getElementById('team-skills').value.trim(); // Can be empty
   const size = parseInt(document.getElementById('team-size').value);
-  const vibe_tags = document.getElementById('team-vibe-tags').value.trim(); // Can be empty
   const leader_email = localStorage.getItem('userEmail');
   if (!name || !leader_email || isNaN(size) || size <= 0) { // Added size validation
     showToast('❌', 'Error', 'Team Name and Team Size are required.');
@@ -797,4 +756,15 @@ function showToast(icon, title, msg) {
   const toast = document.getElementById('toast');
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
+}
+async function deleteTeam(teamId) {
+  const leader = localStorage.getItem('userEmail');
+  if (!confirm('Delete this team?')) return;
+  const res = await fetch(`/api/teams/${teamId}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ leader_email: leader })
+  });
+  if (res.ok) loadTeams();
+  else alert('Only team leader can delete');
 }

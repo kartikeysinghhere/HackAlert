@@ -1,17 +1,23 @@
 :root {
-  --bg: #020617;
-  --surface: #0f172a;
-  --card: rgba(30, 41, 59, 0.3);
-  --border: rgba(255, 255, 255, 0.06);
-  --border-light: rgba(255, 255, 255, 0.12);
-  --accent: #10b981;
-  --accent-glow: rgba(16, 185, 129, 0.4);
-  --accent2: #38bdf8;
-  --accent3: #818cf8;
-  --text: #f8fafc;
-  --muted: #94a3b8;
+  --bg: #0e0e0e;
+  --surface: #131313;
+  --card: rgba(42, 42, 42, 0.6);
+
+  --border: rgba(132, 148, 149, 0.2);
+  --border-light: rgba(132, 148, 149, 0.4);
+
+  /* MAIN COLORS (CYBER NOIR STYLE) */
+  --accent: #00f0ff;        /* neon cyan */
+  --accent-glow: rgba(0, 240, 255, 0.4);
+
+  --accent2: #d05bff;       /* neon purple */
+  --accent3: #7df4ff;       /* light cyan */
+
+  --text: #e5e2e1;
+  --muted: #b9cacb;
+
   --mono: 'Space Mono', monospace;
-  --sans: 'Syne', sans-serif;
+  --sans: 'Space Grotesk', sans-serif;
 }
  
 *, *::before, *::after {
