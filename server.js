@@ -142,6 +142,18 @@ app.get('/api/teams', async (req, res) => {
   res.json(data);
 });
 
+// ── Get single team ──
+app.get('/api/teams/:id', async (req, res) => {
+  const { id } = req.params;
+  const { data, error } = await supabase
+    .from('teams')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
 // ── Create team ──
 app.post('/api/teams/create', async (req, res) => {
   const { name, leader_email, hackathon, skills, size } = req.body;
@@ -184,8 +196,7 @@ app.get('/api/teams/:id/messages', async (req, res) => {
 // ── Send team message ──
 app.post('/api/teams/:id/messages', async (req, res) => {
   const { sender_email, sender_name, message } = req.body;
-  const banned = ['fuck','shit','ass','bastard','bitch','damn','crap']; // This line was already changed in a previous diff
-  if (banned.some(w => message.toLowerCase().includes(w)))
+  if (bannedWords.some(w => message.toLowerCase().includes(w)))
     return res.status(400).json({ error: 'Message contains inappropriate language' });
   const { error } = await supabase.from('team_messages').insert([{
     team_id: req.params.id, sender_email, sender_name, message
@@ -266,16 +277,3 @@ app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
   console.log(`✅ Supabase connected!`);
 });
-
-function getIndianHackathons() {
-  return [
-    { name:"Smart India Hackathon 2026", start:"2026-08-01", city:"Multiple Cities", country:"India", virtual:false, hybrid:false, website:"https://sih.gov.in" },
-    { name:"HackWithInfy", start:"2026-06-15", city:"Bengaluru", country:"India", virtual:false, hybrid:true, website:"https://hackwithinfy.in" },
-    { name:"Hack This Fall", start:"2026-07-01", city:"", country:"India", virtual:true, hybrid:false, website:"https://hackthisfall.tech" },
-    { name:"HackBout", start:"2026-06-20", city:"Delhi", country:"India", virtual:false, hybrid:false, website:"https://hackbout.tech" },
-    { name:"HackNITR", start:"2026-07-10", city:"Rourkela", country:"India", virtual:false, hybrid:false, website:"https://hacknitr.tech" },
-    { name:"HackCBS", start:"2026-09-01", city:"Delhi", country:"India", virtual:false, hybrid:false, website:"https://hackcbs.tech" },
-    { name:"HackBVP", start:"2026-08-15", city:"Delhi", country:"India", virtual:false, hybrid:false, website:"https://hackbvp.com" },
-    { name:"Hackstreet Boys", start:"2026-07-20", city:"Mumbai", country:"India", virtual:false, hybrid:false, website:"https://hackstreet.in" }
-  ];
-}
