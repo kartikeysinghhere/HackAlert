@@ -13,8 +13,27 @@ function censorMessage(text) {
     return censoredText;
 }
 
+function escapeHTML(str) {
+  if (!str) return '';
+  return str.replace(/[&<>'"]/g, 
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
+}
+
+function safeJSString(str) {
+  if (!str) return '';
+  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
 function getCountdown(dateStr) {
   const diff = new Date(dateStr) - new Date();
+  if (isNaN(diff)) return "TBA";
   if (diff <= 0) return "Ended";
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -32,6 +51,23 @@ window.addEventListener('DOMContentLoaded', () => {
     if (btn) btn.style.display = 'none';
   }
   showWelcomeMessage();
+
+  // ADDED: handle invite link
+  const params = new URLSearchParams(window.location.search);
+  const joinTeamId = params.get('join_team');
+  if (joinTeamId) {
+    if (!isLoggedIn) {
+      // Store intent, redirect to login
+      sessionStorage.setItem('pendingJoinTeam', joinTeamId);
+      goTo('login');
+    } else {
+      goTo('teams');
+      // Wait for teams to load then auto-open chat
+      setTimeout(() => openTeamChat(parseInt(joinTeamId), 'Team'), 800);
+    }
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname);
+  }
 });
 
 // ── Fetch hackathons from live API ──
@@ -82,25 +118,25 @@ function createHackathonCard(hack, isDimmed = false) {
 
   const isSaved = savedList.some(s => s.name === hack.name);
   card.innerHTML = `
-    ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
+    ${hack.banner ? `<img src="${escapeHTML(hack.banner)}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
       ${hack.logo
-        ? `<img src="${hack.logo}" style="width:40px;height:40px;border-radius:8px;">`
+        ? `<img src="${escapeHTML(hack.logo)}" style="width:40px;height:40px;border-radius:8px;">`
         : `<div class="feature-icon">💻</div>`}
-      <h3>${hack.name}</h3>
+      <h3>${escapeHTML(hack.name)}</h3>
     </div>
     <p><strong>📅 Date:</strong> ${startDate}</p>
     <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
-    <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : location}</p>
+    <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : escapeHTML(location)}</p>
     <p><strong>💻 Mode:</strong> ${mode}</p>
-    ${hack.state ? `<p><strong>📍 State:</strong> ${hack.state}</p>` : ''}
+    ${hack.state ? `<p><strong>📍 State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
     ${hack.mlhAssociated ? `<p><strong>🎓 MLH:</strong> Associated</p>` : ''}
     ${hack.hack_club_event ? `<p><strong>🏠 Hack Club:</strong> Official Event ✅</p>` : ''}
     ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
-    <a href="${hack.website}" target="_blank">Visit Website →</a>
-    <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-    <button onclick="copyLink(this, '${hack.website}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-    <button onclick="toggleSave(this)" data-name="${hack.name}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
+    <a href="${escapeHTML(hack.website)}" target="_blank">Visit Website →</a>
+    <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
+    <button onclick="copyLink(this, '${safeJSString(hack.website)}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
+    <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
   `;
   return card;
 }
@@ -111,7 +147,7 @@ function renderHackathons(hackathons) {
   grid.innerHTML = "";
 
   if (hackathons.length === 0) {
-    const query = document.getElementById('search-input')?.value || '';
+    const query = escapeHTML(document.getElementById('search-input')?.value || '');
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`;
     return;
   }
@@ -124,26 +160,30 @@ function renderHackathons(hackathons) {
 }
 
 // ── Search: matched cards sort to top, rest dimmed below ──
+let searchTimeout = null;
 function searchHackathons(query) {
-  const q = query.toLowerCase().trim();
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const q = query.toLowerCase().trim();
 
-  if (!q) {
-    renderHackathons(allHackathons);
-    return;
-  }
+    if (!q) {
+      renderHackathons(allHackathons);
+      return;
+    }
 
-  const matched = [];
-  const rest = [];
+    const matched = [];
+    const rest = [];
 
-  allHackathons.forEach(h => {
-    const inName    = h.name.toLowerCase().includes(q);
-    const inCity    = h.city && h.city.toLowerCase().includes(q);
-    const inCountry = h.country && h.country.toLowerCase().includes(q);
-    if (inName || inCity || inCountry) matched.push(h);
-    else rest.push(h);
-  });
+    allHackathons.forEach(h => {
+      const inName    = h.name.toLowerCase().includes(q);
+      const inCity    = h.city && h.city.toLowerCase().includes(q);
+      const inCountry = h.country && h.country.toLowerCase().includes(q);
+      if (inName || inCity || inCountry) matched.push(h);
+      else rest.push(h);
+    });
 
-  renderHackathonsSorted(matched, rest);
+    renderHackathonsSorted(matched, rest);
+  }, 300);
 }
 
 // ── Render sorted with matches on top ──
@@ -152,7 +192,7 @@ function renderHackathonsSorted(matched, rest) {
   grid.innerHTML = "";
   
   if (matched.length === 0 && rest.length === 0) {
-    const query = document.getElementById('search-input')?.value || '';
+    const query = escapeHTML(document.getElementById('search-input')?.value || '');
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found for "<strong>${query}</strong>"</div>`;
     return;
   }
@@ -176,7 +216,6 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  if (pageId === 'teams') loadTeams();
   const protectedPages = ['dashboard', 'bot', 'profile', 'teams'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
@@ -189,16 +228,18 @@ function goTo(pageId) {
   document.getElementById('page-' + pageId).classList.add('active');
   if (pageId === 'dashboard' && allHackathons.length === 0) fetchHackathons();
   if (pageId === 'profile') loadProfile();
+  if (pageId === 'teams') loadTeams();
 }
 
 // ── Append message bubble to chat ──
-function appendMessage(role, text) {
+function appendMessage(role, text, isHTML = false) {
   const area = document.getElementById('chat-area');
   const msg = document.createElement('div');
   msg.className = `msg ${role}`;
+  const displayText = isHTML ? text : escapeHTML(censorMessage(text));
   msg.innerHTML = `
     <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
-    <div class="msg-bubble">${censorMessage(text)}</div> <!-- Censor for display -->
+    <div class="msg-bubble">${displayText}</div>
   `;
   area.appendChild(msg);
   area.scrollTop = area.scrollHeight;
@@ -206,6 +247,8 @@ function appendMessage(role, text) {
   // Store the (potentially censored) message in chatHistory
   if (role === 'bot' && chatHistory.some(m => m.content === text)) return; // Avoid duplicate welcome
   chatHistory.push({ role: role === 'user' ? 'user' : 'assistant', content: censorMessage(text) });
+  // Cap chatHistory to prevent memory leak
+  if (chatHistory.length > 30) chatHistory = chatHistory.slice(-30);
 }
 
 // ── Show typing indicator ──
@@ -235,7 +278,7 @@ function removeTyping() {
 function showWelcomeMessage() {
   setTimeout(() => {
     const welcomeMsg = "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
-    appendMessage('bot', welcomeMsg);
+    appendMessage('bot', welcomeMsg, true);
   }, 600);
 }
 
@@ -309,7 +352,15 @@ async function loginUser() {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userEmail', email);
       localStorage.setItem('userName', data.user?.name || '');
-      goTo('dashboard');
+      // Also add this in loginUser() after successful login, to handle the deferred join:
+      const pendingJoin = sessionStorage.getItem('pendingJoinTeam');
+      if (pendingJoin) {
+        sessionStorage.removeItem('pendingJoinTeam');
+        goTo('teams');
+        setTimeout(() => openTeamChat(parseInt(pendingJoin), 'Team'), 800);
+      } else {
+        goTo('dashboard');
+      }
       showToast('🎉', 'Login Successful!', `Welcome back, ${data.user?.name || 'user'}!`);
     } else {
       showToast('❌', 'Login Failed', data.error || 'Something went wrong during login.');
@@ -375,8 +426,8 @@ function loadProfile() {
   } else {
     list.innerHTML = saved.map(hack => `
       <div style="padding:8px 12px;margin-bottom:8px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-        <span>🔖 ${hack.name}</span>
-        <button onclick="unsaveHackathon('${hack.name}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
+        <span>🔖 ${escapeHTML(hack.name)}</span>
+        <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
       </div>
     `).join('');
   }
@@ -404,8 +455,8 @@ function loadProfile() {
           <div style="font-weight: 700; font-size: 14px;">${dateString.split(' ')[1] || dateString.split('.')[0]}</div>
           <div>${dateString.split(' ')[0] || dateString.split('.')[1]}</div>
         </div>
-        <div style="flex: 1; font-size: 14px;">${hack.name}</div>
-        <button onclick="unsaveHackathon('${hack.name}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
+        <div style="flex: 1; font-size: 14px;">${escapeHTML(hack.name)}</div>
+        <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
       </div>
     `;
   }).join('');
@@ -417,6 +468,10 @@ function logout() {
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display  = 'none';
   localStorage.removeItem('loggedIn');
+  localStorage.removeItem('userName');
+  localStorage.removeItem('userEmail');
+  localStorage.removeItem('userMobile');
+  localStorage.removeItem('userCollege');
   const btn = document.getElementById('get-started-btn');
   if (btn) btn.style.display = '';
   goTo('landing');
@@ -456,16 +511,37 @@ function toggleSave(btn) {
   loadProfile(); // Update profile page if it's active
 }
 
-function copyLink(btn, url) { // This function was present in the original file, keeping it.
-  navigator.clipboard.writeText(url);
-  btn.textContent = '✅ Copied!';
-  btn.style.borderColor = 'var(--accent)';
-  btn.style.color = 'var(--accent)';
+function copyLink(btn, url) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      btn.textContent = '✅ Copied!';
+      btn.style.borderColor = 'var(--accent)';
+      btn.style.color = 'var(--accent)';
+    }).catch(() => {
+      fallbackCopy(url, btn);
+    });
+  } else {
+    fallbackCopy(url, btn);
+  }
   setTimeout(() => {
     btn.textContent = '🔗 Copy';
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
   }, 2000);
+}
+
+function fallbackCopy(text, btn) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  btn.textContent = '✅ Copied!';
+  btn.style.borderColor = 'var(--accent)';
+  btn.style.color = 'var(--accent)';
 } 
 
 function unsaveHackathon(name) {
@@ -485,7 +561,6 @@ function updateStats() {
 
 function filterByCountry(country) {
   document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-pill').classList.add('active');
   const searchInput = document.getElementById('search-input');
   if (searchInput) searchInput.value = '';
 
@@ -544,26 +619,26 @@ function openModal(hack) {
   if (hack.hybrid) mode = "🔀 Hybrid";
 
   document.getElementById('modal-content').innerHTML = `
-    ${hack.banner ? `<img src="${hack.banner}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:20px;">` : ''}
+    ${hack.banner ? `<img src="${escapeHTML(hack.banner)}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:20px;">` : ''}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-      ${hack.logo ? `<img src="${hack.logo}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
+      ${hack.logo ? `<img src="${escapeHTML(hack.logo)}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
       <div>
-        <h2 style="color:#fff;margin:0;">${hack.name}</h2>
+        <h2 style="color:#fff;margin:0;">${escapeHTML(hack.name)}</h2>
         <p style="color:var(--accent);font-family:var(--mono);font-size:12px;margin:4px 0;">${mode}</p>
       </div>
     </div>
     <div style="display:grid;gap:12px;font-size:14px;color:var(--muted);">
       <p>📅 <strong style="color:var(--text);">Date:</strong> ${startDate}</p>
       <p>⏳ <strong style="color:var(--text);">Deadline:</strong> ${getCountdown(hack.start)}</p>
-      <p>🌎 <strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${hack.city}, ${hack.country}` : "TBA")}</p>
-      ${hack.state ? `<p>📍 <strong style="color:var(--text);">State:</strong> ${hack.state}</p>` : ''}
+      <p>🌎 <strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${escapeHTML(hack.city)}, ${escapeHTML(hack.country)}` : "TBA")}</p>
+      ${hack.state ? `<p>📍 <strong style="color:var(--text);">State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
       ${hack.mlhAssociated ? `<p>🎓 <strong style="color:var(--text);">MLH:</strong> Associated</p>` : ''}
       ${hack.hack_club_event ? `<p>🏠 <strong style="color:var(--text);">Hack Club:</strong> Official Event ✅</p>` : ''}
       ${hack.apac ? `<p>🌏 <strong style="color:var(--text);">Region:</strong> Asia Pacific</p>` : ''}
     </div>
     <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
-      <a href="${hack.website}" target="_blank" style="background:var(--accent);color:#050508;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;font-family:var(--mono);">Register Now →</a>
-      <a href="https://wa.me/?text=Check out ${hack.name}: ${hack.website}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">📲 WhatsApp</a>
+      <a href="${escapeHTML(hack.website)}" target="_blank" style="background:var(--accent);color:#050508;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;font-family:var(--mono);">Register Now →</a>
+      <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">📲 WhatsApp</a>
     </div>
   `;
   document.getElementById('hack-modal').style.display = 'flex';
@@ -575,32 +650,38 @@ function closeModal() {
 
 // ── TEAMS ──
 let currentTeamId = null;
-let chatInterval = null;
+let chatEventSource = null;
 
 async function loadTeams() {
   const grid = document.getElementById('teams-grid');
   grid.innerHTML = '<p style="color:#aaa;padding:20px;">Loading teams...</p>';
-  const res = await fetch('/api/teams');
-  const teams = await res.json();
-  const currentUserEmail = localStorage.getItem('userEmail');
+  try {
+    const res = await fetch('/api/teams');
+    if (!res.ok) throw new Error('Failed to load teams');
+    const teams = await res.json();
+    const currentUserEmail = localStorage.getItem('userEmail');
 
-  if (!teams.length) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:20px;">No teams yet. Create one!</p>'; return; }
-  grid.innerHTML = teams.map(t => `
-    <div class="feature-card"> <!-- Use feature-card as per your existing CSS for consistency -->
-      <h3 style="margin-bottom: 8px;">${t.name}</h3>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">🏆 ${t.hackathon || 'Open Hackathon'}</p>
-      <p style="font-size:13px;margin-bottom:4px;">🛠 ${t.skills || 'Any skills welcome'}</p>
-      <p style="font-size:13px;margin-bottom:8px;">👥 ${t.slots_left} slots left / ${t.size} total</p>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Leader: ${t.leader_email}</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        ${t.leader_email === currentUserEmail
-          ? `<button onclick="deleteTeam(${t.id})" class="btn-primary" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Delete Team</button>`
-          : `<button onclick="joinTeam(${t.id}, '${t.name}')" class="btn-primary" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join Team</button>`
-        }
-        <button onclick="openTeamChat(${t.id},'${t.name}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
+    if (!teams.length) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:20px;">No teams yet. Create one!</p>'; return; }
+    grid.innerHTML = teams.map(t => `
+      <div class="feature-card">
+        <h3 style="margin-bottom: 8px;">${escapeHTML(t.name)}</h3>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">🏆 ${escapeHTML(t.hackathon || 'Open Hackathon')}</p>
+        <p style="font-size:13px;margin-bottom:4px;">🛠 ${escapeHTML(t.skills || 'Any skills welcome')}</p>
+        <p style="font-size:13px;margin-bottom:8px;">👥 ${t.slots_left} slots left / ${t.size} total</p>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Leader: ${escapeHTML(t.leader_email)}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${t.leader_email === currentUserEmail
+            ? `<button onclick="deleteTeam(${t.id})" class="btn-primary" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Delete Team</button>`
+            : `<button onclick="joinTeam(${t.id}, '${safeJSString(t.name)}')" class="btn-primary" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join Team</button>`
+          }
+          <button onclick="openTeamChat(${t.id},'${safeJSString(t.name)}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  } catch (err) {
+    console.error('Error loading teams:', err);
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:20px;">⚠️ Failed to load teams. Please try again.</p>';
+  }
 }
 
 function showCreateTeam() {
@@ -623,7 +704,7 @@ async function createTeam() {
   const res = await fetch('/api/teams/create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, hackathon, skills, size, leader_email, vibe_tags })
+    body: JSON.stringify({ name, hackathon, skills, size, leader_email })
   });
   if (res.ok) { hideCreateTeam(); loadTeams(); }
   else { const d = await res.json(); showToast('❌', 'Error creating team', d.error); }
@@ -654,55 +735,97 @@ async function openTeamChat(teamId, teamName) {
   currentTeamId = teamId;
   document.getElementById('chat-team-name').textContent = teamName;
   document.getElementById('team-chat-modal').style.display = 'flex';
-  await loadTeamMessages();
 
-  const currentUserEmail = localStorage.getItem('userEmail');
+  try {
+    await loadTeamMessages();
 
-  // Fetch team details to check leader and members
-  const teamRes = await fetch(`/api/teams/${teamId}`); // Fetch specific team
-  const currentTeam = await teamRes.json();
-  
-  const membersRes = await fetch(`/api/teams/${teamId}/members`);
-  const members = await membersRes.json();
-  const isMember = members.some(member => member.user_email === currentUserEmail);
-  const isLeader = currentTeam && currentTeam.leader_email === currentUserEmail;
+    const currentUserEmail = localStorage.getItem('userEmail');
 
-  const membersListDiv = document.getElementById('team-members-list');
-  if (membersListDiv) {
-      membersListDiv.innerHTML = '👥 ' + members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${m.user_name || m.user_email}</span>`).join('');
-  }
+    const teamRes = await fetch(`/api/teams/${teamId}`);
+    if (!teamRes.ok) throw new Error('Failed to load team details');
+    const currentTeam = await teamRes.json();
+    
+    const membersRes = await fetch(`/api/teams/${teamId}/members`);
+    if (!membersRes.ok) throw new Error('Failed to load members');
+    const members = await membersRes.json();
+    const isMember = members.some(member => member.user_email === currentUserEmail);
+    const isLeader = currentTeam && currentTeam.leader_email === currentUserEmail;
 
-  const teamActionsDiv = document.getElementById('team-chat-actions');
-  if (teamActionsDiv) {
-    teamActionsDiv.innerHTML = ''; // Clear previous buttons
-    if (isMember && !isLeader) {
-      teamActionsDiv.innerHTML += `<button onclick="leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Leave Team</button>`;
+    const membersListDiv = document.getElementById('team-members-list');
+    if (membersListDiv) {
+        membersListDiv.innerHTML = '👥 ' + members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join('');
     }
+
+    const teamActionsDiv = document.getElementById('team-chat-actions');
+    if (teamActionsDiv) {
+      teamActionsDiv.innerHTML = '';
+      if (isMember && !isLeader) {
+        teamActionsDiv.innerHTML += `<button onclick="leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Leave Team</button>`;
+      }
+      teamActionsDiv.innerHTML += `<button onclick="copyInviteLink(${teamId})" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-left:8px;">🔗 Invite</button>`;
+    }
+  } catch (err) {
+    console.error('Error loading team chat:', err);
+    showToast('⚠️', 'Error', 'Failed to load team details. Please try again.');
   }
 
+  if (chatEventSource) {
+    chatEventSource.close();
+  }
+  
+  // Connect to SSE stream
+  chatEventSource = new EventSource(`/api/teams/${teamId}/stream`);
+  chatEventSource.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    appendTeamMessage(data);
+  };
+}
 
-
-  chatInterval = setInterval(loadTeamMessages, 5000);
+function copyInviteLink(teamId) {
+  const url = `${window.location.origin}${window.location.pathname}?join_team=${teamId}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('✅', 'Copied!', 'Invite link copied to clipboard.');
+    });
+  } else {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('✅', 'Copied!', 'Invite link copied to clipboard.');
+  }
 }
 
 function closeTeamChat() {
   document.getElementById('team-chat-modal').style.display = 'none';
-  clearInterval(chatInterval);
+  if (chatEventSource) {
+    chatEventSource.close();
+    chatEventSource = null;
+  }
   currentTeamId = null;
+}
+
+function appendTeamMessage(m) {
+  const area = document.getElementById('team-chat-area');
+  area.insertAdjacentHTML('beforeend', `
+    <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 14px;margin-bottom:8px;">
+      <strong style="color:var(--accent);font-size:12px;">${escapeHTML(m.sender_name || m.sender_email)}</strong>
+      <p style="font-size:14px;margin-top:4px;color:var(--text);">${escapeHTML(m.message)}</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(m.sent_at || Date.now()).toLocaleTimeString()}</p>
+    </div>
+  `);
+  area.scrollTop = area.scrollHeight;
 }
 
 async function loadTeamMessages() {
   const area = document.getElementById('team-chat-area');
   const res = await fetch(`/api/teams/${currentTeamId}/messages`);
   const msgs = await res.json();
-  area.innerHTML = msgs.map(m => `
-    <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 14px;">
-      <strong style="color:var(--accent);font-size:12px;">${m.sender_name || m.sender_email}</strong>
-      <p style="font-size:14px;margin-top:4px;color:var(--text);">${m.message}</p>
-      <p style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(m.sent_at).toLocaleTimeString()}</p>
-    </div>
-  `).join('');
-  area.scrollTop = area.scrollHeight;
+  area.innerHTML = '';
+  msgs.forEach(appendTeamMessage);
 }
 
 async function sendTeamMessage() {
@@ -712,12 +835,14 @@ async function sendTeamMessage() {
   const sender_email = localStorage.getItem('userEmail');
   const sender_name = localStorage.getItem('userName');
   input.value = '';
+  
+  // Note: We don't call loadTeamMessages() or appendTeamMessage() manually here
+  // because the SSE stream will broadcast the message back to us instantly.
   await fetch(`/api/teams/${currentTeamId}/messages`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sender_email, sender_name, message })
   });
-  loadTeamMessages();
 }
 
 async function leaveTeam(teamId) {
@@ -760,10 +885,9 @@ function showToast(icon, title, msg) {
 async function deleteTeam(teamId) {
   const leader = localStorage.getItem('userEmail');
   if (!confirm('Delete this team?')) return;
-  const res = await fetch(`/api/teams/${teamId}`, {
+  const res = await fetch(`/api/teams/${teamId}?leader_email=${encodeURIComponent(leader)}`, {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ leader_email: leader })
+    headers: { 'Content-Type': 'application/json' }
   });
   if (res.ok) loadTeams();
   else alert('Only team leader can delete');
