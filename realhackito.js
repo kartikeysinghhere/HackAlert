@@ -31,6 +31,14 @@ function safeJSString(str) {
   return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
 }
 
+function authHeaders() {
+  const token = localStorage.getItem('authToken');
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+  };
+}
+
 function getCountdown(dateStr) {
   const diff = new Date(dateStr) - new Date();
   if (isNaN(diff)) return "TBA";
@@ -333,7 +341,6 @@ function quickSend(btn) {
   sendChat();
 }
 
-// ── Login ──
 async function loginUser() {
   const email = document.getElementById('login-email').value.trim();
   const pass = document.getElementById('login-pass').value.trim();
@@ -347,12 +354,12 @@ async function loginUser() {
     });
     const data = await res.json();
     if (res.ok) {
-      document.getElementById('nav-auth').style.display = 'none';
-      document.getElementById('nav-app').style.display = 'flex';
+      localStorage.setItem('authToken', data.token); // YE LINE MISSING THI
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userEmail', email);
       localStorage.setItem('userName', data.user?.name || '');
-      // Also add this in loginUser() after successful login, to handle the deferred join:
+      document.getElementById('nav-auth').style.display = 'none';
+      document.getElementById('nav-app').style.display = 'flex';
       const pendingJoin = sessionStorage.getItem('pendingJoinTeam');
       if (pendingJoin) {
         sessionStorage.removeItem('pendingJoinTeam');
@@ -467,6 +474,7 @@ function logout() {
   if (!confirm('Are you sure you want to log out?')) return;
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display = 'none';
+  localStorage.removeItem('authToken');
   localStorage.removeItem('loggedIn');
   localStorage.removeItem('userName');
   localStorage.removeItem('userEmail');
@@ -694,33 +702,26 @@ function hideCreateTeam() {
 async function createTeam() {
   const name = document.getElementById('team-name').value.trim();
   const hackathon = document.getElementById('team-hackathon').value.trim();
-  const skills = document.getElementById('team-skills').value.trim(); // Can be empty
+  const skills = document.getElementById('team-skills').value.trim();
   const size = parseInt(document.getElementById('team-size').value);
-  const leader_email = localStorage.getItem('userEmail');
-  if (!name || !leader_email || isNaN(size) || size <= 0) { // Added size validation
+  if (!name || isNaN(size) || size <= 0) {
     showToast('❌', 'Error', 'Team Name and Team Size are required.');
     return;
   }
   const res = await fetch('/api/teams/create', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, hackathon, skills, size, leader_email })
+    headers: authHeaders(),
+    body: JSON.stringify({ name, hackathon, skills, size })
   });
   if (res.ok) { hideCreateTeam(); loadTeams(); }
   else { const d = await res.json(); showToast('❌', 'Error creating team', d.error); }
 }
 
 async function joinTeam(teamId, teamName) {
-  const user_email = localStorage.getItem('userEmail');
-  const user_name = localStorage.getItem('userName');
-  if (!user_email) {
-    showToast('⚠️', 'Not Logged In', 'Please login first to join a team.');
-    return;
-  }
   const res = await fetch('/api/teams/join', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ team_id: teamId, user_email, user_name })
+    headers: authHeaders(),
+    body: JSON.stringify({ team_id: teamId })
   });
   const d = await res.json();
   if (res.ok) {
@@ -832,17 +833,19 @@ async function sendTeamMessage() {
   const input = document.getElementById('team-msg-input');
   const message = input.value.trim();
   if (!message) return;
-  const sender_email = localStorage.getItem('userEmail');
-  const sender_name = localStorage.getItem('userName');
-  input.value = '';
 
-  // Note: We don't call loadTeamMessages() or appendTeamMessage() manually here
-  // because the SSE stream will broadcast the message back to us instantly.
-  await fetch(`/api/teams/${currentTeamId}/messages`, {
+  const res = await fetch(`/api/teams/${currentTeamId}/messages`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sender_email, sender_name, message })
+    headers: authHeaders(),
+    body: JSON.stringify({ message })
   });
+
+  if (!res.ok) {
+    const d = await res.json();
+    showToast('❌', 'Blocked', d.error);
+    return;
+  }
+  input.value = '';
 }
 
 async function leaveTeam(teamId) {
@@ -855,9 +858,9 @@ async function leaveTeam(teamId) {
   }
 
   try {
-    const res = await fetch(`/api/teams/${teamId}/members/${user_email}`, {
+    const res = await fetch(`/api/teams/${teamId}/members/${encodeURIComponent(user_email)}`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders()
     });
 
     const data = await res.json();
