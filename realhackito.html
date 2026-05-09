@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9L7Y94447"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-R9L7Y94447');
   </script>
@@ -13,176 +14,207 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hack/Alert — Never Miss a Hackathon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="realhackito.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="realhackito.css?v=2">
+  <meta name="description"
+    content="Hack/Alert aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you." />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   <style>
-    /* ── LIGHT THEME ── */
-    body.light {
-      --bg: #f0f4f8;
-      --surface: #e2e8f0;
-      --card: rgba(255,255,255,0.7);
-      --border: rgba(0,0,0,0.08);
-      --border-light: rgba(0,0,0,0.12);
-      --text: #0f172a;
-      --muted: #64748b;
-    }
-    body.light nav { background: rgba(240,244,248,0.85); border-bottom: 1px solid rgba(0,0,0,0.06); }
-    body.light .auth-box input { color: #0f172a; background: rgba(255,255,255,0.8); }
-    body.light .msg.bot .msg-bubble { background: #fff; color: #0f172a; }
-    body.light .bot-header, body.light .quick-prompts, body.light .chat-input-wrap { background: #e2e8f0; }
-    body.light #chat-input { background: rgba(255,255,255,0.8); color: #0f172a; }
-    body.light .hack-card { background: rgba(255,255,255,0.8); }
-    body.light .feature-card { background: rgba(255,255,255,0.8); }
-    body.light .site-footer { background: #e2e8f0; }
- 
     /* ── THEME TOGGLE ── */
     .theme-toggle {
-      width: 38px; height: 38px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       border: 1px solid var(--border-light);
       background: transparent;
       color: var(--muted);
       font-size: 16px;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: all 0.2s;
       flex-shrink: 0;
     }
-    .theme-toggle:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,255,136,0.06); }
- 
+
+    .theme-toggle:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(0, 240, 255, 0.06);
+    }
+
     /* ── FLOATING BOT ── */
     #floating-bot {
       position: fixed;
-      bottom: 30px; right: 30px;
-      width: 56px; height: 56px;
+      bottom: 30px;
+      right: 30px;
+      width: 56px;
+      height: 56px;
       background: var(--accent);
       color: #121212;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 26px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,255,102,0.4);
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       z-index: 999;
     }
-    #floating-bot:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(0,255,102,0.6); }
- 
+
+    #floating-bot:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.6);
+    }
+
     /* hide floating bot on bot page */
-    #page-bot.active ~ #floating-bot { display: none !important; }
+    #page-bot.active~#floating-bot {
+      display: none !important;
+    }
   </style>
 </head>
+
 <body>
- 
-<!-- NAVBAR -->
-<nav id="navbar">
-  <div class="nav-logo" onclick="goTo('landing')">Hack<span>/</span>Alert</div>
-  <div style="display:flex;align-items:center;gap:8px;">
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
-    <div class="nav-links" id="nav-auth">
-      <button class="nav-btn" onclick="goTo('login')">Login</button>
-      <button class="nav-btn cta" onclick="goTo('signup')">Sign Up →</button>
-    </div>
-    <div class="nav-links" id="nav-app" style="display:none;">
-      <button class="nav-btn" id="nb-hack" onclick="goTo('dashboard')">Hackathons</button>
-      <button class="nav-btn" id="nb-bot" onclick="goTo('bot')">💬 HackBot</button>
-      <button class="nav-btn" onclick="goTo('profile')">👤 Profile</button>
-      <button class="nav-btn" onclick="goTo('teams')">🤝 Teams</button>
-      <button class="nav-btn" onclick="logout()">Logout</button>
-    </div>
-  </div>
-</nav>
- 
-<!-- LANDING -->
-<div class="page active" id="page-landing">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <section class="hero">
-    <div class="hero-badge">AI-Powered Hackathon Tracker</div>
-    <h1>Never Miss<br>A <span class="highlight">HACKATHON</span><br>Again<span class="highlight">!</span></h1>
-    <p>Hack/Alert aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you.</p>
-    <div class="hero-actions">
-      <button class="btn-hero primary" id="get-started-btn" onclick="goTo('signup')">Get Started — It's Free</button>
-      <button class="btn-hero secondary" onclick="goTo('dashboard')">Browse Hackathons</button>
-    </div>
-  </section>
-  <div class="stats">
-    <div class="stat"><div class="stat-num">240+</div><div class="stat-label">Hackathons Listed</div></div>
-    <div class="stat"><div class="stat-num">18K</div><div class="stat-label">Devs Notified</div></div>
-    <div class="stat"><div class="stat-num">₹50L+</div><div class="stat-label">Total Prize Pool</div></div>
-  </div>
-  <div class="features">
-    <div class="feature-card"><div class="feature-icon">🤖</div><h3>AI Chatbot</h3><p>Ask HackBot anything — "Show me online hackathons under 2 weeks" and get instant curated results.</p></div>
-    <div class="feature-card"><div class="feature-icon">🔔</div><h3>Real-time Alerts</h3><p>Get notified the moment a new hackathon drops that matches your skills and interests.</p></div>
-    <div class="feature-card"><div class="feature-icon">🎯</div><h3>Smart Filters</h3><p>Filter by mode, duration, prize, eligibility, tech stack, and more. Find your perfect hackathon.</p></div>
-    <div class="feature-card"><div class="feature-icon">📱</div><h3>WhatsApp (Soon)</h3><p>Daily digest of fresh hackathons delivered to your WhatsApp. Never open another tab.</p></div>
-  </div>
-  <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
-</div>
- 
-<!-- LOGIN -->
-<div class="page" id="page-login">
-  <div class="orb auth-orb1"></div>
-  <div class="orb auth-orb2"></div>
-  <div class="auth-box">
-    <div class="auth-logo">Hack/Alert</div>
-    <h2 class="auth-title">Welcome back 👋</h2>
-    <p class="auth-sub">Log in to track your hackathons</p>
-    <form onsubmit="event.preventDefault(); loginUser();">
-      <label>Email address</label>
-      <input type="email" id="login-email" placeholder="you@example.com" required />
-      <label>Password</label>
-      <input type="password" id="login-pass" placeholder="••••••••" required />
-      <button type="submit" class="auth-submit">Log in →</button>
-    </form>
-    <div class="auth-footer">Don't have an account? <a onclick="goTo('signup')">Sign up free</a></div>
-  </div>
-</div>
- 
-<!-- SIGNUP -->
-<div class="page" id="page-signup">
-  <div class="orb auth-orb1"></div>
-  <div class="orb auth-orb2"></div>
-  <div class="auth-box">
-    <div class="auth-logo">Hack/Alert</div>
-    <h2 class="auth-title">Create account</h2>
-    <p class="auth-sub">Join 18,000+ devs tracking hackathons</p>
-    <form onsubmit="event.preventDefault(); signupUser();">
-      <label>Full Name</label>
-      <input type="text" id="signup-name" placeholder="Kartikey Singh" required />
-      <label>Email address</label>
-      <input type="email" id="signup-email" placeholder="you@example.com" required />
-      <label>Password</label>
-      <input type="password" id="signup-pass" placeholder="Create a password" required />
-      <label>Mobile Number</label>
-      <input type="tel" id="signup-mobile" placeholder="+91 9999999999 (Optional)" />
-      <label>College / University</label>
-      <input type="text" id="signup-college" placeholder="JiET (Optional)" />
-      <label style="margin-bottom:12px;">I'm interested in</label>
-      <div class="interests-grid">
-        <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Web Dev</label>
-        <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> AI / ML</label>
-        <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Blockchain</label>
-        <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Cybersecurity</label>
-        <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Mobile Dev</label>
-        <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Open Source</label>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-logo" onclick="goTo('landing')">Hack<span>/</span>Alert</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
+      <div class="nav-links" id="nav-auth">
+        <button class="nav-btn" onclick="goTo('login')">Login</button>
+        <button class="nav-btn cta" onclick="goTo('signup')">Sign Up →</button>
       </div>
-      <button type="submit" class="auth-submit">Create Account →</button>
-    </form>
-    <div class="auth-footer">Already have an account? <a onclick="goTo('login')">Log in</a></div>
-  </div>
-</div>
- 
-<!-- DASHBOARD -->
-<div class="page" id="page-dashboard">
-  <div class="dash-header">
-    <div>
-      <h2>Upcoming <span>Hackathons</span></h2>
-      <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Live data · Updated just now</p>
+      <div class="nav-links" id="nav-app" style="display:none;">
+        <button class="nav-btn" id="nb-hack" onclick="goTo('dashboard')">Hackathons</button>
+        <button class="nav-btn" id="nb-bot" onclick="goTo('bot')">💬 HackBot</button>
+        <button class="nav-btn" onclick="goTo('profile')">👤 Profile</button>
+        <button class="nav-btn" onclick="goTo('teams')">🤝 Teams</button>
+        <button class="nav-btn" onclick="logout()">Logout</button>
+      </div>
     </div>
- 
-    <input type="text" id="search-input" placeholder="🔍 Search hackathons..."
-      oninput="searchHackathons(this.value)"
-      style="
+  </nav>
+
+  <!-- LANDING -->
+  <div class="page active" id="page-landing">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <section class="hero">
+      <div class="hero-badge">AI-Powered Hackathon Tracker</div>
+      <h1>Never Miss<br>A <span class="highlight">HACKATHON</span><br>Again<span class="highlight">!</span></h1>
+      <p>Hack/Alert aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you.</p>
+      <div class="hero-actions">
+        <button class="btn-hero primary" id="get-started-btn" onclick="goTo('signup')">Get Started — It's Free</button>
+        <button class="btn-hero secondary" onclick="goTo('dashboard')">Browse Hackathons</button>
+      </div>
+    </section>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">240+</div>
+        <div class="stat-label">Hackathons Listed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">18K</div>
+        <div class="stat-label">Devs Notified</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">₹50L+</div>
+        <div class="stat-label">Total Prize Pool</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Chatbot</h3>
+        <p>Ask HackBot anything — "Show me online hackathons under 2 weeks" and get instant curated results.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Real-time Alerts</h3>
+        <p>Get notified the moment a new hackathon drops that matches your skills and interests.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Smart Filters</h3>
+        <p>Filter by mode, duration, prize, eligibility, tech stack, and more. Find your perfect hackathon.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>WhatsApp (Soon)</h3>
+        <p>Daily digest of fresh hackathons delivered to your WhatsApp. Never open another tab.</p>
+      </div>
+    </div>
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="page" id="page-login">
+    <div class="orb auth-orb1"></div>
+    <div class="orb auth-orb2"></div>
+    <div class="auth-box">
+      <div class="auth-logo">Hack/Alert</div>
+      <h2 class="auth-title">Welcome back 👋</h2>
+      <p class="auth-sub">Log in to track your hackathons</p>
+      <form onsubmit="event.preventDefault(); loginUser();">
+        <label>Email address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" required />
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••" required />
+        <button type="submit" class="auth-submit">Log in →</button>
+      </form>
+      <div class="auth-footer">Don't have an account? <a onclick="goTo('signup')">Sign up free</a></div>
+    </div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div class="page" id="page-signup">
+    <div class="orb auth-orb1"></div>
+    <div class="orb auth-orb2"></div>
+    <div class="auth-box">
+      <div class="auth-logo">Hack/Alert</div>
+      <h2 class="auth-title">Create account</h2>
+      <p class="auth-sub">Join 18,000+ devs tracking hackathons</p>
+      <form onsubmit="event.preventDefault(); signupUser();">
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="Kartikey Singh" required />
+        <label>Email address</label>
+        <input type="email" id="signup-email" placeholder="you@example.com" required />
+        <label>Password</label>
+        <input type="password" id="signup-pass" placeholder="Create a password" required />
+        <label>Mobile Number</label>
+        <input type="tel" id="signup-mobile" placeholder="+91 9999999999 (Optional)" />
+        <label>College / University</label>
+        <input type="text" id="signup-college" placeholder="JiET (Optional)" />
+        <label style="margin-bottom:12px;">I'm interested in</label>
+        <div class="interests-grid">
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Web Dev</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> AI / ML</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Blockchain</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Cybersecurity</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Mobile Dev</label>
+          <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Open Source</label>
+        </div>
+        <button type="submit" class="auth-submit">Create Account →</button>
+      </form>
+      <div class="auth-footer">Already have an account? <a onclick="goTo('login')">Log in</a></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="page" id="page-dashboard">
+    <div class="dash-header">
+      <div>
+        <h2>Upcoming <span>Hackathons</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Live data · Updated just
+          now</p>
+      </div>
+
+      <input type="text" id="search-input" placeholder="🔍 Search hackathons..." oninput="searchHackathons(this.value)"
+        style="
         background: rgba(255,255,255,0.05);
         border: 1px solid var(--border-light);
         border-radius: 10px;
@@ -193,203 +225,262 @@
         outline: none;
         width: 260px;
         transition: all 0.2s;
-      "
-      onfocus="this.style.borderColor='var(--accent)'; this.style.background='rgba(0,255,136,0.05)'"
-      onblur="this.style.borderColor='var(--border-light)'; this.style.background='rgba(255,255,255,0.05)'"
-    />
- 
-    <div class="filter-bar">
-      <button class="filter-pill active" onclick="filterCards(this,'all')">All</button>
-      <button class="filter-pill" onclick="filterCards(this,'online')">🌐 Online</button>
-      <button class="filter-pill" onclick="filterCards(this,'hybrid')">🔀 Hybrid</button>
-      <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
+      " onfocus="this.style.borderColor='var(--accent)'; this.style.background='rgba(0,255,136,0.05)'"
+        onblur="this.style.borderColor='var(--border-light)'; this.style.background='rgba(255,255,255,0.05)'" />
+
+      <div class="filter-bar">
+        <button class="filter-pill active" onclick="filterCards(this,'all')">All</button>
+        <button class="filter-pill" onclick="filterCards(this,'online')">🌐 Online</button>
+        <button class="filter-pill" onclick="filterCards(this,'hybrid')">🔀 Hybrid</button>
+        <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
+      </div>
+    </div>
+
+    <div id="dash-stats"
+      style="display:flex;gap:24px;padding:16px 40px;border-bottom:1px solid var(--border);flex-wrap:wrap;">
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">📦 Total: <strong id="stat-total"
+          style="color:var(--text);">0</strong></div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">✅ Upcoming: <strong id="stat-upcoming"
+          style="color:var(--accent);">0</strong></div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">⏰ Ended: <strong id="stat-ended"
+          style="color:#ef4444;">0</strong></div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">🔖 Saved: <strong id="stat-saved"
+          style="color:var(--accent2);">0</strong></div>
+      <div style="margin-left:auto;position:relative;">
+        <input id="country-search" type="text" placeholder="🌍 Filter by country..."
+          oninput="filterCountryList(this.value)"
+          onfocus="document.getElementById('country-list').style.display='block'"
+          onblur="setTimeout(()=>document.getElementById('country-list').style.display='none',200)"
+          style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:6px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;width:200px;">
+        <div id="country-list"
+          style="display:none;position:absolute;right:0;top:36px;background:var(--surface);border:1px solid var(--border-light);border-radius:10px;max-height:220px;overflow-y:auto;z-index:200;width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+        </div>
+      </div>
+    </div>
+
+    <div class="hackathon-grid" id="hackathon-grid"></div>
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
+  </div>
+
+  <!-- BOT -->
+  <div class="page" id="page-bot">
+    <div class="bot-header">
+      <div class="bot-avatar">🤖</div>
+      <div class="bot-info">
+        <h3>HackBot</h3>
+        <p>// AI Hackathon Assistant</p>
+      </div>
+      <div class="bot-status"></div>
+    </div>
+    <div class="chat-area" id="chat-area"></div>
+    <div class="quick-prompts">
+      <button class="quick-chip" onclick="quickSend(this)">Hackathons this month?</button>
+      <button class="quick-chip" onclick="quickSend(this)">Online hackathons with big prizes</button>
+      <button class="quick-chip" onclick="quickSend(this)">ML/AI themed hackathons</button>
+      <button class="quick-chip" onclick="quickSend(this)">Beginner-friendly ones</button>
+      <button class="quick-chip" onclick="quickSend(this)">Hackathons in India</button>
+    </div>
+    <div class="chat-input-wrap">
+      <input type="text" id="chat-input" placeholder="Ask me about any hackathon..." />
+      <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
     </div>
   </div>
 
-  <div id="dash-stats" style="display:flex;gap:24px;padding:16px 40px;border-bottom:1px solid var(--border);flex-wrap:wrap;">
-  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">📦 Total: <strong id="stat-total" style="color:var(--text);">0</strong></div>
-  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">✅ Upcoming: <strong id="stat-upcoming" style="color:var(--accent);">0</strong></div>
-  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">⏰ Ended: <strong id="stat-ended" style="color:#ef4444;">0</strong></div>
-  <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">🔖 Saved: <strong id="stat-saved" style="color:var(--accent2);">0</strong></div>
-<div style="margin-left:auto;position:relative;">
-  <input id="country-search" type="text" placeholder="🌍 Filter by country..."
-    oninput="filterCountryList(this.value)"
-    onfocus="document.getElementById('country-list').style.display='block'"
-    onblur="setTimeout(()=>document.getElementById('country-list').style.display='none',200)"
-    style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:6px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;width:200px;">
-  <div id="country-list"
-    style="display:none;position:absolute;right:0;top:36px;background:var(--surface);border:1px solid var(--border-light);border-radius:10px;max-height:220px;overflow-y:auto;z-index:200;width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-  </div>
-</div>
-</div>
- 
-  <div class="hackathon-grid" id="hackathon-grid"></div>
-  <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
-</div>
- 
-<!-- BOT -->
-<div class="page" id="page-bot">
-  <div class="bot-header">
-    <div class="bot-avatar">🤖</div>
-    <div class="bot-info"><h3>HackBot</h3><p>// AI Hackathon Assistant</p></div>
-    <div class="bot-status"></div>
-  </div>
-  <div class="chat-area" id="chat-area"></div>
-  <div class="quick-prompts">
-    <button class="quick-chip" onclick="quickSend(this)">Hackathons this month?</button>
-    <button class="quick-chip" onclick="quickSend(this)">Online hackathons with big prizes</button>
-    <button class="quick-chip" onclick="quickSend(this)">ML/AI themed hackathons</button>
-    <button class="quick-chip" onclick="quickSend(this)">Beginner-friendly ones</button>
-    <button class="quick-chip" onclick="quickSend(this)">Hackathons in India</button>
-  </div>
-  <div class="chat-input-wrap">
-    <input type="text" id="chat-input" placeholder="Ask me about any hackathon..." />
-    <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
-  </div>
-</div>
-
-<!-- PROFILE -->
-<div class="page" id="page-profile">
-  <div class="dash-header">
-    <div>
-      <h2>My <span>Profile</span></h2>
-      <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Your account details</p>
-    </div>
-  </div>
-
-  <div style="padding:32px 40px;display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1100px;">
-    
-    <!-- User Info Card -->
-    <div class="feature-card">
-      <h3 style="margin-bottom:20px;">👤 Account Info</h3>
-      <p><strong>📛 Name:</strong> <span id="profile-name">—</span></p>
-      <p style="margin-top:10px;"><strong>📧 Email:</strong> <span id="profile-email">—</span></p>
-      <p style="margin-top:10px;"><strong>📱 Mobile:</strong> <span id="profile-mobile">—</span></p>
-      <p style="margin-top:10px;"><strong>🎓 College:</strong> <span id="profile-college">—</span></p>
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="dash-header">
+      <div>
+        <h2>My <span>Profile</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Your account details</p>
+      </div>
     </div>
 
-    <!-- Saved Hackathons Card -->
-    <div class="feature-card">
-      <h3 style="margin-bottom:20px;">🔖 Saved Hackathons</h3>
-      <div id="saved-list"></div>
-    </div>
-    
-    <!-- Interactive Roadmap Card -->
-    <div class="feature-card" style="grid-column: 1 / -1;">
+    <div style="padding:32px 40px;display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1100px;">
+
+      <!-- User Info Card -->
+      <div class="feature-card">
+        <h3 style="margin-bottom:20px;">👤 Account Info</h3>
+        <p><strong>📛 Name:</strong> <span id="profile-name">—</span></p>
+        <p style="margin-top:10px;"><strong>📧 Email:</strong> <span id="profile-email">—</span></p>
+        <p style="margin-top:10px;"><strong>📱 Mobile:</strong> <span id="profile-mobile">—</span></p>
+        <p style="margin-top:10px;"><strong>🎓 College:</strong> <span id="profile-college">—</span></p>
+      </div>
+
+      <!-- Saved Hackathons Card -->
+      <div class="feature-card">
+        <h3 style="margin-bottom:20px;">🔖 Saved Hackathons</h3>
+        <div id="saved-list"></div>
+      </div>
+
+      <!-- Interactive Roadmap Card -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
         <h3 style="margin-bottom:20px;">🗓️ My Hackathon Roadmap</h3>
         <div id="roadmap-list"></div>
-    </div>
+      </div>
 
-  </div>
-  <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
-</div>
-
-<!-- HACKATHON MODAL -->
-<div id="hack-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-  <div style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:560px;width:90%;position:relative;max-height:80vh;overflow-y:auto;">
-    <button onclick="closeModal()" style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
-    <div id="modal-content">
-      <!-- Hackathon details will be loaded here -->
     </div>
-  </div>
-</div>
-
-<!-- TEAMS -->
-<div class="page" id="page-teams">
-  <div class="dash-header">
-    <div>
-      <h2>Find Your <span>Team</span></h2>
-      <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Build your dream hackathon squad</p>
-    </div>
-    <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showCreateTeam()">+ Create Team</button>
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
   </div>
 
-  <!-- CREATE TEAM MODAL -->
-<div id="create-team-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-  <div style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;">
-    <button onclick="hideCreateTeam()" style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
-    <h3 style="margin-bottom:24px;color:#fff;">Create New Team</h3>
-    <div style="display:flex;flex-direction:column;gap:16px;">
-      <input id="team-name" placeholder="Team Name *" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-      <input id="team-hackathon" placeholder="Target Hackathon" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-      <input id="team-skills" placeholder="Skills needed (e.g. React, ML)" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-      <select id="team-size" style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-        <option value="2">2 Members</option>
-        <option value="3">3 Members</option>
-        <option value="4" selected>4 Members</option>
-        <option value="5">5 Members</option>
-      </select>
-      <button onclick="createTeam()" style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Create Team →</button>
+  <!-- HACKATHON MODAL -->
+  <div id="hack-modal"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+    <div
+      style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:560px;width:90%;position:relative;max-height:80vh;overflow-y:auto;">
+      <button onclick="closeModal()"
+        style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+      <div id="modal-content">
+        <!-- Hackathon details will be loaded here -->
+      </div>
     </div>
   </div>
-</div>
 
-  <!-- Teams Grid -->
-  <div id="teams-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:24px 40px;"></div>
+  <!-- TEAMS -->
+  <div class="page" id="page-teams">
+    <div class="dash-header">
+      <div>
+        <h2>Find Your <span>Team</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Build your dream hackathon squad
+        </p>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button class="btn-hero secondary" style="padding:10px 24px;font-size:13px;" onclick="showMatchmaker()">🤖 Find My
+          Team</button>
+        <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showCreateTeam()">+ Create
+          Team</button>
+      </div>
+    </div>
 
-  <!-- Team Chat Modal -->
-  <div id="team-chat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-    <div style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;width:90%;max-width:560px;height:70vh;display:flex;flex-direction:column;position:relative;">
-      <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-        <h3 id="chat-team-name"></h3>
-        <div id="team-chat-actions" style="display:flex;gap:8px;">
-          <!-- Leave Team button will be inserted here by JS -->
+    <!-- CREATE TEAM MODAL -->
+    <!-- Add matchmaker modal (put after create-team-modal) -->
+  <div id="matchmaker-modal"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+    <div
+      style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:540px;width:90%;position:relative;max-height:80vh;overflow-y:auto;">
+      <button onclick="hideMatchmaker()"
+        style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+      <h3 style="margin-bottom:8px;color:#fff;">🤖 AI Team Matcher</h3>
+      <p style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:24px;">Enter your skills and AI will
+        rank the best open teams for you.</p>
+      <textarea id="match-skills" placeholder="e.g. React, Node.js, Machine Learning, UI design..."
+        style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;min-height:80px;"></textarea>
+      <button onclick="runMatchmaker()"
+        style="margin-top:16px;width:100%;background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Find
+        Best Teams →</button>
+      <div id="match-results" style="margin-top:24px;display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+  </div>
+    <div id="create-team-modal"
+      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+      <div
+        style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;">
+        <button onclick="hideCreateTeam()"
+          style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+        <h3 style="margin-bottom:24px;color:#fff;">Create New Team</h3>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <input id="team-name" placeholder="Team Name *"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <input id="team-hackathon" placeholder="Target Hackathon"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <input id="team-skills" placeholder="Skills needed (e.g. React, ML)"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <select id="team-size"
+            style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+            <option value="2">2 Members</option>
+            <option value="3">3 Members</option>
+            <option value="4" selected>4 Members</option>
+            <option value="5">5 Members</option>
+          </select>
+          <button onclick="createTeam()"
+            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Create
+            Team →</button>
         </div>
-        <button onclick="closeTeamChat()" style="background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
-      </div>
-      <div id="team-members-list" style="padding: 8px 24px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-        <!-- Members will be loaded here by JS -->
-      </div>
-      <div id="team-chat-area" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
-      <div style="padding:16px;border-top:1px solid var(--border);display:flex;gap:8px;">
-        <input id="team-msg-input" placeholder="Type a message..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-        <button onclick="sendTeamMessage()" style="background:var(--accent);border:none;border-radius:10px;padding:10px 16px;color:#050508;cursor:pointer;font-size:16px;">➤</button>
       </div>
     </div>
+
+    <!-- Teams Grid -->
+    <div id="teams-grid"
+      style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:24px 40px;"></div>
+
+    <!-- Team Chat Modal -->
+    <div id="team-chat-modal"
+      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+      <div
+        style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;width:90%;max-width:560px;height:70vh;display:flex;flex-direction:column;position:relative;">
+        <div
+          style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <h3 id="chat-team-name"></h3>
+          <div id="team-chat-actions" style="display:flex;gap:8px;">
+            <!-- Leave Team button will be inserted here by JS -->
+          </div>
+          <button onclick="closeTeamChat()"
+            style="background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div id="team-members-list"
+          style="padding: 8px 24px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <!-- Members will be loaded here by JS -->
+        </div>
+        <div id="team-chat-area"
+          style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
+        <div style="padding:16px;border-top:1px solid var(--border);display:flex;gap:8px;">
+          <input id="team-msg-input" placeholder="Type a message..."
+            onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendTeamMessage(); }"
+            style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <button onclick="sendTeamMessage()"
+            style="background:var(--accent);border:none;border-radius:10px;padding:10px 16px;color:#050508;cursor:pointer;font-size:16px;">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
   </div>
 
-  <footer class="site-footer">© 2025 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
-</div>
- 
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <div class="toast-icon" id="toast-icon"></div>
-  <div class="toast-title" id="toast-title"></div>
-  <div class="toast-msg" id="toast-msg"></div>
-</div>
- 
-<!-- FLOATING BOT -->
-<div id="floating-bot" onclick="goTo('bot')" title="Talk to HackBot">🤖</div>
- 
-<script src="realhackito.js"></script>
-<script>
-  // ── THEME TOGGLE ──
-  function toggleTheme() {
-    document.body.classList.toggle('light');
-    const btn = document.getElementById('theme-btn');
-    btn.textContent = document.body.classList.contains('light') ? '🌕' : '🌙';
-    localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-  }
-  // load saved theme
-  if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light');
-    document.getElementById('theme-btn').textContent = '🌕';
-  }
- 
-  // ── ENTER KEY TO SEND ──
-  document.getElementById('chat-input').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendChat();
-    }
-  });
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <div class="toast-icon" id="toast-icon"></div>
+    <div class="toast-title" id="toast-title"></div>
+    <div class="toast-msg" id="toast-msg"></div>
+  </div>
 
-  document.getElementById('hack-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-</script>
-<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-  style="display:none;position:fixed;bottom:100px;right:30px;background:var(--accent);color:#050508;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;z-index:998;box-shadow:0 4px 15px rgba(0,255,136,0.4);">↑</button>
+  <!-- FLOATING BOT -->
+  <div id="floating-bot" onclick="goTo('bot')" title="Talk to HackBot">🤖</div>
+
+  <script src="realhackito.js"></script>
+  <script>
+    // ── THEME TOGGLE ──
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      const btn = document.getElementById('theme-btn');
+      btn.textContent = document.body.classList.contains('light') ? '🌕' : '🌙';
+      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+    // load saved theme
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('theme-btn').textContent = '🌕';
+    }
+
+    // ── ENTER KEY TO SEND ──
+    document.getElementById('chat-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChat();
+      }
+    });
+
+    document.getElementById('hack-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+
+    // ── BACK TO TOP BUTTON ──
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('back-top');
+      if (window.scrollY > 300) btn.style.display = 'block';
+      else btn.style.display = 'none';
+    });
+  </script>
+  <button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    style="display:none;position:fixed;bottom:100px;right:30px;background:var(--accent);color:#050508;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;z-index:998;box-shadow:0 4px 15px rgba(0,240,255,0.4);">↑</button>
 </body>
+
 </html>
- 

@@ -277,6 +277,72 @@ app.get('/api/saved', authenticate, async (req, res) => {
   res.json(data);
 });
 
+app.post('/api/teams/match', authenticate, async (req, res) => {
+  const { user_skills } = req.body;
+  if (!user_skills || !user_skills.trim()) {
+    return res.status(400).json({ error: 'Provide your skills to get matches.' });
+  }
+
+  const { data: teams, error } = await supabase
+    .from('teams')
+    .select('id, name, hackathon, skills, slots_left, size, leader_email')
+    .gt('slots_left', 0);
+
+  if (error || !teams?.length) {
+    return res.status(200).json({ matches: [], message: 'No open teams found.' });
+  }
+
+  try {
+    const prompt = `
+You are a team matchmaking engine for a hackathon platform.
+
+User's skills: "${user_skills}"
+
+Open teams (JSON):
+${JSON.stringify(teams.map(t => ({
+  id: t.id,
+  name: t.name,
+  hackathon: t.hackathon,
+  looking_for: t.skills,
+  slots_left: t.slots_left
+})), null, 2)}
+
+Return ONLY a valid JSON array of the top 3 best-matching teams, in this exact format:
+[
+  {
+    "id": <team_id>,
+    "name": "<team_name>",
+    "match_score": <0-100>,
+    "reason": "<one sentence why this is a good fit>"
+  }
+]
+No explanation, no markdown, just the JSON array.
+`;
+
+    const response = await client.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 500,
+      temperature: 0.3
+    });
+
+    const raw = response.choices[0].message.content.trim();
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const matches = JSON.parse(clean);
+
+    // Attach full team data to each match
+    const enriched = matches.map(m => ({
+      ...m,
+      ...teams.find(t => t.id === m.id)
+    }));
+
+    res.json({ matches: enriched });
+  } catch (err) {
+    console.error('Matchmaking error:', err.message);
+    res.status(500).json({ error: 'Matchmaking failed: ' + err.message });
+  }
+});
+
 // ── Get single team ──
 app.get('/api/teams/:id', async (req, res) => {
   const { id } = req.params;

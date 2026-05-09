@@ -892,3 +892,60 @@ async function deleteTeam(teamId) {
   if (res.ok) loadTeams();
   else alert('Only team leader can delete');
 }
+
+function showMatchmaker() {
+  document.getElementById('matchmaker-modal').style.display = 'flex';
+  document.getElementById('match-results').innerHTML = '';
+}
+
+function hideMatchmaker() {
+  document.getElementById('matchmaker-modal').style.display = 'none';
+}
+
+async function runMatchmaker() {
+  const skills = document.getElementById('match-skills').value.trim();
+  if (!skills) { showToast('⚠️', 'Missing', 'Enter your skills first.'); return; }
+
+  const resultsDiv = document.getElementById('match-results');
+  resultsDiv.innerHTML = '<p style="color:var(--muted);font-family:var(--mono);font-size:13px;">🤖 Analyzing teams...</p>';
+
+  try {
+    const res = await fetch('/api/teams/match', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ user_skills: skills })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      resultsDiv.innerHTML = `<p style="color:#ef4444;font-size:13px;">❌ ${data.error}</p>`;
+      return;
+    }
+
+    if (!data.matches?.length) {
+      resultsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No open teams found right now.</p>';
+      return;
+    }
+
+    resultsDiv.innerHTML = data.matches.map(m => `
+      <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:12px;padding:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <strong style="color:#fff;font-size:15px;">${escapeHTML(m.name)}</strong>
+          <span style="background:rgba(0,240,255,0.1);color:var(--accent);font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:100px;border:1px solid rgba(0,240,255,0.3);">${m.match_score}% match</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">🏆 ${escapeHTML(m.hackathon || 'Open')}</p>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">🛠 Looking for: ${escapeHTML(m.skills || 'Any')}</p>
+        <p style="font-size:13px;color:var(--accent3);font-style:italic;margin-bottom:12px;">"${escapeHTML(m.reason)}"</p>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">👥 ${m.slots_left} slot${m.slots_left !== 1 ? 's' : ''} left</p>
+        <button onclick="joinTeam(${m.id},'${safeJSString(m.name)}')"
+          style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">
+          Join Team →
+        </button>
+      </div>
+    `).join('');
+
+  } catch (err) {
+    resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Could not reach server.</p>';
+  }
+}
