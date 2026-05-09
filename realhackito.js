@@ -224,7 +224,7 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot', 'profile', 'teams'];
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {
@@ -237,6 +237,7 @@ function goTo(pageId) {
   if (pageId === 'dashboard' && allHackathons.length === 0) fetchHackathons();
   if (pageId === 'profile') loadProfile();
   if (pageId === 'teams') loadTeams();
+  if (pageId === 'calendar') renderCalendar();
 }
 
 // ── Append message bubble to chat ──
@@ -885,15 +886,15 @@ function showToast(icon, title, msg) {
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
 async function deleteTeam(teamId) {
-  const leader = localStorage.getItem('userEmail');
   if (!confirm('Delete this team?')) return;
-  const res = await fetch(`/api/teams/${teamId}?leader_email=${encodeURIComponent(leader)}`, {
+  const res = await fetch(`/api/teams/${teamId}`, {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' }
+    headers: authHeaders()
   });
   if (res.ok) loadTeams();
-  else alert('Only team leader can delete');
+  else { const d = await res.json(); showToast('❌', 'Error', d.error); }
 }
 
 function showMatchmaker() {
@@ -951,4 +952,90 @@ async function runMatchmaker() {
   } catch (err) {
     resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Could not reach server.</p>';
   }
+}
+
+// ── CALENDAR ──
+let calendarDate = new Date();
+
+function goToCalendar() {
+  goTo('calendar');
+}
+
+function renderCalendar() {
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+  const saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  const savedNames = saved.map(s => s.name);
+  const now = new Date();
+
+  document.getElementById('calendar-month-label').textContent =
+    calendarDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // Group hackathons by date
+  const byDate = {};
+  allHackathons.forEach(h => {
+    const d = new Date(h.start);
+    if (d.getFullYear() === year && d.getMonth() === month) {
+      const key = d.getDate();
+      if (!byDate[key]) byDate[key] = [];
+      byDate[key].push(h);
+    }
+  });
+
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  let html = `<div class="cal-grid">`;
+
+  // Day headers
+  days.forEach(d => {
+    html += `<div class="cal-day-header">${d}</div>`;
+  });
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    html += `<div class="cal-day empty"></div>`;
+  }
+
+  // Day cells
+  for (let day = 1; day <= daysInMonth; day++) {
+    const isToday = now.getDate() === day && now.getMonth() === month && now.getFullYear() === year;
+    const hacks = byDate[day] || [];
+
+    html += `<div class="cal-day${isToday ? ' today' : ''}">
+      <div class="cal-day-num">${day}</div>`;
+
+    hacks.slice(0, 3).forEach(h => {
+      const daysLeft = Math.ceil((new Date(h.start) - now) / (1000 * 60 * 60 * 24));
+      const isSaved = savedNames.includes(h.name);
+      let cls = 'upcoming';
+      if (isSaved) cls = 'saved';
+      else if (daysLeft <= 5) cls = 'urgent';
+      else if (daysLeft <= 20) cls = 'soon';
+
+      html += `<div class="cal-event ${cls}" onclick="openModal(allHackathons.find(x=>x.name==='${safeJSString(h.name)}'))" title="${escapeHTML(h.name)}">
+        ${escapeHTML(h.name)}
+      </div>`;
+    });
+
+    if (hacks.length > 3) {
+      html += `<div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;">+${hacks.length - 3} more</div>`;
+    }
+
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  document.getElementById('calendar-grid').innerHTML = html;
+}
+
+function prevMonth() {
+  calendarDate.setMonth(calendarDate.getMonth() - 1);
+  renderCalendar();
+}
+
+function nextMonth() {
+  calendarDate.setMonth(calendarDate.getMonth() + 1);
+  renderCalendar();
 }
