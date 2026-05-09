@@ -1,0 +1,1488 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "realhackito.js",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L1",
+      "id": "realhackito_js",
+      "community": 0,
+      "norm_label": "realhackito.js"
+    },
+    {
+      "label": "censorMessage()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L10",
+      "id": "hackito_old_realhackito_censormessage",
+      "community": 1,
+      "norm_label": "censormessage()"
+    },
+    {
+      "label": "escapeHTML()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L16",
+      "id": "hackito_old_realhackito_escapehtml",
+      "community": 2,
+      "norm_label": "escapehtml()"
+    },
+    {
+      "label": "safeJSString()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L29",
+      "id": "hackito_old_realhackito_safejsstring",
+      "community": 2,
+      "norm_label": "safejsstring()"
+    },
+    {
+      "label": "getCountdown()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L34",
+      "id": "hackito_old_realhackito_getcountdown",
+      "community": 2,
+      "norm_label": "getcountdown()"
+    },
+    {
+      "label": "fetchHackathons()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L57",
+      "id": "hackito_old_realhackito_fetchhackathons",
+      "community": 3,
+      "norm_label": "fetchhackathons()"
+    },
+    {
+      "label": "createHackathonCard()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L78",
+      "id": "hackito_old_realhackito_createhackathoncard",
+      "community": 2,
+      "norm_label": "createhackathoncard()"
+    },
+    {
+      "label": "renderHackathons()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L128",
+      "id": "hackito_old_realhackito_renderhackathons",
+      "community": 3,
+      "norm_label": "renderhackathons()"
+    },
+    {
+      "label": "searchHackathons()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L147",
+      "id": "hackito_old_realhackito_searchhackathons",
+      "community": 0,
+      "norm_label": "searchhackathons()"
+    },
+    {
+      "label": "renderHackathonsSorted()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L173",
+      "id": "hackito_old_realhackito_renderhackathonssorted",
+      "community": 2,
+      "norm_label": "renderhackathonssorted()"
+    },
+    {
+      "label": "filterCards()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L188",
+      "id": "hackito_old_realhackito_filtercards",
+      "community": 1,
+      "norm_label": "filtercards()"
+    },
+    {
+      "label": "goTo()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L201",
+      "id": "hackito_old_realhackito_goto",
+      "community": 6,
+      "norm_label": "goto()"
+    },
+    {
+      "label": "appendMessage()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L218",
+      "id": "hackito_old_realhackito_appendmessage",
+      "community": 1,
+      "norm_label": "appendmessage()"
+    },
+    {
+      "label": "showTyping()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L238",
+      "id": "hackito_old_realhackito_showtyping",
+      "community": 1,
+      "norm_label": "showtyping()"
+    },
+    {
+      "label": "removeTyping()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L255",
+      "id": "hackito_old_realhackito_removetyping",
+      "community": 1,
+      "norm_label": "removetyping()"
+    },
+    {
+      "label": "showWelcomeMessage()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L261",
+      "id": "hackito_old_realhackito_showwelcomemessage",
+      "community": 0,
+      "norm_label": "showwelcomemessage()"
+    },
+    {
+      "label": "sendChat()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L269",
+      "id": "hackito_old_realhackito_sendchat",
+      "community": 1,
+      "norm_label": "sendchat()"
+    },
+    {
+      "label": "quickSend()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L313",
+      "id": "hackito_old_realhackito_quicksend",
+      "community": 1,
+      "norm_label": "quicksend()"
+    },
+    {
+      "label": "loginUser()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L320",
+      "id": "hackito_old_realhackito_loginuser",
+      "community": 6,
+      "norm_label": "loginuser()"
+    },
+    {
+      "label": "signupUser()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L350",
+      "id": "hackito_old_realhackito_signupuser",
+      "community": 6,
+      "norm_label": "signupuser()"
+    },
+    {
+      "label": "toggleChip()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L381",
+      "id": "hackito_old_realhackito_togglechip",
+      "community": 0,
+      "norm_label": "togglechip()"
+    },
+    {
+      "label": "loadProfile()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L385",
+      "id": "hackito_old_realhackito_loadprofile",
+      "community": 4,
+      "norm_label": "loadprofile()"
+    },
+    {
+      "label": "logout()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L441",
+      "id": "hackito_old_realhackito_logout",
+      "community": 6,
+      "norm_label": "logout()"
+    },
+    {
+      "label": "getFallbackHackathons()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L456",
+      "id": "hackito_old_realhackito_getfallbackhackathons",
+      "community": 3,
+      "norm_label": "getfallbackhackathons()"
+    },
+    {
+      "label": "toggleSave()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L465",
+      "id": "hackito_old_realhackito_togglesave",
+      "community": 4,
+      "norm_label": "togglesave()"
+    },
+    {
+      "label": "copyLink()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L489",
+      "id": "hackito_old_realhackito_copylink",
+      "community": 0,
+      "norm_label": "copylink()"
+    },
+    {
+      "label": "fallbackCopy()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L508",
+      "id": "hackito_old_realhackito_fallbackcopy",
+      "community": 0,
+      "norm_label": "fallbackcopy()"
+    },
+    {
+      "label": "unsaveHackathon()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L522",
+      "id": "hackito_old_realhackito_unsavehackathon",
+      "community": 4,
+      "norm_label": "unsavehackathon()"
+    },
+    {
+      "label": "updateStats()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L529",
+      "id": "hackito_old_realhackito_updatestats",
+      "community": 4,
+      "norm_label": "updatestats()"
+    },
+    {
+      "label": "filterByCountry()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L537",
+      "id": "hackito_old_realhackito_filterbycountry",
+      "community": 3,
+      "norm_label": "filterbycountry()"
+    },
+    {
+      "label": "buildCountryList()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L549",
+      "id": "hackito_old_realhackito_buildcountrylist",
+      "community": 3,
+      "norm_label": "buildcountrylist()"
+    },
+    {
+      "label": "filterCountryList()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L573",
+      "id": "hackito_old_realhackito_filtercountrylist",
+      "community": 0,
+      "norm_label": "filtercountrylist()"
+    },
+    {
+      "label": "selectCountry()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L581",
+      "id": "hackito_old_realhackito_selectcountry",
+      "community": 3,
+      "norm_label": "selectcountry()"
+    },
+    {
+      "label": "openModal()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L590",
+      "id": "hackito_old_realhackito_openmodal",
+      "community": 2,
+      "norm_label": "openmodal()"
+    },
+    {
+      "label": "closeModal()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L622",
+      "id": "hackito_old_realhackito_closemodal",
+      "community": 0,
+      "norm_label": "closemodal()"
+    },
+    {
+      "label": "loadTeams()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L630",
+      "id": "hackito_old_realhackito_loadteams",
+      "community": 7,
+      "norm_label": "loadteams()"
+    },
+    {
+      "label": "showCreateTeam()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L662",
+      "id": "hackito_old_realhackito_showcreateteam",
+      "community": 0,
+      "norm_label": "showcreateteam()"
+    },
+    {
+      "label": "hideCreateTeam()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L665",
+      "id": "hackito_old_realhackito_hidecreateteam",
+      "community": 5,
+      "norm_label": "hidecreateteam()"
+    },
+    {
+      "label": "createTeam()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L669",
+      "id": "hackito_old_realhackito_createteam",
+      "community": 5,
+      "norm_label": "createteam()"
+    },
+    {
+      "label": "joinTeam()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L688",
+      "id": "hackito_old_realhackito_jointeam",
+      "community": 7,
+      "norm_label": "jointeam()"
+    },
+    {
+      "label": "openTeamChat()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L709",
+      "id": "hackito_old_realhackito_openteamchat",
+      "community": 0,
+      "norm_label": "openteamchat()"
+    },
+    {
+      "label": "copyInviteLink()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L759",
+      "id": "hackito_old_realhackito_copyinvitelink",
+      "community": 5,
+      "norm_label": "copyinvitelink()"
+    },
+    {
+      "label": "closeTeamChat()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L777",
+      "id": "hackito_old_realhackito_closeteamchat",
+      "community": 8,
+      "norm_label": "closeteamchat()"
+    },
+    {
+      "label": "appendTeamMessage()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L786",
+      "id": "hackito_old_realhackito_appendteammessage",
+      "community": 2,
+      "norm_label": "appendteammessage()"
+    },
+    {
+      "label": "loadTeamMessages()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L798",
+      "id": "hackito_old_realhackito_loadteammessages",
+      "community": 0,
+      "norm_label": "loadteammessages()"
+    },
+    {
+      "label": "sendTeamMessage()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L806",
+      "id": "hackito_old_realhackito_sendteammessage",
+      "community": 0,
+      "norm_label": "sendteammessage()"
+    },
+    {
+      "label": "leaveTeam()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L823",
+      "id": "hackito_old_realhackito_leaveteam",
+      "community": 8,
+      "norm_label": "leaveteam()"
+    },
+    {
+      "label": "showToast()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L852",
+      "id": "hackito_old_realhackito_showtoast",
+      "community": 5,
+      "norm_label": "showtoast()"
+    },
+    {
+      "label": "deleteTeam()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L860",
+      "id": "hackito_old_realhackito_deleteteam",
+      "community": 7,
+      "norm_label": "deleteteam()"
+    },
+    {
+      "label": "server.js",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L1",
+      "id": "server_js",
+      "community": 9,
+      "norm_label": "server.js"
+    },
+    {
+      "label": "censorMessage()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L15",
+      "id": "hackito_old_server_censormessage",
+      "community": 9,
+      "norm_label": "censormessage()"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_censormessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_safejsstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_getcountdown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_fetchhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_createhackathoncard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_renderhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_searchhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L173",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_renderhackathonssorted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L188",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_filtercards",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_goto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L218",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_appendmessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L238",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_showtyping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L255",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_removetyping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L261",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_showwelcomemessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L269",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_sendchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L313",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_quicksend",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L320",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_loginuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L350",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_signupuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L381",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_togglechip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L385",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_loadprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L441",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_logout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L456",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_getfallbackhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L465",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_togglesave",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L489",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_copylink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L508",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_fallbackcopy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L522",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_unsavehackathon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L529",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_updatestats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L537",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_filterbycountry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L549",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_buildcountrylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L573",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_filtercountrylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L581",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_selectcountry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L590",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_openmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L622",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_closemodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L630",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_loadteams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L662",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_showcreateteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L665",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_hidecreateteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L669",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_createteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L688",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_jointeam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L709",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_openteamchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L759",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_copyinvitelink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L777",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_closeteamchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L786",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_appendteammessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L798",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_loadteammessages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L806",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_sendteammessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L823",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_leaveteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L852",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L860",
+      "weight": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_deleteteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L222",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_appendmessage",
+      "target": "hackito_old_realhackito_censormessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L279",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
+      "target": "hackito_old_realhackito_censormessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_createhackathoncard",
+      "target": "hackito_old_realhackito_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_renderhackathons",
+      "target": "hackito_old_realhackito_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L178",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_renderhackathonssorted",
+      "target": "hackito_old_realhackito_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L222",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_appendmessage",
+      "target": "hackito_old_realhackito_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L597",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_openmodal",
+      "target": "hackito_old_realhackito_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L790",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_appendteammessage",
+      "target": "hackito_old_realhackito_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_createhackathoncard",
+      "target": "hackito_old_realhackito_safejsstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_createhackathoncard",
+      "target": "hackito_old_realhackito_getcountdown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L607",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_openmodal",
+      "target": "hackito_old_realhackito_getcountdown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_fetchhackathons",
+      "target": "hackito_old_realhackito_getfallbackhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_fetchhackathons",
+      "target": "hackito_old_realhackito_renderhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L212",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_goto",
+      "target": "hackito_old_realhackito_fetchhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_renderhackathons",
+      "target": "hackito_old_realhackito_updatestats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_renderhackathons",
+      "target": "hackito_old_realhackito_buildcountrylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L194",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_filtercards",
+      "target": "hackito_old_realhackito_renderhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L543",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_filterbycountry",
+      "target": "hackito_old_realhackito_renderhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L586",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_selectcountry",
+      "target": "hackito_old_realhackito_renderhackathons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L304",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
+      "target": "hackito_old_realhackito_filtercards",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L213",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_goto",
+      "target": "hackito_old_realhackito_loadprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L214",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_goto",
+      "target": "hackito_old_realhackito_loadteams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L338",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_loginuser",
+      "target": "hackito_old_realhackito_goto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L371",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_signupuser",
+      "target": "hackito_old_realhackito_goto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L452",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_logout",
+      "target": "hackito_old_realhackito_goto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L275",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
+      "target": "hackito_old_realhackito_appendmessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L276",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
+      "target": "hackito_old_realhackito_showtyping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L283",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
+      "target": "hackito_old_realhackito_removetyping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L316",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_quicksend",
+      "target": "hackito_old_realhackito_sendchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L339",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_loginuser",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L372",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_signupuser",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L486",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_togglesave",
+      "target": "hackito_old_realhackito_loadprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L526",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_unsavehackathon",
+      "target": "hackito_old_realhackito_loadprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L471",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_togglesave",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L485",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_togglesave",
+      "target": "hackito_old_realhackito_updatestats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L499",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_copylink",
+      "target": "hackito_old_realhackito_fallbackcopy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L684",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_createteam",
+      "target": "hackito_old_realhackito_loadteams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L703",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_jointeam",
+      "target": "hackito_old_realhackito_loadteams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L842",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_leaveteam",
+      "target": "hackito_old_realhackito_loadteams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L867",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_deleteteam",
+      "target": "hackito_old_realhackito_loadteams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L684",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_createteam",
+      "target": "hackito_old_realhackito_hidecreateteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L676",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_createteam",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L692",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_jointeam",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L715",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_openteamchat",
+      "target": "hackito_old_realhackito_loadteammessages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L744",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_openteamchat",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L773",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_copyinvitelink",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L841",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_leaveteam",
+      "target": "hackito_old_realhackito_closeteamchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L828",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_leaveteam",
+      "target": "hackito_old_realhackito_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_censormessage",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "b19d36fc630edce6bb5c82882ae4d33ea5cfde00"
+}

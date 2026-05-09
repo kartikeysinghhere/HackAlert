@@ -1,0 +1,213 @@
+{
+  "communities": {
+    "0": [
+      "hackito_old_realhackito_closemodal",
+      "hackito_old_realhackito_copylink",
+      "hackito_old_realhackito_fallbackcopy",
+      "hackito_old_realhackito_filtercountrylist",
+      "hackito_old_realhackito_loadteammessages",
+      "hackito_old_realhackito_openteamchat",
+      "hackito_old_realhackito_searchhackathons",
+      "hackito_old_realhackito_sendteammessage",
+      "hackito_old_realhackito_showcreateteam",
+      "hackito_old_realhackito_showwelcomemessage",
+      "hackito_old_realhackito_togglechip",
+      "realhackito_js"
+    ],
+    "1": [
+      "hackito_old_realhackito_appendmessage",
+      "hackito_old_realhackito_censormessage",
+      "hackito_old_realhackito_filtercards",
+      "hackito_old_realhackito_quicksend",
+      "hackito_old_realhackito_removetyping",
+      "hackito_old_realhackito_sendchat",
+      "hackito_old_realhackito_showtyping"
+    ],
+    "2": [
+      "hackito_old_realhackito_appendteammessage",
+      "hackito_old_realhackito_createhackathoncard",
+      "hackito_old_realhackito_escapehtml",
+      "hackito_old_realhackito_getcountdown",
+      "hackito_old_realhackito_openmodal",
+      "hackito_old_realhackito_renderhackathonssorted",
+      "hackito_old_realhackito_safejsstring"
+    ],
+    "3": [
+      "hackito_old_realhackito_buildcountrylist",
+      "hackito_old_realhackito_fetchhackathons",
+      "hackito_old_realhackito_filterbycountry",
+      "hackito_old_realhackito_getfallbackhackathons",
+      "hackito_old_realhackito_renderhackathons",
+      "hackito_old_realhackito_selectcountry"
+    ],
+    "4": [
+      "hackito_old_realhackito_loadprofile",
+      "hackito_old_realhackito_togglesave",
+      "hackito_old_realhackito_unsavehackathon",
+      "hackito_old_realhackito_updatestats"
+    ],
+    "5": [
+      "hackito_old_realhackito_copyinvitelink",
+      "hackito_old_realhackito_createteam",
+      "hackito_old_realhackito_hidecreateteam",
+      "hackito_old_realhackito_showtoast"
+    ],
+    "6": [
+      "hackito_old_realhackito_goto",
+      "hackito_old_realhackito_loginuser",
+      "hackito_old_realhackito_logout",
+      "hackito_old_realhackito_signupuser"
+    ],
+    "7": [
+      "hackito_old_realhackito_deleteteam",
+      "hackito_old_realhackito_jointeam",
+      "hackito_old_realhackito_loadteams"
+    ],
+    "8": [
+      "hackito_old_realhackito_closeteamchat",
+      "hackito_old_realhackito_leaveteam"
+    ],
+    "9": [
+      "hackito_old_server_censormessage",
+      "server_js"
+    ]
+  },
+  "cohesion": {
+    "0": 0.2,
+    "1": 0.33,
+    "2": 0.33,
+    "3": 0.33,
+    "4": 0.5,
+    "5": 0.5,
+    "6": 0.5,
+    "7": 0.67,
+    "8": 1.0,
+    "9": 1.0
+  },
+  "gods": [
+    {
+      "id": "hackito_old_realhackito_showtoast",
+      "label": "showToast()",
+      "degree": 9
+    },
+    {
+      "id": "hackito_old_realhackito_renderhackathons",
+      "label": "renderHackathons()",
+      "degree": 8
+    },
+    {
+      "id": "hackito_old_realhackito_escapehtml",
+      "label": "escapeHTML()",
+      "degree": 7
+    },
+    {
+      "id": "hackito_old_realhackito_goto",
+      "label": "goTo()",
+      "degree": 7
+    },
+    {
+      "id": "hackito_old_realhackito_sendchat",
+      "label": "sendChat()",
+      "degree": 7
+    },
+    {
+      "id": "hackito_old_realhackito_loadteams",
+      "label": "loadTeams()",
+      "degree": 6
+    },
+    {
+      "id": "hackito_old_realhackito_fetchhackathons",
+      "label": "fetchHackathons()",
+      "degree": 4
+    },
+    {
+      "id": "hackito_old_realhackito_createhackathoncard",
+      "label": "createHackathonCard()",
+      "degree": 4
+    },
+    {
+      "id": "hackito_old_realhackito_appendmessage",
+      "label": "appendMessage()",
+      "degree": 4
+    },
+    {
+      "id": "hackito_old_realhackito_loadprofile",
+      "label": "loadProfile()",
+      "degree": 4
+    }
+  ],
+  "surprises": [
+    {
+      "source": "renderHackathons()",
+      "target": "escapeHTML()",
+      "source_files": [
+        "realhackito.js",
+        "realhackito.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 2 \u2192 community 3"
+    },
+    {
+      "source": "appendMessage()",
+      "target": "escapeHTML()",
+      "source_files": [
+        "realhackito.js",
+        "realhackito.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 2 \u2192 community 1"
+    },
+    {
+      "source": "goTo()",
+      "target": "fetchHackathons()",
+      "source_files": [
+        "realhackito.js",
+        "realhackito.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 3 \u2192 community 6"
+    },
+    {
+      "source": "renderHackathons()",
+      "target": "updateStats()",
+      "source_files": [
+        "realhackito.js",
+        "realhackito.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 3 \u2192 community 4"
+    },
+    {
+      "source": "filterCards()",
+      "target": "renderHackathons()",
+      "source_files": [
+        "realhackito.js",
+        "realhackito.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 3 \u2192 community 1"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `showToast()` connect `Community 5` to `Community 0`, `Community 4`, `Community 6`, `Community 7`, `Community 8`?",
+      "why": "High betweenness centrality (0.011) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `renderHackathons()` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`, `Community 4`?",
+      "why": "High betweenness centrality (0.009) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `escapeHTML()` connect `Community 2` to `Community 0`, `Community 1`, `Community 3`?",
+      "why": "High betweenness centrality (0.006) - this node is a cross-community bridge."
+    }
+  ]
+}

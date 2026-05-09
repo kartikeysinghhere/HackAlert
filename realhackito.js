@@ -623,7 +623,7 @@ function openModal(hack) {
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
       ${hack.logo ? `<img src="${escapeHTML(hack.logo)}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
       <div>
-        <h2 style="color:#fff;margin:0;">${escapeHTML(hack.name)}</h2>
+        <h2 style="color:var(--text);margin:0;">${escapeHTML(hack.name)}</h2>
         <p style="color:var(--accent);font-family:var(--mono);font-size:12px;margin:4px 0;">${mode}</p>
       </div>
     </div>
@@ -931,7 +931,7 @@ async function runMatchmaker() {
     resultsDiv.innerHTML = data.matches.map(m => `
       <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:12px;padding:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <strong style="color:#fff;font-size:15px;">${escapeHTML(m.name)}</strong>
+          <strong style="color:var(--text);font-size:15px;">${escapeHTML(m.name)}</strong>
           <span style="background:rgba(0,240,255,0.1);color:var(--accent);font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:100px;border:1px solid rgba(0,240,255,0.3);">${m.match_score}% match</span>
         </div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">🏆 ${escapeHTML(m.hackathon || 'Open')}</p>
