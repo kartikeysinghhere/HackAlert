@@ -224,7 +224,7 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', , 'showcase'];
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {

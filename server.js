@@ -1,6 +1,4 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const JWT_SECRET = process.env.JWT_SECRET || 'change-this-in-production';
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -8,6 +6,11 @@ const Groq = require('groq-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
 const cron = require('node-cron');
+const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error('CRITICAL: JWT_SECRET missing in environment');
 
 const app = express();
 const PORT = 3000;
@@ -223,7 +226,7 @@ app.post('/api/login', async (req, res) => {
   if (!email || !pass) return res.status(400).json({ error: 'Fields required' });
 
   const { data, error } = await supabase
-    .from('users').select('*').eq('email', email).single();
+    .from('users').select('id, name, email, password, mobile, college').eq('email', email).single();
 
   if (error || !data) return res.status(401).json({ error: 'Invalid email or password' });
 
@@ -451,8 +454,12 @@ app.get('/api/teams/:id/tasks', async (req, res) => {
   res.json(data || []);
 });
 
-app.post('/api/teams/:id/tasks', async (req, res) => {
+app.post('/api/teams/:id/tasks', authenticate, async (req, res) => {
   const { title, status } = req.body;
+  const { data: member } = await supabase.from('team_members')
+    .select('*').eq('team_id', req.params.id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
   const { data, error } = await supabase
     .from('team_tasks')
     .insert([{ team_id: req.params.id, title, status }])
@@ -461,18 +468,23 @@ app.post('/api/teams/:id/tasks', async (req, res) => {
   res.json(data);
 });
 
-app.put('/api/teams/:team_id/tasks/:task_id', async (req, res) => {
+app.put('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) => {
   const { status } = req.body;
+  const { data: member } = await supabase.from('team_members')
+    .select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
   const { data, error } = await supabase
-    .from('team_tasks')
-    .update({ status })
-    .eq('id', req.params.task_id)
-    .select().single();
+    .from('team_tasks').update({ status }).eq('id', req.params.task_id).select().single();
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
 
-app.delete('/api/teams/:team_id/tasks/:task_id', async (req, res) => {
+app.delete('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) => {
+  const { data: member } = await supabase.from('team_members')
+    .select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
   const { error } = await supabase.from('team_tasks').delete().eq('id', req.params.task_id);
   if (error) return res.status(500).json({ error: error.message });
   res.json({ message: 'Deleted' });
@@ -609,6 +621,32 @@ app.delete('/api/teams/:id/project', authenticate, async (req, res) => {
   res.json({ message: 'Project deleted' });
 });
 
+const express = require("express");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: "Too many attempts, try again later"
+});
+
+app.use("/api/login", authLimiter);
+app.use("/api/signup", authLimiter);
+
+// your routes here
+app.post("/api/login", ...)
+
+app.post("/api/signup", ...)
+
+app.listen(3000, () => {
+  console.log("Server running");
+});
 
 app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
