@@ -256,7 +256,7 @@ app.post('/api/saved', authenticate, async (req, res) => {
 
   const { error } = await supabase.from('saved_hackathons')
     .upsert([{ user_email, hackathon_name, hackathon_start, hackathon_website }],
-            { onConflict: 'user_email,hackathon_name' });
+      { onConflict: 'user_email,hackathon_name' });
   if (error) return res.status(500).json({ error: error.message });
   res.json({ message: 'Saved' });
 });
@@ -300,12 +300,12 @@ User's skills: "${user_skills}"
 
 Open teams (JSON):
 ${JSON.stringify(teams.map(t => ({
-  id: t.id,
-  name: t.name,
-  hackathon: t.hackathon,
-  looking_for: t.skills,
-  slots_left: t.slots_left
-})), null, 2)}
+      id: t.id,
+      name: t.name,
+      hackathon: t.hackathon,
+      looking_for: t.skills,
+      slots_left: t.slots_left
+    })), null, 2)}
 
 Return ONLY a valid JSON array of the top 3 best-matching teams, in this exact format:
 [
@@ -523,6 +523,14 @@ app.delete('/api/teams/:team_id', authenticate, async (req, res) => {
   res.json({ message: 'Team deleted successfully' });
 });
 
+app.get('/debug-env', (req, res) => {
+  res.json({
+    has_groq: !!process.env.GROQ_API_KEY,
+    has_jwt: !!process.env.JWT_SECRET,
+    has_supabase_url: !!process.env.SUPABASE_URL,
+    has_supabase_key: !!process.env.SUPABASE_KEY,
+  });
+});
 
 
 app.listen(PORT, () => {
