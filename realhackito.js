@@ -8,14 +8,14 @@ let chatHistory = [];
 // Banned words list and censor function
 const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap']; // Extend as needed
 function censorMessage(text) {
-    let censoredText = text;
-    bannedWords.forEach(word => { const regex = new RegExp(`\\b${word}\\b`, 'gi'); censoredText = censoredText.replace(regex, '*'.repeat(word.length)); });
-    return censoredText;
+  let censoredText = text;
+  bannedWords.forEach(word => { const regex = new RegExp(`\\b${word}\\b`, 'gi'); censoredText = censoredText.replace(regex, '*'.repeat(word.length)); });
+  return censoredText;
 }
 
 function escapeHTML(str) {
   if (!str) return '';
-  return str.replace(/[&<>'"]/g, 
+  return str.replace(/[&<>'"]/g,
     tag => ({
       '&': '&amp;',
       '<': '&lt;',
@@ -111,7 +111,7 @@ function createHackathonCard(hack, isDimmed = false) {
     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
     openModal(hack);
   };
-  const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000*60*60*24));
+  const daysLeft = Math.ceil((new Date(hack.start) - new Date()) / (1000 * 60 * 60 * 24));
   if (daysLeft <= 5) card.classList.add('urgent');
   else if (daysLeft <= 20) card.classList.add('soon');
   if (isDimmed) card.style.opacity = "0.35";
@@ -121,8 +121,8 @@ function createHackathonCard(hack, isDimmed = false) {
     ${hack.banner ? `<img src="${escapeHTML(hack.banner)}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
       ${hack.logo
-        ? `<img src="${escapeHTML(hack.logo)}" style="width:40px;height:40px;border-radius:8px;">`
-        : `<div class="feature-icon">💻</div>`}
+      ? `<img src="${escapeHTML(hack.logo)}" style="width:40px;height:40px;border-radius:8px;">`
+      : `<div class="feature-icon">💻</div>`}
       <h3>${escapeHTML(hack.name)}</h3>
     </div>
     <p><strong>📅 Date:</strong> ${startDate}</p>
@@ -155,8 +155,8 @@ function renderHackathons(hackathons) {
   hackathons.forEach(hack => {
     grid.appendChild(createHackathonCard(hack));
   });
-  updateStats();      
-  buildCountryList(); 
+  updateStats();
+  buildCountryList();
 }
 
 // ── Search: matched cards sort to top, rest dimmed below ──
@@ -175,8 +175,8 @@ function searchHackathons(query) {
     const rest = [];
 
     allHackathons.forEach(h => {
-      const inName    = h.name.toLowerCase().includes(q);
-      const inCity    = h.city && h.city.toLowerCase().includes(q);
+      const inName = h.name.toLowerCase().includes(q);
+      const inCity = h.city && h.city.toLowerCase().includes(q);
       const inCountry = h.country && h.country.toLowerCase().includes(q);
       if (inName || inCity || inCountry) matched.push(h);
       else rest.push(h);
@@ -190,7 +190,7 @@ function searchHackathons(query) {
 function renderHackathonsSorted(matched, rest) {
   const grid = document.getElementById("hackathon-grid");
   grid.innerHTML = "";
-  
+
   if (matched.length === 0 && rest.length === 0) {
     const query = escapeHTML(document.getElementById('search-input')?.value || '');
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found for "<strong>${query}</strong>"</div>`;
@@ -208,10 +208,10 @@ function filterCards(btn, type) {
   const searchInput = document.getElementById('search-input');
   if (searchInput) searchInput.value = '';
 
-  if (type === 'online')       renderHackathons(allHackathons.filter(h => h.virtual));
-  else if (type === 'hybrid')  renderHackathons(allHackathons.filter(h => h.hybrid));
+  if (type === 'online') renderHackathons(allHackathons.filter(h => h.virtual));
+  else if (type === 'hybrid') renderHackathons(allHackathons.filter(h => h.hybrid));
   else if (type === 'offline') renderHackathons(allHackathons.filter(h => !h.virtual && !h.hybrid));
-  else                         renderHackathons(allHackathons);
+  else renderHackathons(allHackathons);
 }
 
 // ── Page navigation ──
@@ -243,7 +243,7 @@ function appendMessage(role, text, isHTML = false) {
   `;
   area.appendChild(msg);
   area.scrollTop = area.scrollHeight;
-  
+
   // Store the (potentially censored) message in chatHistory
   if (role === 'bot' && chatHistory.some(m => m.content === text)) return; // Avoid duplicate welcome
   chatHistory.push({ role: role === 'user' ? 'user' : 'assistant', content: censorMessage(text) });
@@ -295,13 +295,13 @@ async function sendChat() {
   // local smart reply using censored message
   const censoredMessageForLocalReply = censorMessage(message).toLowerCase();
   if (censoredMessageForLocalReply.includes('nearest') || censoredMessageForLocalReply.includes('closest')) {
-  const next = allHackathons[0];
-  if (next) {
-    removeTyping();
-    appendMessage('bot', `🏆 Nearest hackathon is <strong>${next.name}</strong> on 📅 ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? '🌐 Online' : `📍 ${next.city}, ${next.country}`}. <a href="${next.website}" target="_blank">Visit →</a>`);
-    return;
+    const next = allHackathons[0];
+    if (next) {
+      removeTyping();
+      appendMessage('bot', `🏆 Nearest hackathon is <strong>${next.name}</strong> on 📅 ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? '🌐 Online' : `📍 ${next.city}, ${next.country}`}. <a href="${next.website}" target="_blank">Visit →</a>`);
+      return;
+    }
   }
-}
 
   try {
     const res = await fetch('/ask', {
@@ -317,9 +317,9 @@ async function sendChat() {
     const reply = data.answer || data.reply || data.message || data.response || data.text || JSON.stringify(data);
     appendMessage('bot', reply);
     if (data.action === 'filter' && data.filterType) {
-    const pill = document.querySelector(`.filter-pill[onclick*="${data.filterType}"]`);
-    if (pill) filterCards(pill, data.filterType);
-  }
+      const pill = document.querySelector(`.filter-pill[onclick*="${data.filterType}"]`);
+      if (pill) filterCards(pill, data.filterType);
+    }
   } catch (err) {
     removeTyping();
     appendMessage('bot', "⚠️ Couldn't reach the server. Make sure the backend is running.");
@@ -336,11 +336,11 @@ function quickSend(btn) {
 // ── Login ──
 async function loginUser() {
   const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-pass').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
   if (!email || !pass) return alert('Fill all fields');
 
   try {
-    const res  = await fetch('/api/login', {
+    const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, pass })
@@ -371,28 +371,28 @@ async function loginUser() {
   }
 }
 
-// ── Signup ──
 async function signupUser() {
-  const name  = document.getElementById('signup-name').value.trim();
+  const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
-  const pass  = document.getElementById('signup-pass').value.trim();
-  const mobile = document.getElementById('signup-mobile').value.trim() || null; // Ensure null for optional empty fields
-  const college = document.getElementById('signup-college').value.trim() || null; // Ensure null for optional empty fields
+  const pass = document.getElementById('signup-pass').value.trim();
+  const mobile = document.getElementById('signup-mobile').value.trim() || null;
+  const college = document.getElementById('signup-college').value.trim() || null;
   if (!name || !email || !pass) return alert('Name, Email, and Password are required.');
 
   try {
-    const res  = await fetch('/api/signup', {
+    const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, pass, mobile, college })
     });
     const data = await res.json();
     if (res.ok) {
+      localStorage.setItem('authToken', data.token); // YE LINE MISSING THI
       localStorage.setItem('loggedIn', 'true');
-      localStorage.setItem('userName', name); // Ensure this is set
+      localStorage.setItem('userName', name);
       localStorage.setItem('userEmail', email);
-      localStorage.setItem('userMobile', mobile || ''); // Store empty string if null
-      localStorage.setItem('userCollege', college || ''); // Store empty string if null
+      localStorage.setItem('userMobile', mobile || '');
+      localStorage.setItem('userCollege', college || '');
       goTo('dashboard');
       showToast('🥳', 'Signup Successful!', `Welcome to Hack/Alert, ${name}!`);
     } else showToast('❌', 'Signup Failed', data.error || 'Something went wrong during signup.');
@@ -408,18 +408,18 @@ function toggleChip(el) {
 }
 
 function loadProfile() {
-  const name    = localStorage.getItem('userName') || '—';
-  const email   = localStorage.getItem('userEmail') || '—';
-  const mobile  = localStorage.getItem('userMobile') || '—';
+  const name = localStorage.getItem('userName') || '—';
+  const email = localStorage.getItem('userEmail') || '—';
+  const mobile = localStorage.getItem('userMobile') || '—';
   const college = localStorage.getItem('userCollege') || '—';
 
-  document.getElementById('profile-name').textContent    = name;
-  document.getElementById('profile-email').textContent   = email;
-  document.getElementById('profile-mobile').textContent  = mobile;
+  document.getElementById('profile-name').textContent = name;
+  document.getElementById('profile-email').textContent = email;
+  document.getElementById('profile-mobile').textContent = mobile;
   document.getElementById('profile-college').textContent = college;
 
   const saved = JSON.parse(localStorage.getItem('saved') || '[]');
-  const list  = document.getElementById('saved-list');
+  const list = document.getElementById('saved-list');
 
   if (saved.length === 0) {
     list.innerHTML = '<p style="color:var(--muted)">No hackathons saved yet.</p>';
@@ -466,7 +466,7 @@ function loadProfile() {
 function logout() {
   if (!confirm('Are you sure you want to log out?')) return;
   document.getElementById('nav-auth').style.display = '';
-  document.getElementById('nav-app').style.display  = 'none';
+  document.getElementById('nav-app').style.display = 'none';
   localStorage.removeItem('loggedIn');
   localStorage.removeItem('userName');
   localStorage.removeItem('userEmail');
@@ -480,10 +480,10 @@ function logout() {
 // ── Fallback Data ──
 function getFallbackHackathons() {
   return [
-    { name:"Global AI Hack 2026", start:"2026-05-15", city:"San Francisco", country:"USA",   virtual:false, hybrid:true,  website:"#" },
-    { name:"Web3 Weekend",        start:"2026-05-20", city:"",              country:"",       virtual:true,  hybrid:false, website:"#" },
-    { name:"India HackFest",      start:"2026-06-01", city:"Bangalore",     country:"India",  virtual:false, hybrid:false, website:"#" },
-    { name:"ML Marathon",         start:"2026-06-10", city:"New York",      country:"USA",    virtual:true,  hybrid:false, website:"#" }
+    { name: "Global AI Hack 2026", start: "2026-05-15", city: "San Francisco", country: "USA", virtual: false, hybrid: true, website: "#" },
+    { name: "Web3 Weekend", start: "2026-05-20", city: "", country: "", virtual: true, hybrid: false, website: "#" },
+    { name: "India HackFest", start: "2026-06-01", city: "Bangalore", country: "India", virtual: false, hybrid: false, website: "#" },
+    { name: "ML Marathon", start: "2026-06-10", city: "New York", country: "USA", virtual: true, hybrid: false, website: "#" }
   ];
 }
 
@@ -542,7 +542,7 @@ function fallbackCopy(text, btn) {
   btn.textContent = '✅ Copied!';
   btn.style.borderColor = 'var(--accent)';
   btn.style.color = 'var(--accent)';
-} 
+}
 
 function unsaveHackathon(name) {
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
@@ -572,18 +572,18 @@ function filterByCountry(country) {
 }
 
 function buildCountryList() {
-  const countries = ['All Countries','Afghanistan','Albania','Algeria','Argentina',
-    'Australia','Austria','Azerbaijan','Bangladesh','Belarus','Belgium','Bolivia',
-    'Brazil','Cambodia','Canada','Chile','China','Colombia','Croatia','Czech Republic',
-    'Denmark','Ecuador','Egypt','Estonia','Ethiopia','Finland','France','Georgia',
-    'Germany','Ghana','Greece','Hungary','India','Indonesia','Iran','Iraq','Ireland',
-    'Israel','Italy','Japan','Jordan','Kazakhstan','Kenya','Kuwait','Latvia','Lebanon',
-    'Lithuania','Malaysia','Mexico','Morocco','Myanmar','Nepal','Netherlands',
-    'New Zealand','Nigeria','Norway','Pakistan','Peru','Philippines','Poland',
-    'Portugal','Romania','Russia','Saudi Arabia','Serbia','Singapore','Slovakia',
-    'Slovenia','South Africa','South Korea','Spain','Sri Lanka','Sweden','Switzerland',
-    'Taiwan','Thailand','Turkey','Uganda','Ukraine','United Arab Emirates',
-    'United Kingdom','United States','Uruguay','Uzbekistan','Venezuela','Vietnam','Zimbabwe'];
+  const countries = ['All Countries', 'Afghanistan', 'Albania', 'Algeria', 'Argentina',
+    'Australia', 'Austria', 'Azerbaijan', 'Bangladesh', 'Belarus', 'Belgium', 'Bolivia',
+    'Brazil', 'Cambodia', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia', 'Czech Republic',
+    'Denmark', 'Ecuador', 'Egypt', 'Estonia', 'Ethiopia', 'Finland', 'France', 'Georgia',
+    'Germany', 'Ghana', 'Greece', 'Hungary', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland',
+    'Israel', 'Italy', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Latvia', 'Lebanon',
+    'Lithuania', 'Malaysia', 'Mexico', 'Morocco', 'Myanmar', 'Nepal', 'Netherlands',
+    'New Zealand', 'Nigeria', 'Norway', 'Pakistan', 'Peru', 'Philippines', 'Poland',
+    'Portugal', 'Romania', 'Russia', 'Saudi Arabia', 'Serbia', 'Singapore', 'Slovakia',
+    'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka', 'Sweden', 'Switzerland',
+    'Taiwan', 'Thailand', 'Turkey', 'Uganda', 'Ukraine', 'United Arab Emirates',
+    'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam', 'Zimbabwe'];
 
   const list = document.getElementById('country-list');
   if (!list) return;
@@ -613,7 +613,7 @@ function selectCountry(country) {
 }
 
 function openModal(hack) {
-  const startDate = new Date(hack.start).toLocaleDateString(undefined, {month:'long',day:'numeric',year:'numeric'});
+  const startDate = new Date(hack.start).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
   let mode = "📍 In-Person";
   if (hack.virtual) mode = "🌐 Online";
   if (hack.hybrid) mode = "🔀 Hybrid";
@@ -671,9 +671,9 @@ async function loadTeams() {
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Leader: ${escapeHTML(t.leader_email)}</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           ${t.leader_email === currentUserEmail
-            ? `<button onclick="deleteTeam(${t.id})" class="btn-primary" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Delete Team</button>`
-            : `<button onclick="joinTeam(${t.id}, '${safeJSString(t.name)}')" class="btn-primary" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join Team</button>`
-          }
+        ? `<button onclick="deleteTeam(${t.id})" class="btn-primary" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Delete Team</button>`
+        : `<button onclick="joinTeam(${t.id}, '${safeJSString(t.name)}')" class="btn-primary" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join Team</button>`
+      }
           <button onclick="openTeamChat(${t.id},'${safeJSString(t.name)}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
         </div>
       </div>
@@ -744,7 +744,7 @@ async function openTeamChat(teamId, teamName) {
     const teamRes = await fetch(`/api/teams/${teamId}`);
     if (!teamRes.ok) throw new Error('Failed to load team details');
     const currentTeam = await teamRes.json();
-    
+
     const membersRes = await fetch(`/api/teams/${teamId}/members`);
     if (!membersRes.ok) throw new Error('Failed to load members');
     const members = await membersRes.json();
@@ -753,7 +753,7 @@ async function openTeamChat(teamId, teamName) {
 
     const membersListDiv = document.getElementById('team-members-list');
     if (membersListDiv) {
-        membersListDiv.innerHTML = '👥 ' + members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join('');
+      membersListDiv.innerHTML = '👥 ' + members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join('');
     }
 
     const teamActionsDiv = document.getElementById('team-chat-actions');
@@ -772,7 +772,7 @@ async function openTeamChat(teamId, teamName) {
   if (chatEventSource) {
     chatEventSource.close();
   }
-  
+
   // Connect to SSE stream
   chatEventSource = new EventSource(`/api/teams/${teamId}/stream`);
   chatEventSource.onmessage = (e) => {
@@ -835,7 +835,7 @@ async function sendTeamMessage() {
   const sender_email = localStorage.getItem('userEmail');
   const sender_name = localStorage.getItem('userName');
   input.value = '';
-  
+
   // Note: We don't call loadTeamMessages() or appendTeamMessage() manually here
   // because the SSE stream will broadcast the message back to us instantly.
   await fetch(`/api/teams/${currentTeamId}/messages`, {
