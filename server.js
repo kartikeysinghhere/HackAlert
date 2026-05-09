@@ -44,15 +44,61 @@ const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy');
 const teamClients = {}; // Holds SSE connections { teamId: [res1, res2, ...] }
 let globalHackathons = []; // Cached hackathons for RAG
 
-// Cron job runs every day at 10 AM
+// ── Replace empty cron with real alert logic ──
 cron.schedule('0 10 * * *', async () => {
-  console.log('Running daily cron job for hackathon alerts...');
+  console.log('[CRON] Running deadline alert check...');
   if (!process.env.RESEND_API_KEY) {
-    console.log('[Email Alert] Missing RESEND_API_KEY. Skipping emails.');
+    console.log('[CRON] No RESEND_API_KEY. Skipping.');
     return;
   }
-  console.log('Checking for upcoming hackathons...');
-  // Email sending logic would go here
+
+  const now = new Date();
+  const in3Days = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+  // Get all saved hackathons starting within 3 days
+  const { data: upcoming, error } = await supabase
+    .from('saved_hackathons')
+    .select('*')
+    .gte('hackathon_start', now.toISOString())
+    .lte('hackathon_start', in3Days.toISOString());
+
+  if (error || !upcoming?.length) {
+    console.log('[CRON] No upcoming deadlines found.');
+    return;
+  }
+
+  // Group by user
+  const byUser = {};
+  upcoming.forEach(row => {
+    if (!byUser[row.user_email]) byUser[row.user_email] = [];
+    byUser[row.user_email].push(row);
+  });
+
+  // Send one email per user
+  for (const [email, hacks] of Object.entries(byUser)) {
+    const hackList = hacks.map(h =>
+      `<li><strong>${h.hackathon_name}</strong> — starts ${new Date(h.hackathon_start).toLocaleDateString()} — <a href="${h.hackathon_website}">Register →</a></li>`
+    ).join('');
+
+    try {
+      await resend.emails.send({
+        from: 'HackAlert <alerts@yourdomain.com>', // Change this
+        to: email,
+        subject: `⚡ ${hacks.length} hackathon(s) starting in 3 days!`,
+        html: `
+          <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:32px;border-radius:12px;">
+            <h2 style="color:#00f0ff;">Hack/Alert ⚡</h2>
+            <p>These hackathons you saved are starting soon:</p>
+            <ul style="line-height:2;">${hackList}</ul>
+            <p style="color:#64748b;font-size:12px;">You saved these on Hack/Alert. Visit your profile to manage saved hackathons.</p>
+          </div>
+        `
+      });
+      console.log(`[CRON] Alert sent to ${email}`);
+    } catch (e) {
+      console.error(`[CRON] Failed to send to ${email}:`, e.message);
+    }
+  }
 });
 
 app.use(cors());
@@ -195,10 +241,38 @@ app.post('/api/login', async (req, res) => {
 
 // ── Get all teams ──
 app.get('/api/teams', async (req, res) => {
-  const { data, error } = await supabase // This line was already changed in a previous diff
+  const { data, error } = await supabase
     .from('teams')
     .select('*')
     .order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// ── Save hackathon server-side (replace localStorage-only approach) ──
+app.post('/api/saved', authenticate, async (req, res) => {
+  const { hackathon_name, hackathon_start, hackathon_website } = req.body;
+  const user_email = req.user.email;
+
+  const { error } = await supabase.from('saved_hackathons')
+    .upsert([{ user_email, hackathon_name, hackathon_start, hackathon_website }],
+            { onConflict: 'user_email,hackathon_name' });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Saved' });
+});
+
+app.delete('/api/saved/:name', authenticate, async (req, res) => {
+  const user_email = req.user.email;
+  const hackathon_name = decodeURIComponent(req.params.name);
+  const { error } = await supabase.from('saved_hackathons')
+    .delete().eq('user_email', user_email).eq('hackathon_name', hackathon_name);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Removed' });
+});
+
+app.get('/api/saved', authenticate, async (req, res) => {
+  const { data, error } = await supabase.from('saved_hackathons')
+    .select('*').eq('user_email', req.user.email);
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
