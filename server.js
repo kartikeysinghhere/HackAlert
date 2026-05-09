@@ -532,6 +532,83 @@ app.get('/debug-env', (req, res) => {
   });
 });
 
+// ── Team Project Showcase ──
+
+// Get all projects
+app.get('/api/projects', async (req, res) => {
+  const { data, error } = await supabase
+    .from('team_projects')
+    .select('*, teams(name, hackathon)')
+    .order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+// Get single team's project
+app.get('/api/teams/:id/project', async (req, res) => {
+  const { data, error } = await supabase
+    .from('team_projects')
+    .select('*')
+    .eq('team_id', req.params.id)
+    .single();
+  if (error && error.code !== 'PGRST116') return res.status(500).json({ error: error.message });
+  res.json(data || null);
+});
+
+// Submit or update project (protected)
+app.post('/api/teams/:id/project', authenticate, async (req, res) => {
+  const { title, description, github_link, demo_link, tech_stack } = req.body;
+  const team_id = req.params.id;
+  const submitted_by = req.user.email;
+
+  if (!title) return res.status(400).json({ error: 'Title is required' });
+
+  // Check if user is a member of this team
+  const { data: member } = await supabase
+    .from('team_members')
+    .select('*')
+    .eq('team_id', team_id)
+    .eq('user_email', submitted_by)
+    .single();
+
+  if (!member) return res.status(403).json({ error: 'Only team members can submit a project' });
+
+  // Upsert — insert or update
+  const { data, error } = await supabase
+    .from('team_projects')
+    .upsert([{ team_id, title, description, github_link, demo_link, tech_stack, submitted_by }],
+      { onConflict: 'team_id' })
+    .select()
+    .single();
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// Delete project (protected)
+app.delete('/api/teams/:id/project', authenticate, async (req, res) => {
+  const team_id = req.params.id;
+  const user_email = req.user.email;
+
+  const { data: team } = await supabase
+    .from('teams')
+    .select('leader_email')
+    .eq('id', team_id)
+    .single();
+
+  if (!team || team.leader_email !== user_email) {
+    return res.status(403).json({ error: 'Only team leader can delete the project' });
+  }
+
+  const { error } = await supabase
+    .from('team_projects')
+    .delete()
+    .eq('team_id', team_id);
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Project deleted' });
+});
+
 
 app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);

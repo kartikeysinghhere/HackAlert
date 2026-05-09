@@ -95,6 +95,7 @@
         <button class="nav-btn" onclick="goTo('profile')">👤 Profile</button>
         <button class="nav-btn" onclick="goTo('teams')">🤝 Teams</button>
         <button class="nav-btn" onclick="goTo('calendar')">📅 Calendar</button>
+        <button class="nav-btn" onclick="goTo('showcase')">🚀 Showcase</button>
         <button class="nav-btn" onclick="logout()">Logout</button>
       </div>
     </div>
@@ -475,6 +476,54 @@
     </div>
 
     <div id="calendar-grid" style="padding:0 40px 40px;"></div>
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
+  </div>
+
+  <!-- SHOWCASE -->
+  <div class="page" id="page-showcase">
+    <div class="dash-header">
+      <div>
+        <h2>Project <span>Showcase</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">What teams are building 🚀
+        </p>
+      </div>
+      <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showSubmitProject()">+ Submit
+        Project</button>
+    </div>
+
+    <div id="showcase-grid"
+      style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;padding:24px 40px;"></div>
+
+    <!-- Submit Project Modal -->
+    <div id="submit-project-modal"
+      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+      <div
+        style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;max-height:85vh;overflow-y:auto;">
+        <button onclick="hideSubmitProject()"
+          style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+        <h3 style="margin-bottom:24px;color:#fff;">🚀 Submit Your Project</h3>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <select id="project-team-id"
+            style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+            <option value="">Select your team...</option>
+          </select>
+          <input id="project-title" placeholder="Project Title *"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <textarea id="project-desc" placeholder="What are you building? (description)" rows="3"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;"></textarea>
+          <input id="project-github" placeholder="GitHub Link"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <input id="project-demo" placeholder="Demo / Live Link"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <input id="project-tech" placeholder="Tech Stack (e.g. React, Node, ML)"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <button onclick="submitProject()"
+            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Submit
+            Project →</button>
+        </div>
+      </div>
+    </div>
+
     <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
   </div>
 

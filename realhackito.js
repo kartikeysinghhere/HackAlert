@@ -224,7 +224,7 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar'];
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', , 'showcase'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {
@@ -238,6 +238,7 @@ function goTo(pageId) {
   if (pageId === 'profile') loadProfile();
   if (pageId === 'teams') loadTeams();
   if (pageId === 'calendar') renderCalendar();
+  if (pageId === 'showcase') loadShowcase();
 }
 
 // ── Append message bubble to chat ──
@@ -1038,4 +1039,141 @@ function prevMonth() {
 function nextMonth() {
   calendarDate.setMonth(calendarDate.getMonth() + 1);
   renderCalendar();
+}
+
+// ── PROJECT SHOWCASE ──
+
+async function loadShowcase() {
+  const grid = document.getElementById('showcase-grid');
+  grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:40px;">Loading projects...</p>';
+
+  try {
+    const res = await fetch('/api/projects');
+    const projects = await res.json();
+
+    if (!projects.length) {
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:40px;">No projects submitted yet. Be the first! 🚀</p>';
+      return;
+    }
+
+    const currentUserEmail = localStorage.getItem('userEmail');
+
+    grid.innerHTML = projects.map(p => {
+      const techTags = p.tech_stack
+        ? p.tech_stack.split(',').map(t => `<span class="tech-tag">${escapeHTML(t.trim())}</span>`).join('')
+        : '';
+
+      return `
+        <div class="project-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+            <div>
+              <h3 style="color:#fff;font-size:17px;margin-bottom:4px;">${escapeHTML(p.title)}</h3>
+              <p style="font-family:var(--mono);font-size:11px;color:var(--accent);">by ${escapeHTML(p.teams?.name || 'Unknown Team')}</p>
+            </div>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--muted);background:rgba(255,255,255,0.04);padding:4px 8px;border-radius:6px;border:1px solid var(--border);white-space:nowrap;">
+              🏆 ${escapeHTML(p.teams?.hackathon || 'Open')}
+            </span>
+          </div>
+
+          ${p.description ? `<p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">${escapeHTML(p.description)}</p>` : ''}
+
+          ${techTags ? `<div style="margin-bottom:12px;">${techTags}</div>` : ''}
+
+          <p style="font-size:11px;color:var(--muted);font-family:var(--mono);">
+            Submitted by ${escapeHTML(p.submitted_by)} · ${new Date(p.created_at).toLocaleDateString()}
+          </p>
+
+          <div class="project-links">
+            ${p.github_link ? `<a href="${escapeHTML(p.github_link)}" target="_blank" class="project-link-btn github">⬡ GitHub</a>` : ''}
+            ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">▶ Live Demo</a>` : ''}
+            ${p.submitted_by === currentUserEmail ? `<button onclick="deleteProject(${p.team_id})" class="project-link-btn" style="color:#ef4444;border-color:rgba(239,68,68,0.3);">✕ Delete</button>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:40px;">⚠️ Failed to load projects.</p>';
+  }
+}
+
+async function showSubmitProject() {
+  // Load user's teams into dropdown
+  const userEmail = localStorage.getItem('userEmail');
+  try {
+    const res = await fetch('/api/teams');
+    const teams = await res.json();
+    const myTeams = teams.filter(t =>
+      t.leader_email === userEmail
+    );
+
+    // Also check team_members
+    const allRes = await fetch('/api/teams');
+    const allTeams = await allRes.json();
+
+    const select = document.getElementById('project-team-id');
+    select.innerHTML = '<option value="">Select your team...</option>';
+
+    // Show all teams where user might be member
+    allTeams.forEach(t => {
+      select.innerHTML += `<option value="${t.id}">${escapeHTML(t.name)}</option>`;
+    });
+
+  } catch (e) {
+    console.error(e);
+  }
+  document.getElementById('submit-project-modal').style.display = 'flex';
+}
+
+function hideSubmitProject() {
+  document.getElementById('submit-project-modal').style.display = 'none';
+}
+
+async function submitProject() {
+  const team_id = document.getElementById('project-team-id').value;
+  const title = document.getElementById('project-title').value.trim();
+  const description = document.getElementById('project-desc').value.trim();
+  const github_link = document.getElementById('project-github').value.trim();
+  const demo_link = document.getElementById('project-demo').value.trim();
+  const tech_stack = document.getElementById('project-tech').value.trim();
+
+  if (!team_id) { showToast('❌', 'Error', 'Select a team.'); return; }
+  if (!title) { showToast('❌', 'Error', 'Project title is required.'); return; }
+
+  try {
+    const res = await fetch(`/api/teams/${team_id}/project`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ title, description, github_link, demo_link, tech_stack })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      showToast('🚀', 'Submitted!', 'Your project is now live in the showcase.');
+      hideSubmitProject();
+      loadShowcase();
+      // Clear fields
+      ['project-title', 'project-desc', 'project-github', 'project-demo', 'project-tech'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+    } else {
+      showToast('❌', 'Error', data.error);
+    }
+  } catch (err) {
+    showToast('❌', 'Error', 'Could not submit project.');
+  }
+}
+
+async function deleteProject(teamId) {
+  if (!confirm('Delete this project?')) return;
+  const res = await fetch(`/api/teams/${teamId}/project`, {
+    method: 'DELETE',
+    headers: authHeaders()
+  });
+  if (res.ok) {
+    showToast('✅', 'Deleted', 'Project removed.');
+    loadShowcase();
+  } else {
+    const d = await res.json();
+    showToast('❌', 'Error', d.error);
+  }
 }
