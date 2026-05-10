@@ -360,6 +360,12 @@ async function loginUser() {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userEmail', email);
       localStorage.setItem('userName', data.user?.name || '');
+      localStorage.setItem('userUsername', data.user?.username || '');
+      localStorage.setItem('userGender', data.user?.gender || '');
+      localStorage.setItem('userBio', data.user?.bio || '');
+      localStorage.setItem('userSkills', data.user?.skills || '');
+      localStorage.setItem('userMobile', data.user?.mobile || '');
+      localStorage.setItem('userCollege', data.user?.college || '');
       document.getElementById('nav-auth').style.display = 'none';
       document.getElementById('nav-app').style.display = 'flex';
       const pendingJoin = sessionStorage.getItem('pendingJoinTeam');
@@ -386,13 +392,18 @@ async function signupUser() {
   const pass = document.getElementById('signup-pass').value.trim();
   const mobile = document.getElementById('signup-mobile').value.trim() || null;
   const college = document.getElementById('signup-college').value.trim() || null;
+  const username = document.getElementById('signup-username').value.trim().replace('@', '');
+  const gender = document.querySelector('input[name="gender"]:checked')?.value || null;
+  const bio = document.getElementById('signup-bio').value.trim() || null;
+  const skills = document.getElementById('signup-skills').value.trim() || null;
+
   if (!name || !email || !pass) return alert('Name, Email, and Password are required.');
 
   try {
     const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, pass, mobile, college })
+      body: JSON.stringify({ name, email, pass, mobile, college, username, gender, bio, skills })
     });
     const data = await res.json();
     if (res.ok) {
@@ -400,8 +411,13 @@ async function signupUser() {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userName', name);
       localStorage.setItem('userEmail', email);
+      localStorage.setItem('userUsername', username);
+      localStorage.setItem('userGender', gender || '');
+      localStorage.setItem('userBio', bio || '');
+      localStorage.setItem('userSkills', skills || '');
       localStorage.setItem('userMobile', mobile || '');
       localStorage.setItem('userCollege', college || '');
+
       goTo('dashboard');
       showToast('🥳', 'Signup Successful!', `Welcome to Hack/Alert, ${name}!`);
     } else showToast('❌', 'Signup Failed', data.error || 'Something went wrong during signup.');
@@ -415,17 +431,41 @@ async function signupUser() {
 function toggleChip(el) {
   el.classList.toggle('selected');
 }
-
 function loadProfile() {
   const name = localStorage.getItem('userName') || '—';
   const email = localStorage.getItem('userEmail') || '—';
   const mobile = localStorage.getItem('userMobile') || '—';
   const college = localStorage.getItem('userCollege') || '—';
+  const username = localStorage.getItem('userUsername') || '—';
+  const gender = localStorage.getItem('userGender') || '';
+  const bio = localStorage.getItem('userBio') || '';
+  const skills = localStorage.getItem('userSkills') || '';
 
   document.getElementById('profile-name').textContent = name;
   document.getElementById('profile-email').textContent = email;
   document.getElementById('profile-mobile').textContent = mobile;
   document.getElementById('profile-college').textContent = college;
+  document.getElementById('profile-username').textContent = '@' + username;
+  document.getElementById('profile-skills').textContent = skills || '—';
+
+  const bioEl = document.getElementById('profile-bio-display');
+  if (bioEl) bioEl.textContent = bio || 'No bio yet.';
+
+  const genderBadge = document.getElementById('profile-gender-badge');
+  if (genderBadge) {
+    if (gender === 'male') {
+      genderBadge.textContent = '♂';
+      genderBadge.style.color = '#60a5fa';
+    } else if (gender === 'female') {
+      genderBadge.textContent = '♀';
+      genderBadge.style.color = '#f472b6';
+    } else {
+      genderBadge.textContent = '';
+    }
+  }
+
+  const avatar = document.getElementById('profile-avatar');
+  if (avatar) avatar.textContent = name.charAt(0).toUpperCase();
 
   const saved = JSON.parse(localStorage.getItem('saved') || '[]');
   const list = document.getElementById('saved-list');
@@ -440,7 +480,6 @@ function loadProfile() {
       </div>
     `).join('');
   }
-
   // --- Interactive Roadmap ---
   const roadmapDiv = document.getElementById('roadmap-list');
   if (!roadmapDiv) return;
@@ -488,6 +527,10 @@ function confirmLogout() {
   localStorage.removeItem('loggedIn');
   localStorage.removeItem('userName');
   localStorage.removeItem('userEmail');
+  localStorage.removeItem('userUsername');
+  localStorage.removeItem('userGender');
+  localStorage.removeItem('userBio');
+  localStorage.removeItem('userSkills');
   localStorage.removeItem('userMobile');
   localStorage.removeItem('userCollege');
   const btn = document.getElementById('get-started-btn');
@@ -1282,4 +1325,20 @@ async function deleteReview(hackathonName) {
     headers: authHeaders()
   });
   if (res.ok) { showToast('✅', 'Deleted', 'Review removed.'); loadReviews(hackathonName); }
+}
+
+function selectGender(val) {
+  const male = document.getElementById('gender-male-label');
+  const female = document.getElementById('gender-female-label');
+  if (val === 'male') {
+    male.style.borderColor = 'var(--accent)';
+    male.style.color = 'var(--accent)';
+    female.style.borderColor = 'var(--border-light)';
+    female.style.color = 'var(--muted)';
+  } else {
+    female.style.borderColor = 'var(--accent2)';
+    female.style.color = 'var(--accent2)';
+    male.style.borderColor = 'var(--border-light)';
+    male.style.color = 'var(--muted)';
+  }
 }

@@ -191,6 +191,30 @@
         <input type="tel" id="signup-mobile" placeholder="+91 9999999999 (Optional)" />
         <label>College / University</label>
         <input type="text" id="signup-college" placeholder="JiET (Optional)" />
+        <label>Username *</label>
+        <input type="text" id="signup-username" placeholder="@kartikey (unique)" required />
+        <label>Gender</label>
+        <div style="display:flex;gap:12px;margin-bottom:20px;">
+          <label
+            style="display:flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--border-light);border-radius:10px;cursor:pointer;flex:1;justify-content:center;font-size:14px;color:var(--muted);transition:all 0.2s;"
+            id="gender-male-label">
+            <input type="radio" name="gender" value="male" id="gender-male" style="display:none;"
+              onchange="selectGender('male')">
+            ♂ Male
+          </label>
+          <label
+            style="display:flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--border-light);border-radius:10px;cursor:pointer;flex:1;justify-content:center;font-size:14px;color:var(--muted);transition:all 0.2s;"
+            id="gender-female-label">
+            <input type="radio" name="gender" value="female" id="gender-female" style="display:none;"
+              onchange="selectGender('female')">
+            ♀ Female
+          </label>
+        </div>
+        <label>Bio (Optional)</label>
+        <textarea id="signup-bio" placeholder="Tell hackers about yourself..." rows="2"
+          style="width:100%;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:15px 20px;color:var(--text);font-family:var(--mono);font-size:14px;margin-bottom:20px;outline:none;resize:vertical;"></textarea>
+        <label>Your Skills</label>
+        <input type="text" id="signup-skills" placeholder="React, ML, UI Design..." />
         <label style="margin-bottom:12px;">I'm interested in</label>
         <div class="interests-grid">
           <label class="interest-chip" onclick="toggleChip(this)"><input type="checkbox"> Web Dev</label>
@@ -301,11 +325,28 @@
 
       <!-- User Info Card -->
       <div class="feature-card">
-        <h3 style="margin-bottom:20px;">👤 Account Info</h3>
-        <p><strong>📛 Name:</strong> <span id="profile-name">—</span></p>
-        <p style="margin-top:10px;"><strong>📧 Email:</strong> <span id="profile-email">—</span></p>
-        <p style="margin-top:10px;"><strong>📱 Mobile:</strong> <span id="profile-mobile">—</span></p>
-        <p style="margin-top:10px;"><strong>🎓 College:</strong> <span id="profile-college">—</span></p>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+          <div id="profile-avatar"
+            style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">
+            👤</div>
+          <div>
+            <h3 id="profile-name" style="color:#fff;margin-bottom:4px;">—</h3>
+            <p id="profile-username" style="color:var(--accent);font-family:var(--mono);font-size:13px;">@—</p>
+          </div>
+          <div id="profile-gender-badge" style="margin-left:auto;font-size:28px;"></div>
+        </div>
+        <div id="profile-bio-display"
+          style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;font-style:italic;"></div>
+        <div style="display:grid;gap:10px;">
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">📧 Email:</strong>
+            <span id="profile-email" style="color:var(--text);">—</span></p>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">📱 Mobile:</strong>
+            <span id="profile-mobile" style="color:var(--text);">—</span></p>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🎓 College:</strong>
+            <span id="profile-college" style="color:var(--text);">—</span></p>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🛠 Skills:</strong>
+            <span id="profile-skills" style="color:var(--accent);">—</span></p>
+        </div>
       </div>
 
       <!-- Saved Hackathons Card -->

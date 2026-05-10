@@ -209,20 +209,27 @@ app.post('/ask', async (req, res) => {
 });
 
 app.post('/api/signup', async (req, res) => {
-  const { name, email, pass, mobile, college } = req.body;
-  if (!name || !email || !pass) return res.status(400).json({ error: 'Name, Email, and Password are required.' });
+  const { name, email, pass, mobile, college, username, gender, bio, skills } = req.body;
+  if (!name || !email || !pass || !username) {
+    return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
+  }
+
+  // Check username unique
+  const { data: existing } = await supabase
+    .from('users').select('username').eq('username', username).single();
+  if (existing) return res.status(400).json({ error: 'Username already taken.' });
 
   const hashed = await bcrypt.hash(pass, 10);
   const { error } = await supabase
     .from('users')
-    .insert([{ name, email, password: hashed, mobile, college }]);
+    .insert([{ name, email, password: hashed, mobile, college, username, gender, bio, skills }]);
 
   if (error) {
     if (error.code === '23505') return res.status(400).json({ error: 'Email already exists' });
     return res.status(500).json({ error: error.message });
   }
 
-  const token = jwt.sign({ email, name }, JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign({ email, name, username }, JWT_SECRET, { expiresIn: '7d' });
   res.status(201).json({ message: 'Signup successful', token });
 });
 
@@ -231,7 +238,10 @@ app.post('/api/login', async (req, res) => {
   if (!email || !pass) return res.status(400).json({ error: 'Fields required' });
 
   const { data, error } = await supabase
-    .from('users').select('id, name, email, password, mobile, college').eq('email', email).single();
+    .from('users')
+    .select('id, name, email, password, mobile, college, username, gender, bio, skills')
+    .eq('email', email)
+    .single();
 
   if (error || !data) return res.status(401).json({ error: 'Invalid email or password' });
 
@@ -239,12 +249,25 @@ app.post('/api/login', async (req, res) => {
   if (!match) return res.status(401).json({ error: 'Invalid email or password' });
 
   const token = jwt.sign(
-    { email: data.email, name: data.name },
+    { email: data.email, name: data.name, username: data.username },
     JWT_SECRET,
     { expiresIn: '7d' }
   );
 
-  res.json({ message: 'Login successful', token, user: { name: data.name, email: data.email } });
+  res.json({
+    message: 'Login successful',
+    token,
+    user: {
+      name: data.name,
+      email: data.email,
+      username: data.username,
+      gender: data.gender,
+      bio: data.bio,
+      skills: data.skills,
+      mobile: data.mobile,
+      college: data.college
+    }
+  });
 });
 
 // ── Get all teams ──
