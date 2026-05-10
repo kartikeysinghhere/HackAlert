@@ -1351,6 +1351,9 @@ function selectGender(val) {
 // ── FRIEND SYSTEM ──
 
 function showUserSearch() {
+  if (!document.getElementById('page-profile').classList.contains('active')) {
+    goTo('profile');
+  }
   document.getElementById('user-search-modal').style.display = 'flex';
   document.getElementById('user-search-results').innerHTML = '';
   document.getElementById('user-search-input').value = '';
