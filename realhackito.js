@@ -224,7 +224,7 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages'];
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages', 'ai-tools'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {
@@ -1503,4 +1503,196 @@ async function removeFriend(friend_email) {
     headers: authHeaders()
   });
   if (res.ok) { showToast('✅', 'Removed', 'Friend removed.'); loadFriends(); }
+}
+
+// ── AI TOOLS ──
+
+async function generateIdeas() {
+  const theme = document.getElementById('idea-theme').value.trim();
+  const problem = document.getElementById('idea-problem').value.trim();
+  const level = document.getElementById('idea-level').value;
+  const duration = document.getElementById('idea-duration').value;
+  const skills = document.getElementById('idea-skills').value.trim();
+
+  if (!theme) { showToast('⚠️', 'Missing', 'Enter a hackathon theme.'); return; }
+
+  const output = document.getElementById('ideas-output');
+  output.innerHTML = `
+    <div style="text-align:center;padding:40px;">
+      <div style="font-size:32px;margin-bottom:12px;">🤖</div>
+      <p style="color:var(--muted);font-family:var(--mono);font-size:13px;">Generating 5 unique project ideas...</p>
+    </div>`;
+
+  try {
+    const res = await fetch('/api/ai/ideas', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ theme, problem, level, duration, skills })
+    });
+    const data = await res.json();
+
+    if (!res.ok) { output.innerHTML = `<p style="color:#ef4444;">${data.error}</p>`; return; }
+
+    output.innerHTML = `
+      <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">✨ 5 Project Ideas for "${escapeHTML(theme)}"</h4>
+      ${data.ideas.map((idea, i) => `
+        <div class="idea-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+            <div>
+              <h3 style="color:#fff;font-size:16px;margin-bottom:4px;">${i + 1}. ${escapeHTML(idea.title)}</h3>
+              <p style="color:var(--accent);font-family:var(--mono);font-size:12px;">${escapeHTML(idea.tagline)}</p>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:12px;">
+              <div style="font-family:var(--mono);font-size:20px;font-weight:700;color:${idea.winning_potential >= 80 ? 'var(--accent)' : idea.winning_potential >= 60 ? '#f59e0b' : '#ef4444'};">${idea.winning_potential}%</div>
+              <div style="font-size:10px;color:var(--muted);font-family:var(--mono);">WIN CHANCE</div>
+            </div>
+          </div>
+
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">${escapeHTML(idea.description)}</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:4px;">INNOVATION</div>
+              <div style="font-size:13px;color:#fff;font-weight:700;">${idea.innovation_score}%</div>
+              <div class="score-bar"><div class="score-fill" style="width:${idea.innovation_score}%;"></div></div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:4px;">FEASIBILITY</div>
+              <div style="font-size:13px;color:#fff;font-weight:700;">${idea.feasibility_score}%</div>
+              <div class="score-bar"><div class="score-fill" style="width:${idea.feasibility_score}%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:4px;">WIN POTENTIAL</div>
+              <div style="font-size:13px;color:#fff;font-weight:700;">${idea.winning_potential}%</div>
+              <div class="score-bar"><div class="score-fill" style="width:${idea.winning_potential}%;background:linear-gradient(90deg,var(--accent2),var(--accent));"></div></div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px;">🛠 TECH STACK</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              ${idea.tech_stack.map(t => `<span class="tech-tag">${escapeHTML(t)}</span>`).join('')}
+            </div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px;">⚡ MVP FEATURES</div>
+            ${idea.mvp_features.map(f => `<div style="font-size:12px;color:var(--text);padding:2px 0;">• ${escapeHTML(f)}</div>`).join('')}
+          </div>
+
+          <div style="background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.15);border-radius:8px;padding:10px 12px;">
+            <span style="font-size:11px;color:var(--accent);font-family:var(--mono);">🏆 WOW FACTOR: </span>
+            <span style="font-size:12px;color:var(--text);">${escapeHTML(idea.wow_factor)}</span>
+          </div>
+        </div>
+      `).join('')}
+    `;
+  } catch (err) {
+    output.innerHTML = '<p style="color:#ef4444;">Failed to generate ideas. Try again.</p>';
+  }
+}
+
+async function analyzeHackathon() {
+  const name = document.getElementById('analyzer-name').value.trim();
+  const details = document.getElementById('analyzer-details').value.trim();
+  const skills = document.getElementById('analyzer-skills').value.trim();
+
+  if (!details) { showToast('⚠️', 'Missing', 'Paste hackathon details first.'); return; }
+
+  const output = document.getElementById('analyzer-output');
+  output.innerHTML = `
+    <div style="text-align:center;padding:40px;">
+      <div style="font-size:32px;margin-bottom:12px;">🔍</div>
+      <p style="color:var(--muted);font-family:var(--mono);font-size:13px;">Analyzing hackathon difficulty...</p>
+    </div>`;
+
+  try {
+    const res = await fetch('/api/ai/analyze', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ name, details, skills })
+    });
+    const data = await res.json();
+
+    if (!res.ok) { output.innerHTML = `<p style="color:#ef4444;">${data.error}</p>`; return; }
+
+    const a = data.analysis;
+    const diffClass = {
+      'Easy': 'difficulty-easy',
+      'Medium': 'difficulty-medium',
+      'Hard': 'difficulty-hard',
+      'Expert': 'difficulty-expert'
+    }[a.overall_difficulty] || 'difficulty-medium';
+
+    output.innerHTML = `
+      <div class="idea-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h3 style="color:#fff;font-size:18px;margin-bottom:8px;">${escapeHTML(name || 'Hackathon Analysis')}</h3>
+            <span class="difficulty-badge ${diffClass}">${a.overall_difficulty}</span>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:var(--mono);font-size:40px;font-weight:700;color:var(--accent2);">${a.difficulty_score}</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);">DIFFICULTY SCORE</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;">
+          <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:24px;font-weight:700;color:var(--accent);">${a.skill_match_percentage}%</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:4px;">SKILL MATCH</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:24px;font-weight:700;color:#f59e0b;">${a.preparation_time_days} days</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:4px;">PREP TIME</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:24px;font-weight:700;color:${a.winning_percentage >= 50 ? 'var(--accent)' : '#ef4444'};">${a.winning_percentage}%</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:4px;">WIN CHANCE</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;">🛠 REQUIRED SKILLS</div>
+            ${a.required_skills.map(s => `<div style="font-size:12px;color:var(--text);padding:2px 0;">• ${escapeHTML(s)}</div>`).join('')}
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;">⚡ RECOMMENDED STACK</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">
+              ${a.recommended_stack.map(t => `<span class="tech-tag">${escapeHTML(t)}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+          <div>
+            <div style="font-size:11px;color:#ef4444;font-family:var(--mono);margin-bottom:8px;">⚠️ KEY CHALLENGES</div>
+            ${a.key_challenges.map(c => `<div style="font-size:12px;color:var(--muted);padding:2px 0;">• ${escapeHTML(c)}</div>`).join('')}
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--accent);font-family:var(--mono);margin-bottom:8px;">✅ YOUR ADVANTAGES</div>
+            ${a.advantages.map(c => `<div style="font-size:12px;color:var(--muted);padding:2px 0;">• ${escapeHTML(c)}</div>`).join('')}
+          </div>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;">📅 PREPARATION PLAN</div>
+          ${a.preparation_plan.map((p, i) => `
+            <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+              <span style="color:var(--accent);font-family:var(--mono);font-size:12px;flex-shrink:0;">${i + 1}.</span>
+              <span style="font-size:12px;color:var(--text);">${escapeHTML(p)}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <div style="background:rgba(208,91,255,0.06);border:1px solid rgba(208,91,255,0.2);border-radius:10px;padding:14px;">
+          <div style="font-size:11px;color:var(--accent2);font-family:var(--mono);margin-bottom:6px;">🤖 AI VERDICT</div>
+          <p style="font-size:13px;color:var(--text);line-height:1.6;">${escapeHTML(a.verdict)}</p>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    output.innerHTML = '<p style="color:#ef4444;">Failed to analyze. Try again.</p>';
+  }
 }

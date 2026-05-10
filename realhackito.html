@@ -100,6 +100,7 @@
           💬 Messages <span id="nav-unread-badge"
             style="display:none;background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:100px;margin-left:4px;font-family:var(--mono);">0</span>
         </button>
+        <button class="nav-btn" onclick="goTo('ai-tools')">🧠 AI Tools</button>
         <button class="nav-btn" onclick="logout()">Logout</button>
       </div>
     </div>
@@ -669,6 +670,78 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- AI TOOLS -->
+  <div class="page" id="page-ai-tools">
+    <div class="dash-header">
+      <div>
+        <h2>🧠 AI <span>Tools</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Powered by AI — built for
+          hackers</p>
+      </div>
+    </div>
+
+    <div style="padding:32px 40px;display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1200px;">
+
+      <!-- Project Idea Generator -->
+      <div class="feature-card" style="grid-column:1/-1;">
+        <h3 style="margin-bottom:8px;">💡 Project Idea Generator</h3>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;font-family:var(--mono);">Enter hackathon
+          theme/problem statement → Get 5 unique project ideas with tech stack & winning potential</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <input id="idea-theme" placeholder="e.g. Climate Change, HealthTech, Web3, EdTech..."
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <textarea id="idea-problem"
+            placeholder="Problem statement (optional) — paste the exact problem statement from the hackathon..."
+            rows="3"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;"></textarea>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <select id="idea-level"
+              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate" selected>Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+            <select id="idea-duration"
+              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+              <option value="24">24 Hours</option>
+              <option value="36">36 Hours</option>
+              <option value="48" selected>48 Hours</option>
+              <option value="72">72 Hours</option>
+            </select>
+            <input id="idea-skills" placeholder="Your skills (e.g. React, Python, ML)"
+              style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          </div>
+          <button onclick="generateIdeas()"
+            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">✨
+            Generate Project Ideas</button>
+        </div>
+        <div id="ideas-output" style="margin-top:24px;"></div>
+      </div>
+
+      <!-- Hackathon Difficulty Analyzer -->
+      <div class="feature-card" style="grid-column:1/-1;">
+        <h3 style="margin-bottom:8px;">🔍 Hackathon Difficulty Analyzer</h3>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;font-family:var(--mono);">Paste hackathon details
+          → AI analyzes difficulty, required skills, winning chances & prep time</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <input id="analyzer-name" placeholder="Hackathon name..."
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <textarea id="analyzer-details"
+            placeholder="Paste hackathon description, problem statements, judging criteria, prize pool info..." rows="5"
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;"></textarea>
+          <input id="analyzer-skills" placeholder="Your current skills (e.g. React, Node.js, beginner ML)..."
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
+          <button onclick="analyzeHackathon()"
+            style="background:var(--accent2);color:#fff;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">🔍
+            Analyze Difficulty</button>
+        </div>
+        <div id="analyzer-output" style="margin-top:24px;"></div>
+      </div>
+
+    </div>
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
   </div>
 
   <!-- LOGOUT MODAL -->
