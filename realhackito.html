@@ -339,13 +339,17 @@
           style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;font-style:italic;"></div>
         <div style="display:grid;gap:10px;">
           <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">📧 Email:</strong>
-            <span id="profile-email" style="color:var(--text);">—</span></p>
+            <span id="profile-email" style="color:var(--text);">—</span>
+          </p>
           <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">📱 Mobile:</strong>
-            <span id="profile-mobile" style="color:var(--text);">—</span></p>
+            <span id="profile-mobile" style="color:var(--text);">—</span>
+          </p>
           <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🎓 College:</strong>
-            <span id="profile-college" style="color:var(--text);">—</span></p>
+            <span id="profile-college" style="color:var(--text);">—</span>
+          </p>
           <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🛠 Skills:</strong>
-            <span id="profile-skills" style="color:var(--accent);">—</span></p>
+            <span id="profile-skills" style="color:var(--accent);">—</span>
+          </p>
         </div>
       </div>
 
@@ -359,6 +363,35 @@
       <div class="feature-card" style="grid-column: 1 / -1;">
         <h3 style="margin-bottom:20px;">🗓️ My Hackathon Roadmap</h3>
         <div id="roadmap-list"></div>
+      </div>
+
+      <!-- Friends Card -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3>👥 Friends</h3>
+          <button onclick="showUserSearch()"
+            style="background:var(--accent);color:#050508;border:none;padding:8px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;">+
+            Add Friend</button>
+        </div>
+        <div id="pending-requests" style="margin-bottom:20px;"></div>
+        <div id="friends-list">
+          <p style="color:var(--muted);font-size:13px;">Loading friends...</p>
+        </div>
+      </div>
+
+      <!-- User Search Modal -->
+      <div id="user-search-modal"
+        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+        <div
+          style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;max-height:80vh;overflow-y:auto;">
+          <button onclick="hideUserSearch()"
+            style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+          <h3 style="margin-bottom:20px;color:#fff;">🔍 Find Friends</h3>
+          <input id="user-search-input" type="text" placeholder="Search by username..."
+            oninput="searchUsers(this.value)"
+            style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;margin-bottom:16px;">
+          <div id="user-search-results"></div>
+        </div>
       </div>
 
     </div>

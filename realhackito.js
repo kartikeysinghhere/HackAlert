@@ -482,32 +482,35 @@ function loadProfile() {
   }
   // --- Interactive Roadmap ---
   const roadmapDiv = document.getElementById('roadmap-list');
-  if (!roadmapDiv) return;
-  if (saved.length === 0) {
-    roadmapDiv.innerHTML = '<p style="color:var(--muted)">Save some hackathons to see your roadmap!</p>';
-    return;
+  if (roadmapDiv) {
+    if (saved.length === 0) {
+      roadmapDiv.innerHTML = '<p style="color:var(--muted)">Save some hackathons to see your roadmap!</p>';
+    } else {
+      // Sort by start date for the timeline
+      saved.sort((a, b) => new Date(a.start) - new Date(b.start));
+      const now = new Date();
+
+      roadmapDiv.innerHTML = saved.map(hack => {
+        const hackDate = new Date(hack.start);
+        const isUpcoming = hackDate > now;
+        const dateString = hackDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
+        return `
+          <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-family: var(--mono); font-size: 12px; text-align: center; color: ${isUpcoming ? 'var(--accent)' : 'var(--muted)'}; width: 60px; flex-shrink: 0;">
+              <div style="font-weight: 700; font-size: 14px;">${dateString.split(' ')[1] || dateString.split('.')[0]}</div>
+              <div>${dateString.split(' ')[0] || dateString.split('.')[1]}</div>
+            </div>
+            <div style="flex: 1; font-size: 14px;">${escapeHTML(hack.name)}</div>
+            <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
   }
 
-  // Sort by start date for the timeline
-  saved.sort((a, b) => new Date(a.start) - new Date(b.start));
-  const now = new Date();
-
-  roadmapDiv.innerHTML = saved.map(hack => {
-    const hackDate = new Date(hack.start);
-    const isUpcoming = hackDate > now;
-    const dateString = hackDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-
-    return `
-      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);">
-        <div style="font-family: var(--mono); font-size: 12px; text-align: center; color: ${isUpcoming ? 'var(--accent)' : 'var(--muted)'}; width: 60px; flex-shrink: 0;">
-          <div style="font-weight: 700; font-size: 14px;">${dateString.split(' ')[1] || dateString.split('.')[0]}</div>
-          <div>${dateString.split(' ')[0] || dateString.split('.')[1]}</div>
-        </div>
-        <div style="flex: 1; font-size: 14px;">${escapeHTML(hack.name)}</div>
-        <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
-      </div>
-    `;
-  }).join('');
+  // Load friends list as well
+  loadFriends();
 }
 
 // ── Logout ──
@@ -1341,4 +1344,161 @@ function selectGender(val) {
     male.style.borderColor = 'var(--border-light)';
     male.style.color = 'var(--muted)';
   }
+}
+
+// ── FRIEND SYSTEM ──
+
+function showUserSearch() {
+  document.getElementById('user-search-modal').style.display = 'flex';
+  document.getElementById('user-search-results').innerHTML = '';
+  document.getElementById('user-search-input').value = '';
+}
+
+function hideUserSearch() {
+  document.getElementById('user-search-modal').style.display = 'none';
+}
+
+let searchUsersTimeout = null;
+function searchUsers(q) {
+  clearTimeout(searchUsersTimeout);
+  if (!q.trim()) {
+    document.getElementById('user-search-results').innerHTML = '';
+    return;
+  }
+  searchUsersTimeout = setTimeout(async () => {
+    try {
+      const res = await fetch(`/api/users/search?q=${encodeURIComponent(q)}`, {
+        headers: authHeaders()
+      });
+      const users = await res.json();
+      const resultsDiv = document.getElementById('user-search-results');
+
+      if (!users.length) {
+        resultsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No users found.</p>';
+        return;
+      }
+
+      resultsDiv.innerHTML = users.map(u => `
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#050508;flex-shrink:0;">
+            ${escapeHTML(u.name.charAt(0).toUpperCase())}
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <strong style="color:#fff;font-size:14px;">${escapeHTML(u.name)}</strong>
+              <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
+            </div>
+            <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
+            ${u.bio ? `<p style="color:var(--muted);font-size:12px;margin-top:2px;">${escapeHTML(u.bio)}</p>` : ''}
+          </div>
+          <button onclick="sendFriendRequest('${escapeHTML(u.email)}')"
+            style="background:var(--accent);color:#050508;border:none;padding:6px 14px;border-radius:8px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+            + Add
+          </button>
+        </div>
+      `).join('');
+    } catch (e) {
+      document.getElementById('user-search-results').innerHTML = '<p style="color:#ef4444;font-size:13px;">Error searching users.</p>';
+    }
+  }, 400);
+}
+
+async function sendFriendRequest(to_email) {
+  try {
+    const res = await fetch('/api/friends/request', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ to_email })
+    });
+    const data = await res.json();
+    if (res.ok) showToast('✅', 'Request Sent!', 'Friend request sent successfully.');
+    else showToast('❌', 'Error', data.error);
+  } catch (e) {
+    showToast('❌', 'Error', 'Could not send request.');
+  }
+}
+
+async function loadFriends() {
+  try {
+    // Load pending requests
+    const reqRes = await fetch('/api/friends/requests', { headers: authHeaders() });
+    const requests = await reqRes.json();
+    const pendingDiv = document.getElementById('pending-requests');
+
+    if (requests.length) {
+      pendingDiv.innerHTML = `
+        <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:10px;">📬 PENDING REQUESTS (${requests.length})</h4>
+        ${requests.map(r => `
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);border-radius:10px;margin-bottom:8px;">
+            <div style="flex:1;">
+              <strong style="color:#fff;font-size:13px;">${escapeHTML(r.from_email)}</strong>
+              <p style="color:var(--muted);font-size:11px;font-family:var(--mono);">wants to be your friend</p>
+            </div>
+            <button onclick="respondRequest(${r.id}, 'accepted')" style="background:var(--accent);color:#050508;border:none;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;margin-right:4px;">✓ Accept</button>
+            <button onclick="respondRequest(${r.id}, 'declined')" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;">✕</button>
+          </div>
+        `).join('')}
+      `;
+    } else {
+      pendingDiv.innerHTML = '';
+    }
+
+    // Load friends
+    const friendRes = await fetch('/api/friends', { headers: authHeaders() });
+    const friends = await friendRes.json();
+    const friendsDiv = document.getElementById('friends-list');
+
+    if (!friends.length) {
+      friendsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No friends yet. Search for hackers to connect!</p>';
+      return;
+    }
+
+    friendsDiv.innerHTML = `
+      <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS (${friends.length})</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+        ${friends.map(f => `
+          <div style="padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;flex-shrink:0;">
+              ${escapeHTML(f.name.charAt(0).toUpperCase())}
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:4px;">
+                <strong style="color:#fff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
+                <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
+              </div>
+              <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
+            </div>
+            <button onclick="removeFriend('${escapeHTML(f.email)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch (e) {
+    console.error('Error loading friends:', e);
+  }
+}
+
+async function respondRequest(id, status) {
+  try {
+    const res = await fetch(`/api/friends/requests/${id}`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast('✅', status === 'accepted' ? 'Friend Added!' : 'Declined', '');
+      loadFriends();
+    }
+  } catch (e) {
+    showToast('❌', 'Error', 'Could not respond to request.');
+  }
+}
+
+async function removeFriend(friend_email) {
+  if (!confirm('Remove this friend?')) return;
+  const res = await fetch(`/api/friends/${encodeURIComponent(friend_email)}`, {
+    method: 'DELETE',
+    headers: authHeaders()
+  });
+  if (res.ok) { showToast('✅', 'Removed', 'Friend removed.'); loadFriends(); }
 }

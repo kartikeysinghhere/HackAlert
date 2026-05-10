@@ -688,6 +688,129 @@ app.delete('/api/reviews/:hackathon_name', authenticate, async (req, res) => {
   res.json({ message: 'Review deleted' });
 });
 
+// ── Friend System ──
+
+// Search users by username
+app.get('/api/users/search', authenticate, async (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.status(400).json({ error: 'Query required' });
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('name, email, username, gender, bio, skills, college')
+    .ilike('username', `%${q}%`)
+    .neq('email', req.user.email)
+    .limit(10);
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+// Send friend request
+app.post('/api/friends/request', authenticate, async (req, res) => {
+  const { to_email } = req.body;
+  const from_email = req.user.email;
+  if (!to_email) return res.status(400).json({ error: 'to_email required' });
+  if (to_email === from_email) return res.status(400).json({ error: 'Cannot add yourself' });
+
+  // Check already friends
+  const { data: existing } = await supabase
+    .from('friendships')
+    .select('*')
+    .or(`and(user1_email.eq.${from_email},user2_email.eq.${to_email}),and(user1_email.eq.${to_email},user2_email.eq.${from_email})`)
+    .single();
+  if (existing) return res.status(400).json({ error: 'Already friends' });
+
+  const { error } = await supabase
+    .from('friend_requests')
+    .upsert([{ from_email, to_email, status: 'pending' }], { onConflict: 'from_email,to_email' });
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Friend request sent' });
+});
+
+// Get pending requests (received)
+app.get('/api/friends/requests', authenticate, async (req, res) => {
+  const { data, error } = await supabase
+    .from('friend_requests')
+    .select('*, users!friend_requests_from_email_fkey(name, username, gender)')
+    .eq('to_email', req.user.email)
+    .eq('status', 'pending');
+
+  if (error) {
+    // Fallback without join
+    const { data: simple } = await supabase
+      .from('friend_requests')
+      .select('*')
+      .eq('to_email', req.user.email)
+      .eq('status', 'pending');
+    return res.json(simple || []);
+  }
+  res.json(data || []);
+});
+
+// Accept/decline request
+app.put('/api/friends/requests/:id', authenticate, async (req, res) => {
+  const { status } = req.body; // 'accepted' or 'declined'
+  const { id } = req.params;
+
+  const { data: request } = await supabase
+    .from('friend_requests')
+    .select('*')
+    .eq('id', id)
+    .eq('to_email', req.user.email)
+    .single();
+
+  if (!request) return res.status(404).json({ error: 'Request not found' });
+
+  await supabase.from('friend_requests').update({ status }).eq('id', id);
+
+  if (status === 'accepted') {
+    await supabase.from('friendships').upsert([{
+      user1_email: request.from_email,
+      user2_email: request.to_email
+    }], { onConflict: 'user1_email,user2_email' });
+  }
+
+  res.json({ message: `Request ${status}` });
+});
+
+// Get friends list
+app.get('/api/friends', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const { data, error } = await supabase
+    .from('friendships')
+    .select('*')
+    .or(`user1_email.eq.${email},user2_email.eq.${email}`);
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  // Get friend emails
+  const friendEmails = (data || []).map(f =>
+    f.user1_email === email ? f.user2_email : f.user1_email
+  );
+
+  if (!friendEmails.length) return res.json([]);
+
+  const { data: friends } = await supabase
+    .from('users')
+    .select('name, email, username, gender, bio, skills, college')
+    .in('email', friendEmails);
+
+  res.json(friends || []);
+});
+
+// Remove friend
+app.delete('/api/friends/:friend_email', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const friend_email = decodeURIComponent(req.params.friend_email);
+
+  await supabase.from('friendships').delete()
+    .or(`and(user1_email.eq.${email},user2_email.eq.${friend_email}),and(user1_email.eq.${friend_email},user2_email.eq.${email})`);
+
+  res.json({ message: 'Friend removed' });
+});
+
 app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
   console.log(`✅ Supabase connected!`);
