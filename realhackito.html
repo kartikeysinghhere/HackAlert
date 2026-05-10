@@ -89,19 +89,36 @@
         <button class="nav-btn" onclick="goTo('login')">Login</button>
         <button class="nav-btn cta" onclick="goTo('signup')">Sign Up →</button>
       </div>
-      <div class="nav-links" id="nav-app" style="display:none;">
+      <div class="nav-links" id="nav-app" style="display:none;align-items:center;gap:8px;">
         <button class="nav-btn" id="nb-hack" onclick="goTo('dashboard')">Hackathons</button>
-        <button class="nav-btn" onclick="showUserSearch()">🔍 Find Friends</button>
-        <button class="nav-btn" onclick="goTo('profile')">👤 Profile</button>
-        <button class="nav-btn" onclick="goTo('teams')">🤝 Teams</button>
-        <button class="nav-btn" onclick="goTo('calendar')">📅 Calendar</button>
-        <button class="nav-btn" onclick="goTo('showcase')">🚀 Showcase</button>
-        <button class="nav-btn" onclick="goTo('messages')" id="nb-messages">
-          💬 Messages <span id="nav-unread-badge"
-            style="display:none;background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:100px;margin-left:4px;font-family:var(--mono);">0</span>
-        </button>
-        <button class="nav-btn" onclick="goTo('ai-tools')">🧠 AI Tools</button>
-        <button class="nav-btn" onclick="logout()">Logout</button>
+        <div style="position:relative;">
+          <button class="nav-btn" onclick="toggleNavMenu()" id="nav-menu-btn"
+            style="display:flex;align-items:center;gap:6px;">
+            ☰ Menu
+          </button>
+          <div id="nav-dropdown"
+            style="display:none;position:absolute;right:0;top:48px;background:var(--surface);border:1px solid var(--border-light);border-radius:16px;padding:8px;min-width:200px;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+            <button class="nav-btn" onclick="goTo('profile');toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">👤 Profile</button>
+            <button class="nav-btn" onclick="goTo('teams');toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🤝 Teams</button>
+            <button class="nav-btn" onclick="goTo('calendar');toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">📅 Calendar</button>
+            <button class="nav-btn" onclick="goTo('showcase');toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🚀 Showcase</button>
+            <button class="nav-btn" onclick="goTo('messages');toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">💬 Messages <span
+                id="nav-unread-badge"
+                style="display:none;background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:100px;margin-left:4px;font-family:var(--mono);">0</span></button>
+            <button class="nav-btn" onclick="goTo('ai-tools');toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🧠 AI Tools</button>
+            <button class="nav-btn" onclick="showUserSearch();toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🔍 Find Friends</button>
+            <div style="border-top:1px solid var(--border);margin:8px 0;"></div>
+            <button class="nav-btn" onclick="logout();toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:#ef4444;">🚪 Logout</button>
+          </div>
+        </div>
       </div>
     </div>
   </nav>

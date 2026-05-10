@@ -240,6 +240,7 @@ function goTo(pageId) {
   if (pageId === 'calendar') renderCalendar();
   if (pageId === 'showcase') loadShowcase();
   if (pageId === 'messages') loadConversations();
+  if (pageId === 'ai-tools') { }
 }
 
 // ── Append message bubble to chat ──
@@ -1696,3 +1697,17 @@ async function analyzeHackathon() {
     output.innerHTML = '<p style="color:#ef4444;">Failed to analyze. Try again.</p>';
   }
 }
+
+function toggleNavMenu() {
+  const dropdown = document.getElementById('nav-dropdown');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+// Click outside se close ho
+document.addEventListener('click', (e) => {
+  const btn = document.getElementById('nav-menu-btn');
+  const dropdown = document.getElementById('nav-dropdown');
+  if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+});
