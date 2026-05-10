@@ -1492,3 +1492,87 @@ body.light .nav-btn:hover {
   border-color: rgba(0, 240, 255, 0.3);
   color: var(--accent);
 }
+
+/* ── DM EYE INDICATOR ── */
+#page-messages {
+  padding-top: 70px;
+}
+
+.eye-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+
+.eye-svg {
+  width: 18px;
+  height: 18px;
+}
+
+.conv-item {
+  padding: 14px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+
+.conv-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.conv-item.active {
+  background: rgba(0, 240, 255, 0.06);
+  border-left: 2px solid var(--accent);
+}
+
+.dm-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+  animation: msgIn 0.2s ease;
+}
+
+.dm-msg.sent {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.dm-msg.received {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.dm-bubble {
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.dm-msg.sent .dm-bubble {
+  background: var(--accent);
+  color: #050508;
+  border-radius: 16px 16px 4px 16px;
+}
+
+.dm-msg.received .dm-bubble {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 16px 16px 16px 4px;
+}
+
+.dm-meta {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: var(--mono);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

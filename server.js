@@ -14,6 +14,7 @@ if (!JWT_SECRET) throw new Error('CRITICAL: JWT_SECRET missing in environment');
 
 const app = express();
 const PORT = 3000;
+const dmClients = {}; // DM SSE connections
 
 // Banned words list and censor function for the bot
 const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap']; // Extend as needed
@@ -809,6 +810,163 @@ app.delete('/api/friends/:friend_email', authenticate, async (req, res) => {
     .or(`and(user1_email.eq.${email},user2_email.eq.${friend_email}),and(user1_email.eq.${friend_email},user2_email.eq.${email})`);
 
   res.json({ message: 'Friend removed' });
+});
+
+// ── Direct Messages ──
+
+// Get conversations list (inbox)
+app.get('/api/dm/conversations', authenticate, async (req, res) => {
+  const email = req.user.email;
+
+  const { data, error } = await supabase
+    .from('direct_messages')
+    .select('*')
+    .or(`from_email.eq.${email},to_email.eq.${email}`)
+    .order('created_at', { ascending: false });
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  // Group by conversation partner
+  const conversations = {};
+  (data || []).forEach(msg => {
+    const partner = msg.from_email === email ? msg.to_email : msg.from_email;
+    if (!conversations[partner]) {
+      conversations[partner] = {
+        partner_email: partner,
+        last_message: msg.message,
+        last_time: msg.created_at,
+        unread: 0
+      };
+    }
+    if (msg.to_email === email && !msg.seen) {
+      conversations[partner].unread++;
+    }
+  });
+
+  // Get partner names
+  const partnerEmails = Object.keys(conversations);
+  if (!partnerEmails.length) return res.json([]);
+
+  const { data: users } = await supabase
+    .from('users')
+    .select('name, email, username, gender')
+    .in('email', partnerEmails);
+
+  const result = Object.values(conversations).map(conv => ({
+    ...conv,
+    partner: users?.find(u => u.email === conv.partner_email) || { email: conv.partner_email, name: conv.partner_email }
+  }));
+
+  res.json(result);
+});
+
+// Get messages between two users
+app.get('/api/dm/:partner_email', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const partner = decodeURIComponent(req.params.partner_email);
+
+  const { data, error } = await supabase
+    .from('direct_messages')
+    .select('*')
+    .or(`and(from_email.eq.${email},to_email.eq.${partner}),and(from_email.eq.${partner},to_email.eq.${email})`)
+    .order('created_at', { ascending: true });
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  // Mark messages as seen
+  await supabase
+    .from('direct_messages')
+    .update({ seen: true })
+    .eq('to_email', email)
+    .eq('from_email', partner)
+    .eq('seen', false);
+
+  res.json(data || []);
+});
+
+// Send DM
+app.post('/api/dm/:partner_email', authenticate, async (req, res) => {
+  const from_email = req.user.email;
+  const to_email = decodeURIComponent(req.params.partner_email);
+  const { message } = req.body;
+
+  if (!message) return res.status(400).json({ error: 'Message required' });
+
+  // Check if friends
+  const { data: friendship } = await supabase
+    .from('friendships')
+    .select('*')
+    .or(`and(user1_email.eq.${from_email},user2_email.eq.${to_email}),and(user1_email.eq.${to_email},user2_email.eq.${from_email})`)
+    .single();
+
+  if (!friendship) return res.status(403).json({ error: 'You can only DM friends' });
+
+  const { data, error } = await supabase
+    .from('direct_messages')
+    .insert([{ from_email, to_email, message, seen: false }])
+    .select().single();
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  // Broadcast via SSE if receiver is connected
+  const dmKey = [from_email, to_email].sort().join('::');
+  if (dmClients[dmKey]) {
+    dmClients[dmKey].forEach(client => {
+      client.write(`data: ${JSON.stringify(data)}\n\n`);
+    });
+  }
+
+  res.json(data);
+});
+
+// Mark messages as seen
+app.put('/api/dm/:partner_email/seen', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const partner = decodeURIComponent(req.params.partner_email);
+
+  await supabase
+    .from('direct_messages')
+    .update({ seen: true })
+    .eq('to_email', email)
+    .eq('from_email', partner);
+
+  // Notify sender via SSE
+  const dmKey = [email, partner].sort().join('::');
+  if (dmClients[dmKey]) {
+    dmClients[dmKey].forEach(client => {
+      client.write(`data: ${JSON.stringify({ type: 'seen', from: email })}\n\n`);
+    });
+  }
+
+  res.json({ message: 'Marked seen' });
+});
+
+app.get('/api/dm/:partner_email/stream', (req, res) => {
+  const token = req.query.token;
+  if (!token) return res.status(401).end();
+
+  let user;
+  try {
+    user = jwt.verify(token, JWT_SECRET);
+  } catch {
+    return res.status(401).end();
+  }
+
+  const email = user.email;
+  const partner = decodeURIComponent(req.params.partner_email);
+  const dmKey = [email, partner].sort().join('::');
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  if (!dmClients[dmKey]) dmClients[dmKey] = [];
+  dmClients[dmKey].push(res);
+
+  req.on('close', () => {
+    dmClients[dmKey] = dmClients[dmKey].filter(c => c !== res);
+  });
 });
 
 app.listen(PORT, () => {

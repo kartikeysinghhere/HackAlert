@@ -224,7 +224,7 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase'];
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {
@@ -239,6 +239,7 @@ function goTo(pageId) {
   if (pageId === 'teams') loadTeams();
   if (pageId === 'calendar') renderCalendar();
   if (pageId === 'showcase') loadShowcase();
+  if (pageId === 'messages') loadConversations();
 }
 
 // ── Append message bubble to chat ──
@@ -1468,6 +1469,7 @@ async function loadFriends() {
               </div>
               <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
             </div>
+            <button onclick="openDMChat('${escapeHTML(f.email)}','${escapeHTML(f.name)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">💬</button>
             <button onclick="removeFriend('${escapeHTML(f.email)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
           </div>
         `).join('')}
