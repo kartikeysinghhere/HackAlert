@@ -1248,7 +1248,7 @@ body.light .nav-btn:hover {
   inset: 0;
   z-index: 500;
   overflow-y: auto;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding-top: 70px;
 }
