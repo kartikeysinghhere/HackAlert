@@ -109,6 +109,7 @@ app.use(cors({
     ? 'https://hackalert-xwpd.onrender.com'
     : 'http://localhost:3000'
 }));
+
 app.use(helmet({
   contentSecurityPolicy: false
 }));
