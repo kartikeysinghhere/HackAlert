@@ -103,8 +103,12 @@ cron.schedule('0 10 * * *', async () => {
     }
   }
 });
-
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://hackalert-xwpd.onrender.com'
+    : 'http://localhost:3000'
+}));
+app.use(helmet());
 app.use(express.json());
 app.use(express.static(__dirname));
 app.get('/', (req, res) => {
@@ -119,7 +123,6 @@ app.get('/api/hackathons', async (req, res) => {
     const indian = supabaseRes.data || [];
     const all = [...hackClub, ...indian];
 
-    // Remove duplicates by name
     const seen = new Set();
     const unique = all.filter(h => {
       const key = h.name.toLowerCase().trim();
@@ -619,33 +622,6 @@ app.delete('/api/teams/:id/project', authenticate, async (req, res) => {
 
   if (error) return res.status(500).json({ error: error.message });
   res.json({ message: 'Project deleted' });
-});
-
-const express = require("express");
-const cors = require("cors");
-const rateLimit = require("express-rate-limit");
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: "Too many attempts, try again later"
-});
-
-app.use("/api/login", authLimiter);
-app.use("/api/signup", authLimiter);
-
-// your routes here
-app.post("/api/login", ...)
-
-app.post("/api/signup", ...)
-
-app.listen(3000, () => {
-  console.log("Server running");
 });
 
 app.listen(PORT, () => {
