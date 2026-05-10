@@ -626,6 +626,45 @@ app.delete('/api/teams/:id/project', authenticate, async (req, res) => {
   res.json({ message: 'Project deleted' });
 });
 
+// ── Hackathon Reviews ──
+app.get('/api/reviews/:hackathon_name', async (req, res) => {
+  const name = decodeURIComponent(req.params.hackathon_name);
+  const { data, error } = await supabase
+    .from('hackathon_reviews')
+    .select('*')
+    .eq('hackathon_name', name)
+    .order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+app.post('/api/reviews', authenticate, async (req, res) => {
+  const { hackathon_name, rating, review } = req.body;
+  const user_email = req.user.email;
+  if (!hackathon_name || !rating) return res.status(400).json({ error: 'Name and rating required' });
+  if (rating < 1 || rating > 5) return res.status(400).json({ error: 'Rating must be 1-5' });
+
+  const { data, error } = await supabase
+    .from('hackathon_reviews')
+    .upsert([{ hackathon_name, user_email, rating, review }],
+      { onConflict: 'hackathon_name,user_email' })
+    .select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.delete('/api/reviews/:hackathon_name', authenticate, async (req, res) => {
+  const name = decodeURIComponent(req.params.hackathon_name);
+  const user_email = req.user.email;
+  const { error } = await supabase
+    .from('hackathon_reviews')
+    .delete()
+    .eq('hackathon_name', name)
+    .eq('user_email', user_email);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Review deleted' });
+});
+
 app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
   console.log(`✅ Supabase connected!`);

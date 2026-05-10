@@ -473,7 +473,15 @@ function loadProfile() {
 
 // ── Logout ──
 function logout() {
-  if (!confirm('Are you sure you want to log out?')) return;
+  document.getElementById('logout-modal').style.display = 'flex';
+}
+
+function hideLogoutModal() {
+  document.getElementById('logout-modal').style.display = 'none';
+}
+
+function confirmLogout() {
+  document.getElementById('logout-modal').style.display = 'none';
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display = 'none';
   localStorage.removeItem('authToken');
@@ -652,6 +660,10 @@ function openModal(hack) {
     </div>
   `;
   document.getElementById('hack-modal').style.display = 'flex';
+  document.getElementById('review-form').style.display = 'none';
+  document.getElementById('write-review-btn').style.display = 'block';
+  selectedRating = 0;
+  loadReviews(hack.name);
 }
 
 function closeModal() {
@@ -1176,4 +1188,98 @@ async function deleteProject(teamId) {
     const d = await res.json();
     showToast('❌', 'Error', d.error);
   }
+}
+
+// ── REVIEWS ──
+let currentReviewHackathon = null;
+let selectedRating = 0;
+
+function setRating(n) {
+  selectedRating = n;
+  document.querySelectorAll('#star-input .star').forEach((s, i) => {
+    s.style.opacity = i < n ? '1' : '0.3';
+  });
+}
+
+function showReviewForm() {
+  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+  if (!isLoggedIn) { showToast('⚠️', 'Login Required', 'Please login to write a review.'); return; }
+  document.getElementById('review-form').style.display = 'block';
+  document.getElementById('write-review-btn').style.display = 'none';
+}
+
+async function loadReviews(hackathonName) {
+  currentReviewHackathon = hackathonName;
+  const list = document.getElementById('reviews-list');
+  list.innerHTML = '<p style="color:var(--muted);font-size:12px;">Loading reviews...</p>';
+
+  try {
+    const res = await fetch(`/api/reviews/${encodeURIComponent(hackathonName)}`);
+    const reviews = await res.json();
+
+    if (!reviews.length) {
+      list.innerHTML = '<p style="color:var(--muted);font-size:13px;">No reviews yet — be the first!</p>';
+      return;
+    }
+
+    const avg = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
+    const userEmail = localStorage.getItem('userEmail');
+
+    list.innerHTML = `
+      <div style="margin-bottom:12px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;font-weight:700;color:var(--accent);">${avg}</span>
+        <span style="color:#f59e0b;font-size:16px;">${'⭐'.repeat(Math.round(avg))}</span>
+        <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">(${reviews.length} review${reviews.length !== 1 ? 's' : ''})</span>
+      </div>
+      ${reviews.map(r => `
+        <div style="padding:10px 12px;margin-bottom:8px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="color:#f59e0b;font-size:14px;">${'⭐'.repeat(r.rating)}</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:var(--muted);font-size:11px;font-family:var(--mono);">${escapeHTML(r.user_email)}</span>
+              ${r.user_email === userEmail ? `<button onclick="deleteReview('${safeJSString(hackathonName)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:11px;">✕</button>` : ''}
+            </div>
+          </div>
+          ${r.review ? `<p style="font-size:13px;color:var(--muted);margin:0;">${escapeHTML(r.review)}</p>` : ''}
+        </div>
+      `).join('')}
+    `;
+  } catch (e) {
+    list.innerHTML = '<p style="color:#ef4444;font-size:13px;">Failed to load reviews.</p>';
+  }
+}
+
+async function submitReview() {
+  if (!selectedRating) { showToast('⚠️', 'Select Rating', 'Please select a star rating.'); return; }
+  const review = document.getElementById('review-text').value.trim();
+
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ hackathon_name: currentReviewHackathon, rating: selectedRating, review })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast('⭐', 'Review Submitted!', 'Thanks for your feedback.');
+      document.getElementById('review-form').style.display = 'none';
+      document.getElementById('write-review-btn').style.display = 'block';
+      document.getElementById('review-text').value = '';
+      selectedRating = 0;
+      loadReviews(currentReviewHackathon);
+    } else {
+      showToast('❌', 'Error', data.error);
+    }
+  } catch (e) {
+    showToast('❌', 'Error', 'Could not submit review.');
+  }
+}
+
+async function deleteReview(hackathonName) {
+  if (!confirm('Delete your review?')) return;
+  const res = await fetch(`/api/reviews/${encodeURIComponent(hackathonName)}`, {
+    method: 'DELETE',
+    headers: authHeaders()
+  });
+  if (res.ok) { showToast('✅', 'Deleted', 'Review removed.'); loadReviews(hackathonName); }
 }

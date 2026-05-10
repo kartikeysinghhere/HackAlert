@@ -334,6 +334,28 @@
       <div id="modal-content">
         <!-- Hackathon details will be loaded here -->
       </div>
+      <!-- REVIEWS SECTION — YE ADD KARO -->
+      <div id="reviews-section" style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;">
+        <h4 style="color:#fff;margin-bottom:16px;">⭐ Reviews</h4>
+        <div id="reviews-list" style="margin-bottom:16px;"></div>
+        <div id="review-form" style="display:none;">
+          <div style="display:flex;gap:8px;margin-bottom:12px;" id="star-input">
+            <span onclick="setRating(1)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
+            <span onclick="setRating(2)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
+            <span onclick="setRating(3)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
+            <span onclick="setRating(4)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
+            <span onclick="setRating(5)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
+          </div>
+          <textarea id="review-text" placeholder="Share your experience..." rows="3"
+            style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:10px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;margin-bottom:8px;"></textarea>
+          <button onclick="submitReview()"
+            style="background:var(--accent);color:#050508;border:none;padding:10px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;">Submit
+            Review</button>
+        </div>
+        <button id="write-review-btn" onclick="showReviewForm()"
+          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;cursor:pointer;">✏️
+          Write a Review</button>
+      </div>
     </div>
   </div>
 
@@ -525,6 +547,25 @@
     </div>
 
     <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div id="logout-modal"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+    <div
+      style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:380px;width:90%;text-align:center;">
+      <div style="font-size:40px;margin-bottom:16px;">👋</div>
+      <h3 style="color:#fff;margin-bottom:8px;">Logging out?</h3>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">You'll need to login again to access your
+        dashboard.</p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button onclick="hideLogoutModal()"
+          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:12px 28px;border-radius:10px;cursor:pointer;font-family:var(--mono);font-size:13px;">Cancel</button>
+        <button onclick="confirmLogout()"
+          style="background:#ef4444;border:none;color:#fff;padding:12px 28px;border-radius:10px;cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:700;">Yes,
+          Logout</button>
+      </div>
+    </div>
   </div>
 
   <!-- TOAST -->
