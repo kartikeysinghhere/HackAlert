@@ -172,6 +172,58 @@ function bindCoreButtonHandlers() {
   bind('#get-started-btn2', () => goTo('signup'));
   bind('.hero-actions .btn-hero.secondary', () => goTo('dashboard'));
   bind('#floating-bot', () => goTo('bot'));
+
+  // Auth form submits (fallback when inline onsubmit is blocked)
+  const loginForm = document.querySelector('#page-login form');
+  if (loginForm && loginForm.dataset.boundSubmit !== '1') {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loginUser();
+    });
+    loginForm.dataset.boundSubmit = '1';
+  }
+
+  const signupForm = document.querySelector('#page-signup form');
+  if (signupForm && signupForm.dataset.boundSubmit !== '1') {
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      signupUser();
+    });
+    signupForm.dataset.boundSubmit = '1';
+  }
+
+  // Auth page text links
+  bind('#page-login .auth-footer a', () => goTo('signup'));
+  bind('#page-signup .auth-footer a', () => goTo('login'));
+
+  // Gender selection fallback (when inline onchange/onclick is blocked)
+  const maleInput = document.getElementById('gender-male');
+  const femaleInput = document.getElementById('gender-female');
+  const maleLabel = document.getElementById('gender-male-label');
+  const femaleLabel = document.getElementById('gender-female-label');
+
+  if (maleInput && maleInput.dataset.boundChange !== '1') {
+    maleInput.addEventListener('change', () => selectGender('male'));
+    maleInput.dataset.boundChange = '1';
+  }
+  if (femaleInput && femaleInput.dataset.boundChange !== '1') {
+    femaleInput.addEventListener('change', () => selectGender('female'));
+    femaleInput.dataset.boundChange = '1';
+  }
+  if (maleLabel && maleLabel.dataset.boundClick !== '1' && maleInput) {
+    maleLabel.addEventListener('click', () => {
+      maleInput.checked = true;
+      selectGender('male');
+    });
+    maleLabel.dataset.boundClick = '1';
+  }
+  if (femaleLabel && femaleLabel.dataset.boundClick !== '1' && femaleInput) {
+    femaleLabel.addEventListener('click', () => {
+      femaleInput.checked = true;
+      selectGender('female');
+    });
+    femaleLabel.dataset.boundClick = '1';
+  }
 }
 
 function startHeartbeat() {
