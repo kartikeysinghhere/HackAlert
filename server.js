@@ -1063,6 +1063,24 @@ Return ONLY a valid JSON object, no markdown, no explanation:
   }
 });
 
+// ── Online Status ──
+app.post('/api/ping', authenticate, async (req, res) => {
+  await supabase
+    .from('users')
+    .update({ last_seen: new Date().toISOString() })
+    .eq('email', req.user.email);
+  res.json({ ok: true });
+});
+
+app.get('/api/users/online', authenticate, async (req, res) => {
+  const twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+  const { data } = await supabase
+    .from('users')
+    .select('email, last_seen')
+    .gte('last_seen', twoMinsAgo);
+  res.json((data || []).map(u => u.email));
+});
+
 app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
   console.log(`✅ Supabase connected!`);

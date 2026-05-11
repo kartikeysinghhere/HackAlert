@@ -57,6 +57,9 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nav-app').style.display = 'flex';
     const btn = document.getElementById('get-started-btn');
     if (btn) btn.style.display = 'none';
+    startHeartbeat();
+    setInterval(fetchOnlineUsers, 15000);
+    fetchOnlineUsers();
   }
   showWelcomeMessage();
 
@@ -1470,6 +1473,8 @@ async function loadFriends() {
               <div style="display:flex;align-items:center;gap:4px;">
                 <strong style="color:#fff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
                 <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
+${onlineDot(f.email, 8)}
+                <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
               </div>
               <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
             </div>
@@ -1766,6 +1771,7 @@ async function loadConversations() {
           <div style="flex:1;min-width:0;">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <strong style="color:#fff;font-size:13px;">${escapeHTML(c.partner.name || c.partner_email)}</strong>
+              ${onlineDot(c.partner_email, 8)}
               ${c.unread > 0 ? `<span style="background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:100px;font-family:var(--mono);">${c.unread}</span>` : ''}
             </div>
             <p style="color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(c.last_message)}</p>
@@ -1783,14 +1789,17 @@ async function openDMChat(partnerEmail, partnerName) {
   await loadConversations();
 
   document.getElementById('dm-chat-header').innerHTML = `
+  <div style="position:relative;flex-shrink:0;">
     <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;">
       ${escapeHTML(partnerName.charAt(0).toUpperCase())}
     </div>
-    <div>
-      <strong style="color:#fff;">${escapeHTML(partnerName)}</strong>
-      <p style="color:var(--muted);font-size:12px;font-family:var(--mono);">${escapeHTML(partnerEmail)}</p>
-    </div>
-  `;
+    <span style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:${isOnline(partnerEmail) ? '#22c55e' : '#64748b'};border:2px solid var(--surface);${isOnline(partnerEmail) ? 'box-shadow:0 0 6px #22c55e;' : ''}"></span>
+  </div>
+  <div>
+    <strong style="color:#fff;">${escapeHTML(partnerName)}</strong>
+    <p style="color:${isOnline(partnerEmail) ? '#22c55e' : 'var(--muted)'};font-size:12px;font-family:var(--mono);">${isOnline(partnerEmail) ? '● Online' : '○ Offline'}</p>
+  </div>
+`;
 
   const inputArea = document.getElementById('dm-input-area');
   inputArea.style.display = 'flex';
