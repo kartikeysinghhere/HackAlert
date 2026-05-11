@@ -1,0 +1,3 @@
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+✅ HackAlert running → http://localhost:3000/realhackito.html
+✅ Supabase connected!

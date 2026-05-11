@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -38,6 +39,14 @@ app.use('/api/hackathons', hackathonsRoutes); // /api/hackathons, /api/hackathon
 app.use('/api/dm', messagingRoutes); // /api/dm/conversations, /api/dm/:email, etc.
 app.use('/api/teams', teamsRoutes);   // /api/teams/:id, /api/teams/requests, etc.
 app.use('/api', usersRoutes);     // /api/profile, /api/friends, /api/users/online, /api/ping
+
+// Serve frontend for any other routes (SPA support)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, 'realhackito.html'));
+});
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
