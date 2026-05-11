@@ -2,11 +2,17 @@ const authService = require('../services/auth.service');
 const asyncHandler = require('../utils/asyncHandler');
 const { NODE_ENV } = require('../config/env');
 
+const isProduction = NODE_ENV === 'production';
+const cookieSameSiteEnv = (process.env.COOKIE_SAME_SITE || '').toLowerCase();
+const cookieSameSite = ['lax', 'strict', 'none'].includes(cookieSameSiteEnv)
+  ? cookieSameSiteEnv
+  : (isProduction ? 'none' : 'lax');
+
 // Cookie configuration
 const cookieOptions = {
   httpOnly: true,
-  secure: NODE_ENV === 'production',
-  sameSite: 'Strict',
+  secure: isProduction,
+  sameSite: cookieSameSite,
   path: '/'
 };
 

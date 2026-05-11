@@ -22,8 +22,22 @@ const app = express();
 
 // Middleware
 app.use(helmet());
+const allowedOrigins = (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || '')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
 app.use(cors({
-  origin: true, // In production, replace with actual origin
+  origin(origin, callback) {
+    // Allow non-browser requests (no Origin header)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0 && env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS origin not allowed'));
+  },
   credentials: true
 }));
 app.use(express.json());

@@ -7,10 +7,11 @@ const { authenticate } = require('../middleware/security');
 
 // Public routes
 router.post('/register', validate(signupSchema), authController.register);
+router.post('/signup', validate(signupSchema), authController.register); // Backward-compatible alias
 router.post('/login', validate(loginSchema), authController.login);
 router.post('/refresh', authController.refresh);
 
 // Protected routes
-router.post('/logout', authenticate, authController.logout);
+router.post('/logout', authController.logout);
 
 module.exports = router;

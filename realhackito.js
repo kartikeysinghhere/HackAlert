@@ -65,10 +65,8 @@ function safeJSString(str) {
 }
 
 function authHeaders() {
-  const token = localStorage.getItem('authToken');
   return {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    'Content-Type': 'application/json'
   };
 }
 
@@ -86,17 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // Fallback click bindings for environments where inline onclick is blocked
   bindCoreButtonHandlers();
 
-  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-  if (isLoggedIn) {
-    fetchHackathons();
-    document.getElementById('nav-auth').style.display = 'none';
-    document.getElementById('nav-app').style.display = 'flex';
-    const btn = document.getElementById('get-started-btn');
-    if (btn) btn.style.display = 'none';
-    startHeartbeat();
-    setInterval(fetchOnlineUsers, 15000);
-    fetchOnlineUsers();
-  }
+  initializeAuthState();
   showWelcomeMessage();
 
   // ADDED: handle invite link
@@ -116,6 +104,42 @@ window.addEventListener('DOMContentLoaded', () => {
     window.history.replaceState({}, '', window.location.pathname);
   }
 });
+
+async function initializeAuthState() {
+  const navAuth = document.getElementById('nav-auth');
+  const navApp = document.getElementById('nav-app');
+  const btn = document.getElementById('get-started-btn');
+
+  try {
+    const res = await fetch('/api/profile');
+    if (!res.ok) throw new Error('Unauthenticated');
+    const data = await res.json();
+    localStorage.setItem('loggedIn', 'true');
+    if (data?.user) {
+      localStorage.setItem('userEmail', data.user.email || '');
+      localStorage.setItem('userName', data.user.name || '');
+      localStorage.setItem('userUsername', data.user.username || '');
+      localStorage.setItem('userGender', data.user.gender || '');
+      localStorage.setItem('userBio', data.user.bio || '');
+      localStorage.setItem('userSkills', data.user.skills || '');
+      localStorage.setItem('userMobile', data.user.mobile || '');
+      localStorage.setItem('userCollege', data.user.college || '');
+    }
+    if (navAuth) navAuth.style.display = 'none';
+    if (navApp) navApp.style.display = 'flex';
+    if (btn) btn.style.display = 'none';
+    fetchHackathons();
+    startHeartbeat();
+    setInterval(fetchOnlineUsers, 15000);
+    fetchOnlineUsers();
+  } catch (e) {
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('authToken');
+    if (navAuth) navAuth.style.display = '';
+    if (navApp) navApp.style.display = 'none';
+    if (btn) btn.style.display = '';
+  }
+}
 
 function bindCoreButtonHandlers() {
   const bind = (selector, handler) => {
@@ -504,14 +528,13 @@ async function signupUser() {
   if (!name || !email || !pass) return alert('Name, Email, and Password are required.');
 
   try {
-    const res = await fetch('/api/signup', {
+    const res = await fetch('/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, pass, mobile, college, username, gender, bio, skills })
     });
     const data = await res.json();
     if (res.ok) {
-      localStorage.setItem('authToken', data.token); // YE LINE MISSING THI
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userName', name);
       localStorage.setItem('userEmail', email);
