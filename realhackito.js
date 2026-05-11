@@ -1714,3 +1714,169 @@ document.addEventListener('click', (e) => {
     dropdown.style.display = 'none';
   }
 });
+
+// ── DIRECT MESSAGES ──
+let currentDMPartner = null;
+let dmEventSource = null;
+
+function eyeUnseen() {
+  return `<span class="eye-indicator" title="Not seen">
+    <svg class="eye-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" stroke="#64748b"/>
+      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" stroke="#64748b"/>
+      <line x1="1" y1="1" x2="23" y2="23" stroke="#ef4444" stroke-width="2"/>
+    </svg>
+  </span>`;
+}
+
+function eyeSeen() {
+  return `<span class="eye-indicator" title="Seen">
+    <svg class="eye-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#00f0ff"/>
+      <circle cx="12" cy="12" r="3" stroke="#00f0ff"/>
+    </svg>
+  </span>`;
+}
+
+async function loadConversations() {
+  try {
+    const res = await fetch('/api/dm/conversations', { headers: authHeaders() });
+    const convos = await res.json();
+    const list = document.getElementById('conversations-list');
+
+    const totalUnread = convos.reduce((sum, c) => sum + c.unread, 0);
+    const badge = document.getElementById('nav-unread-badge');
+    if (badge) {
+      if (totalUnread > 0) { badge.style.display = 'inline'; badge.textContent = totalUnread; }
+      else badge.style.display = 'none';
+    }
+
+    if (!convos.length) {
+      list.innerHTML = '<p style="padding:20px;color:var(--muted);font-size:13px;">No conversations yet.<br>Add friends and start chatting!</p>';
+      return;
+    }
+
+    list.innerHTML = convos.map(c => `
+      <div class="conv-item ${currentDMPartner === c.partner_email ? 'active' : ''}"
+        onclick="openDMChat('${escapeHTML(c.partner_email)}', '${escapeHTML(c.partner.name || c.partner_email)}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;flex-shrink:0;">
+            ${escapeHTML((c.partner.name || 'U').charAt(0).toUpperCase())}
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong style="color:#fff;font-size:13px;">${escapeHTML(c.partner.name || c.partner_email)}</strong>
+              ${c.unread > 0 ? `<span style="background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:100px;font-family:var(--mono);">${c.unread}</span>` : ''}
+            </div>
+            <p style="color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(c.last_message)}</p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.error('Error loading conversations:', e);
+  }
+}
+
+async function openDMChat(partnerEmail, partnerName) {
+  currentDMPartner = partnerEmail;
+
+  document.getElementById('dm-chat-header').innerHTML = `
+    <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;">
+      ${escapeHTML(partnerName.charAt(0).toUpperCase())}
+    </div>
+    <div>
+      <strong style="color:#fff;">${escapeHTML(partnerName)}</strong>
+      <p style="color:var(--muted);font-size:12px;font-family:var(--mono);">${escapeHTML(partnerEmail)}</p>
+    </div>
+  `;
+
+  const inputArea = document.getElementById('dm-input-area');
+  inputArea.style.display = 'flex';
+
+  await loadDMMessages(partnerEmail);
+
+  if (dmEventSource) dmEventSource.close();
+  const token = localStorage.getItem('authToken');
+  dmEventSource = new EventSource(`/api/dm/${encodeURIComponent(partnerEmail)}/stream?token=${token}`);
+  dmEventSource.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    if (data.type === 'seen') {
+      document.querySelectorAll('.eye-unseen').forEach(el => {
+        el.outerHTML = eyeSeen();
+      });
+    } else {
+      appendDMMessage(data);
+      if (data.to_email === localStorage.getItem('userEmail')) {
+        fetch(`/api/dm/${encodeURIComponent(partnerEmail)}/seen`, {
+          method: 'PUT',
+          headers: authHeaders()
+        });
+      }
+    }
+  };
+
+  loadConversations();
+}
+
+async function loadDMMessages(partnerEmail) {
+  const area = document.getElementById('dm-chat-area');
+  area.innerHTML = '<p style="color:var(--muted);text-align:center;font-size:13px;">Loading...</p>';
+
+  try {
+    const res = await fetch(`/api/dm/${encodeURIComponent(partnerEmail)}`, { headers: authHeaders() });
+    const messages = await res.json();
+    area.innerHTML = '';
+    messages.forEach(m => appendDMMessage(m));
+    area.scrollTop = area.scrollHeight;
+  } catch (e) {
+    area.innerHTML = '<p style="color:#ef4444;text-align:center;">Failed to load messages.</p>';
+  }
+}
+
+function appendDMMessage(m) {
+  const area = document.getElementById('dm-chat-area');
+  const myEmail = localStorage.getItem('userEmail');
+  const isSent = m.from_email === myEmail;
+  const time = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const div = document.createElement('div');
+  div.className = `dm-msg ${isSent ? 'sent' : 'received'}`;
+  div.dataset.msgId = m.id;
+
+  div.innerHTML = `
+    <div class="dm-bubble">${escapeHTML(m.message)}</div>
+    <div class="dm-meta">
+      ${time}
+      ${isSent ? (m.seen ? eyeSeen() : `<span class="eye-unseen">${eyeUnseen()}</span>`) : ''}
+    </div>
+  `;
+
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+async function sendDM() {
+  const input = document.getElementById('dm-input');
+  const message = input.value.trim();
+  if (!message || !currentDMPartner) return;
+
+  input.value = '';
+
+  try {
+    const res = await fetch(`/api/dm/${encodeURIComponent(currentDMPartner)}`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ message })
+    });
+
+    if (!res.ok) {
+      const d = await res.json();
+      showToast('❌', 'Error', d.error);
+      input.value = message;
+    }
+  } catch (e) {
+    showToast('❌', 'Error', 'Could not send message.');
+    input.value = message;
+  }
+}
