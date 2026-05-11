@@ -9,10 +9,20 @@ const cron = require('node-cron');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 
+const {
+  globalLimiter,
+  authLimiter,
+  aiLimiter,
+  speedLimiter,
+  botProtection,
+  aiPromptSanityCheck
+} = require("./middleware/security");
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error('CRITICAL: JWT_SECRET missing in environment');
 
 const app = express();
+// Trust proxy for Render/Vercel IP detection
+app.set('trust proxy', 1);
 const PORT = 3000;
 const dmClients = {}; // DM SSE connections
 
@@ -113,7 +123,10 @@ app.use(cors({
 app.use(helmet({
   contentSecurityPolicy: false
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
+// Apply global rate limiting and speed throttling to all API routes
+app.use('/api/', globalLimiter);
+app.use('/api/', speedLimiter);
 app.use(express.static(__dirname));
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/realhackito.html');
@@ -142,7 +155,7 @@ app.get('/api/hackathons', async (req, res) => {
   }
 });
 
-app.post('/ask', async (req, res) => {
+app.post('/ask', aiLimiter, botProtection, aiPromptSanityCheck, async (req, res) => {
   const { messages } = req.body; // Expecting an array of messages now
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'No messages provided' });
@@ -210,7 +223,7 @@ app.post('/ask', async (req, res) => {
   }
 });
 
-app.post('/api/signup', async (req, res) => {
+app.post('/api/signup', authLimiter, async (req, res) => {
   const { name, email, pass, mobile, college, username, gender, bio, skills } = req.body;
   if (!name || !email || !pass || !username) {
     return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
@@ -235,7 +248,7 @@ app.post('/api/signup', async (req, res) => {
   res.status(201).json({ message: 'Signup successful', token });
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', authLimiter, async (req, res) => {
   const { email, pass } = req.body;
   if (!email || !pass) return res.status(400).json({ error: 'Fields required' });
 
@@ -973,7 +986,7 @@ app.get('/api/dm/:partner_email/stream', (req, res) => {
 // ── AI Tools ──
 
 // Project Idea Generator
-app.post('/api/ai/ideas', authenticate, async (req, res) => {
+app.post('/api/ai/ideas', authenticate, aiLimiter, botProtection, aiPromptSanityCheck, async (req, res) => {
   const { theme, problem, level, duration, skills } = req.body;
   if (!theme) return res.status(400).json({ error: 'Theme is required' });
 
@@ -1019,7 +1032,7 @@ Return ONLY a valid JSON array in this exact format, no markdown, no explanation
 });
 
 // Hackathon Difficulty Analyzer
-app.post('/api/ai/analyze', authenticate, async (req, res) => {
+app.post('/api/ai/analyze', authenticate, aiLimiter, botProtection, aiPromptSanityCheck, async (req, res) => {
   const { name, details, skills } = req.body;
   if (!details) return res.status(400).json({ error: 'Hackathon details required' });
 
