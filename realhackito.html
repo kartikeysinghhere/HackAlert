@@ -121,56 +121,164 @@
       </div>
     </div>
   </nav>
-
   <!-- LANDING -->
   <div class="page active" id="page-landing">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
+
+    <!-- HERO -->
     <section class="hero">
-      <div class="hero-badge">AI-Powered Hackathon Tracker</div>
+      <div class="hero-badge">⚡ AI-Powered Hackathon Platform</div>
       <h1>Never Miss<br>A <span class="highlight">HACKATHON</span><br>Again<span class="highlight">!</span></h1>
-      <p>Hack/Alert aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you.</p>
+      <p>The only platform that finds hackathons, builds your team, generates project ideas, and connects you with
+        fellow hackers — all in one place.</p>
       <div class="hero-actions">
-        <button class="btn-hero primary" id="get-started-btn" onclick="goTo('signup')">Get Started — It's Free</button>
+        <button class="btn-hero primary" id="get-started-btn" onclick="goTo('signup')">Get Started — It's Free
+          →</button>
         <button class="btn-hero secondary" onclick="goTo('dashboard')">Browse Hackathons</button>
       </div>
+      <div style="display:flex;gap:20px;justify-content:center;margin-top:32px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted);">
+          <span style="color:var(--accent);">✓</span> Free forever
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted);">
+          <span style="color:var(--accent);">✓</span> No credit card
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted);">
+          <span style="color:var(--accent);">✓</span> 240+ hackathons live
+        </div>
+      </div>
     </section>
+
+    <!-- STATS -->
     <div class="stats">
       <div class="stat">
         <div class="stat-num">240+</div>
         <div class="stat-label">Hackathons Listed</div>
       </div>
       <div class="stat">
-        <div class="stat-num">18K</div>
+        <div class="stat-num">18K+</div>
         <div class="stat-label">Devs Notified</div>
       </div>
       <div class="stat">
         <div class="stat-num">₹50L+</div>
         <div class="stat-label">Total Prize Pool</div>
       </div>
+      <div class="stat">
+        <div class="stat-num">9</div>
+        <div class="stat-label">AI-Powered Tools</div>
+      </div>
     </div>
-    <div class="features">
-      <div class="feature-card">
+
+    <!-- WHAT MAKES US DIFFERENT -->
+    <div style="text-align:center;padding:60px 40px 20px;">
+      <div
+        style="font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:3px;margin-bottom:12px;">
+        Why Hack/Alert?</div>
+      <h2 style="font-size:clamp(24px,4vw,42px);font-weight:800;color:#fff;margin-bottom:12px;">Not just a list. A
+        complete <span style="color:var(--accent);">hacker toolkit.</span></h2>
+      <p style="color:var(--muted);font-size:16px;max-width:560px;margin:0 auto;">Unstop shows you hackathons. Devfolio
+        lets you register. We do all of that <em>plus</em> help you win.</p>
+    </div>
+
+    <!-- FEATURES GRID -->
+    <div class="features" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <div class="feature-card" style="border-color:rgba(0,240,255,0.2);">
         <div class="feature-icon">🤖</div>
-        <h3>AI Chatbot</h3>
-        <p>Ask HackBot anything — "Show me online hackathons under 2 weeks" and get instant curated results.</p>
+        <h3>HackBot AI</h3>
+        <p>Ask anything — "Show me online hackathons in India under 2 weeks" — and get instant, curated results powered
+          by AI.</p>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔔</div>
-        <h3>Real-time Alerts</h3>
-        <p>Get notified the moment a new hackathon drops that matches your skills and interests.</p>
+      <div class="feature-card" style="border-color:rgba(208,91,255,0.2);">
+        <div class="feature-icon">💡</div>
+        <h3>Project Idea Generator</h3>
+        <p>Enter a theme → get 5 winning project ideas with tech stack, MVP features, and winning potential scores.
+          Unique to us.</p>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <h3>Smart Filters</h3>
-        <p>Filter by mode, duration, prize, eligibility, tech stack, and more. Find your perfect hackathon.</p>
+      <div class="feature-card" style="border-color:rgba(0,240,255,0.2);">
+        <div class="feature-icon">🔍</div>
+        <h3>Difficulty Analyzer</h3>
+        <p>Paste any hackathon details — AI tells you skill match %, prep time needed, winning chances, and a day-by-day
+          plan.</p>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">📱</div>
-        <h3>WhatsApp (Soon)</h3>
-        <p>Daily digest of fresh hackathons delivered to your WhatsApp. Never open another tab.</p>
+      <div class="feature-card" style="border-color:rgba(208,91,255,0.2);">
+        <div class="feature-icon">🤝</div>
+        <h3>Team Builder</h3>
+        <p>Create or join teams, chat in real-time, manage tasks on a Kanban board, and showcase your projects — all in
+          one place.</p>
+      </div>
+      <div class="feature-card" style="border-color:rgba(0,240,255,0.2);">
+        <div class="feature-icon">💬</div>
+        <h3>Hacker Social</h3>
+        <p>Find friends by username, send DMs, see read receipts with a unique eye indicator. Connect before the
+          hackathon starts.</p>
+      </div>
+      <div class="feature-card" style="border-color:rgba(208,91,255,0.2);">
+        <div class="feature-icon">📅</div>
+        <h3>Smart Calendar</h3>
+        <p>Visual calendar with color-coded urgency. See all upcoming hackathons at a glance, with saved ones
+          highlighted.</p>
       </div>
     </div>
+
+    <!-- HOW IT WORKS -->
+    <div style="padding:60px 40px;max-width:900px;margin:0 auto;text-align:center;">
+      <div
+        style="font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:3px;margin-bottom:12px;">
+        How it works</div>
+      <h2 style="font-size:clamp(22px,3vw,36px);font-weight:800;color:#fff;margin-bottom:48px;">From zero to <span
+          style="color:var(--accent2);">hackathon winner</span> in 4 steps</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;">
+        <div style="text-align:center;">
+          <div
+            style="width:56px;height:56px;border-radius:16px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
+            🎯</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:6px;">STEP 1</div>
+          <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Find Your Hackathon</h4>
+          <p style="color:var(--muted);font-size:12px;">Browse 240+ hackathons or ask HackBot to find the perfect one
+            for your skills.</p>
+        </div>
+        <div style="text-align:center;">
+          <div
+            style="width:56px;height:56px;border-radius:16px;background:rgba(208,91,255,0.1);border:1px solid rgba(208,91,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
+            🤝</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent2);margin-bottom:6px;">STEP 2</div>
+          <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Build Your Team</h4>
+          <p style="color:var(--muted);font-size:12px;">Find teammates by skills, send friend requests, and plan
+            together via DMs.</p>
+        </div>
+        <div style="text-align:center;">
+          <div
+            style="width:56px;height:56px;border-radius:16px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
+            💡</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:6px;">STEP 3</div>
+          <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Generate Ideas</h4>
+          <p style="color:var(--muted);font-size:12px;">Use AI to generate winning project ideas with full tech stack
+            and MVP features.</p>
+        </div>
+        <div style="text-align:center;">
+          <div
+            style="width:56px;height:56px;border-radius:16px;background:rgba(208,91,255,0.1);border:1px solid rgba(208,91,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
+            🏆</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent2);margin-bottom:6px;">STEP 4</div>
+          <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Win & Showcase</h4>
+          <p style="color:var(--muted);font-size:12px;">Submit your project to our showcase and build your hacker
+            portfolio.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA SECTION -->
+    <div
+      style="margin:20px 40px 60px;padding:48px;background:linear-gradient(135deg,rgba(0,240,255,0.08),rgba(208,91,255,0.08));border:1px solid rgba(0,240,255,0.2);border-radius:24px;text-align:center;">
+      <h2 style="font-size:clamp(22px,3vw,36px);font-weight:800;color:#fff;margin-bottom:12px;">Ready to win your first
+        hackathon?</h2>
+      <p style="color:var(--muted);font-size:15px;margin-bottom:28px;">Join thousands of developers who use Hack/Alert
+        to find, prepare, and win hackathons.</p>
+      <button class="btn-hero primary" onclick="goTo('signup')" id="get-started-btn2"
+        style="font-size:15px;padding:18px 48px;">Create Free Account →</button>
+    </div>
+
     <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
   </div>
 
