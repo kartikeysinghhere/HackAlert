@@ -1,9 +1,26 @@
-## graphify
+# Hack/Alert Development Guide
 
-This project has a graphify knowledge graph at graphify-out/.
+## Build & Run
+- `npm install`: Install dependencies
+- `npm start`: Start the server (requires .env)
 
-Rules:
-- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
-- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
-- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
-- After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)
+## Backend Architecture
+- `config/`: Configuration files (Supabase, Groq, Env, Cron)
+- `controllers/`: Request handlers
+- `middleware/`: Custom middleware (Auth, Sanitize, Security, Validate)
+- `routes/`: API route definitions
+- `services/`: Business logic and external API integrations
+- `sockets/`: SSE (Server-Sent Events) management
+- `utils/`: Helper functions and common utilities (ErrorHandler, AsyncHandler)
+- `validators/`: Logic-heavy validations
+
+## Tech Stack
+- Node.js/Express
+- Supabase (Database)
+- Groq (AI)
+- Resend (Email alerts)
+
+## Code Style
+- Use `asyncHandler` for all controller methods.
+- Keep business logic in `services`.
+- Keep request/response handling in `controllers`.
