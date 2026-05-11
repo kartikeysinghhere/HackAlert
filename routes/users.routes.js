@@ -18,6 +18,7 @@ router.delete('/friends/:friend_email', usersController.removeFriend);
 
 // Online status
 router.get('/users/online', usersController.getOnline);
+router.get('/online-users', usersController.getOnline); // Frontend compatibility alias
 router.post('/ping', usersController.ping);
 
 module.exports = router;

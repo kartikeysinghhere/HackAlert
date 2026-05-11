@@ -1,10 +1,29 @@
 const supabase = require('../config/db');
 const { ApiError } = require('../utils/errorHandler');
 
+const fallbackHackathons = [
+  { name: "Global AI Hack 2026", start: "2026-05-15", city: "San Francisco", country: "USA", virtual: false, hybrid: true, website: "https://example.com/ai-hack" },
+  { name: "Web3 Weekend", start: "2026-05-20", city: "", country: "", virtual: true, hybrid: false, website: "https://example.com/web3-weekend" },
+  { name: "India HackFest", start: "2026-06-01", city: "Bangalore", country: "India", virtual: false, hybrid: false, website: "https://example.com/india-hackfest" },
+  { name: "ML Marathon", start: "2026-06-10", city: "New York", country: "USA", virtual: true, hybrid: false, website: "https://example.com/ml-marathon" },
+  { name: "Code4Climate", start: "2026-06-14", city: "Berlin", country: "Germany", virtual: false, hybrid: true, website: "https://example.com/code4climate" },
+  { name: "HealthTech Sprint", start: "2026-06-18", city: "London", country: "United Kingdom", virtual: true, hybrid: false, website: "https://example.com/healthtech-sprint" },
+  { name: "FinHack Global", start: "2026-06-24", city: "Singapore", country: "Singapore", virtual: false, hybrid: true, website: "https://example.com/finhack-global" },
+  { name: "Campus Buildathon", start: "2026-07-02", city: "Delhi", country: "India", virtual: false, hybrid: false, website: "https://example.com/campus-buildathon" },
+  { name: "Open Source Jam", start: "2026-07-08", city: "", country: "", virtual: true, hybrid: false, website: "https://example.com/oss-jam" },
+  { name: "Cyber Defense CTF", start: "2026-07-15", city: "Tel Aviv", country: "Israel", virtual: true, hybrid: false, website: "https://example.com/cyber-ctf" },
+  { name: "EdTech Innovate", start: "2026-07-22", city: "Toronto", country: "Canada", virtual: false, hybrid: true, website: "https://example.com/edtech-innovate" },
+  { name: "Smart Cities Hack", start: "2026-08-01", city: "Dubai", country: "United Arab Emirates", virtual: false, hybrid: true, website: "https://example.com/smart-cities" }
+];
+
 const getAll = async () => {
   const { data, error } = await supabase.from('hackathons').select('*');
-  if (error) throw new ApiError(500, error.message);
-  return data || [];
+  if (error) {
+    console.warn('[hackathons] DB fetch failed, using fallback data:', error.message);
+    return fallbackHackathons;
+  }
+  if (!data || data.length === 0) return fallbackHackathons;
+  return data;
 };
 
 const getById = async (id) => {

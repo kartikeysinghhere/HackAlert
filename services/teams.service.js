@@ -2,7 +2,9 @@ const supabase = require('../config/db');
 const { ApiError } = require('../utils/errorHandler');
 
 const getTeams = async (hackathon_id) => {
-  const { data, error } = await supabase.from('teams').select('*').eq('hackathon_id', hackathon_id);
+  let query = supabase.from('teams').select('*');
+  if (hackathon_id) query = query.eq('hackathon_id', hackathon_id);
+  const { data, error } = await query;
   if (error) throw new ApiError(500, error.message);
 
   const teamIds = (data || []).map(t => t.id);
@@ -14,10 +16,35 @@ const getTeams = async (hackathon_id) => {
   }));
 };
 
-const createTeam = async (email, { hackathon_id, name, description, max_members, skills_needed }) => {
+const createTeam = async (email, payload) => {
+  const {
+    hackathon_id = null,
+    name,
+    description = '',
+    max_members,
+    skills_needed,
+    // Compatibility with old frontend fields
+    hackathon,
+    skills,
+    size
+  } = payload || {};
+  const resolvedName = name || payload?.team_name;
+  const resolvedMax = Number(max_members || size || 4);
+  const resolvedSkills = skills_needed || skills || '';
+  const resolvedDescription = description || hackathon || '';
+
+  if (!resolvedName) throw new ApiError(400, 'Team name is required');
+
   const { data: team, error } = await supabase
     .from('teams')
-    .insert([{ hackathon_id, name, description, leader_email: email, max_members, skills_needed }])
+    .insert([{
+      hackathon_id,
+      name: resolvedName,
+      description: resolvedDescription,
+      leader_email: email,
+      max_members: resolvedMax,
+      skills_needed: resolvedSkills
+    }])
     .select().single();
 
   if (error) throw new ApiError(500, error.message);

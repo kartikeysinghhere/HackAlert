@@ -14,6 +14,7 @@ const hackathonsRoutes = require('./routes/hackathons.routes');
 const messagingRoutes = require('./routes/messaging.routes');
 const teamsRoutes = require('./routes/teams.routes');
 const usersRoutes = require('./routes/users.routes');
+const chatRoutes = require('./routes/chat.routes');
 
 // Import Jobs
 const initAlertJobs = require('./jobs/alerts.job');
@@ -53,6 +54,7 @@ app.use('/api/hackathons', hackathonsRoutes); // /api/hackathons, /api/hackathon
 app.use('/api/dm', messagingRoutes); // /api/dm/conversations, /api/dm/:email, etc.
 app.use('/api/teams', teamsRoutes);   // /api/teams/:id, /api/teams/requests, etc.
 app.use('/api', usersRoutes);     // /api/profile, /api/friends, /api/users/online, /api/ping
+app.use('/api', chatRoutes);      // /api/ask
 
 // Serve frontend for any other routes (SPA support)
 app.use((req, res, next) => {
