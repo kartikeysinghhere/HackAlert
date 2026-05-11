@@ -599,7 +599,12 @@ async function signupUser() {
 
       goTo('dashboard');
       showToast('🥳', 'Signup Successful!', `Welcome to Hack/Alert, ${name}!`);
-    } else showToast('❌', 'Signup Failed', data.error || 'Something went wrong during signup.');
+    } else {
+      const detailMsg = Array.isArray(data.details) && data.details.length
+        ? `${data.details[0].path}: ${data.details[0].message}`
+        : '';
+      showToast('❌', 'Signup Failed', detailMsg || data.error || 'Something went wrong during signup.');
+    }
   } catch (err) {
     console.error('Signup error:', err);
     showToast('❌', 'Server Error', 'Could not connect to the server. Please try again.');

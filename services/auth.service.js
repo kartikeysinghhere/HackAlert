@@ -4,6 +4,9 @@ const supabase = require('../config/db');
 const { JWT_SECRET, ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } = require('../config/env');
 const { ApiError } = require('../utils/errorHandler');
 
+const resolveStoredPasswordHash = (user) =>
+  user?.hashed_password || user?.password || user?.hashedPassword || null;
+
 /**
  * Generate Access and Refresh tokens for a user
  */
@@ -51,10 +54,23 @@ const register = async ({ email, pass, name, username, gender, college }) => {
   if (existing) throw new ApiError(400, 'User already exists');
 
   const hashed_password = await bcrypt.hash(pass, 10);
-  const { data: user, error } = await supabase
+  let user = null;
+  let error = null;
+
+  // Prefer new column name, fallback for legacy schemas still using `password`.
+  ({ data: user, error } = await supabase
     .from('users')
     .insert([{ email, hashed_password, name, username, gender, college }])
-    .select().single();
+    .select()
+    .single());
+
+  if (error && /hashed_password/i.test(error.message || '')) {
+    ({ data: user, error } = await supabase
+      .from('users')
+      .insert([{ email, password: hashed_password, name, username, gender, college }])
+      .select()
+      .single());
+  }
 
   if (error) throw new ApiError(500, error.message);
 
@@ -68,7 +84,12 @@ const login = async ({ email, pass }) => {
   const { data: user, error } = await supabase.from('users').select('*').eq('email', email).single();
   if (!user || error) throw new ApiError(401, 'Invalid credentials');
 
-  const match = await bcrypt.compare(pass, user.hashed_password);
+  const storedHash = resolveStoredPasswordHash(user);
+  if (!storedHash) {
+    throw new ApiError(500, 'User password column is missing in database schema');
+  }
+
+  const match = await bcrypt.compare(pass, storedHash);
   if (!match) throw new ApiError(401, 'Invalid credentials');
 
   const { accessToken, refreshToken } = generateTokens(user);
