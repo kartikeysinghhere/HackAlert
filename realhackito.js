@@ -1780,6 +1780,7 @@ async function loadConversations() {
 
 async function openDMChat(partnerEmail, partnerName) {
   currentDMPartner = partnerEmail;
+  await loadConversations();
 
   document.getElementById('dm-chat-header').innerHTML = `
     <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;">

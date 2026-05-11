@@ -1655,3 +1655,19 @@ body.light .nav-btn:hover {
   color: var(--accent2);
   border: 1px solid rgba(208, 91, 255, 0.3);
 }
+
+#page-messages {
+  padding-top: 70px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#page-messages .dash-header {
+  flex-shrink: 0;
+}
+
+#page-messages>div:last-of-type {
+  flex: 1;
+  overflow: hidden;
+}
