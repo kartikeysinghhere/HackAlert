@@ -8,6 +8,17 @@ const { Resend } = require('resend');
 const cron = require('node-cron');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
+// ── Validation & Security Architecture ──
+const { validate } = require("./middleware/validate");
+const { sanitizeBody } = require("./middleware/sanitize");
+const { aiSecurityCheck } = require("./validators/ai.validator");
+const profanity = require("./validators/profanity.validator");
+
+const { signupSchema, loginSchema } = require("./schemas/auth.schema");
+const { createTeamSchema, messageSchema, dmSchema } = require("./schemas/team.schema");
+const { aiIdeasSchema, aiAnalyzeSchema, askBotSchema } = require("./schemas/ai.schema");
+const { saveHackathonSchema } = require("./schemas/hackathon.schema");
+
 
 const {
   globalLimiter,
@@ -124,6 +135,7 @@ app.use(helmet({
   contentSecurityPolicy: false
 }));
 app.use(express.json({ limit: '10kb' }));
+app.use(sanitizeBody);
 // Apply global rate limiting and speed throttling to all API routes
 app.use('/api/', globalLimiter);
 app.use('/api/', speedLimiter);
@@ -155,7 +167,7 @@ app.get('/api/hackathons', async (req, res) => {
   }
 });
 
-app.post('/ask', aiLimiter, botProtection, aiPromptSanityCheck, async (req, res) => {
+app.post('/ask', validate(askBotSchema), aiLimiter, botProtection, aiPromptSanityCheck, aiSecurityCheck, profanity.middleware, async (req, res) => {
   const { messages } = req.body; // Expecting an array of messages now
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'No messages provided' });
@@ -223,7 +235,7 @@ app.post('/ask', aiLimiter, botProtection, aiPromptSanityCheck, async (req, res)
   }
 });
 
-app.post('/api/signup', authLimiter, async (req, res) => {
+app.post('/api/signup', validate(signupSchema), authLimiter, async (req, res) => {
   const { name, email, pass, mobile, college, username, gender, bio, skills } = req.body;
   if (!name || !email || !pass || !username) {
     return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
@@ -248,7 +260,7 @@ app.post('/api/signup', authLimiter, async (req, res) => {
   res.status(201).json({ message: 'Signup successful', token });
 });
 
-app.post('/api/login', authLimiter, async (req, res) => {
+app.post('/api/login', validate(loginSchema), authLimiter, async (req, res) => {
   const { email, pass } = req.body;
   if (!email || !pass) return res.status(400).json({ error: 'Fields required' });
 
@@ -296,7 +308,7 @@ app.get('/api/teams', async (req, res) => {
 });
 
 // ── Save hackathon server-side (replace localStorage-only approach) ──
-app.post('/api/saved', authenticate, async (req, res) => {
+app.post('/api/saved', authenticate, validate(saveHackathonSchema), async (req, res) => {
   const { hackathon_name, hackathon_start, hackathon_website } = req.body;
   const user_email = req.user.email;
 
@@ -402,7 +414,7 @@ app.get('/api/teams/:id', async (req, res) => {
 });
 
 // ── Create team ──
-app.post('/api/teams/create', authenticate, async (req, res) => {
+app.post('/api/teams/create', authenticate, validate(createTeamSchema), async (req, res) => {
   const { name, hackathon, skills, size } = req.body;
   const leader_email = req.user.email; // From token, NOT request body
   if (!name) return res.status(400).json({ error: 'Team name required' });
@@ -899,7 +911,7 @@ app.get('/api/dm/:partner_email', authenticate, async (req, res) => {
 });
 
 // Send DM
-app.post('/api/dm/:partner_email', authenticate, async (req, res) => {
+app.post('/api/dm/:partner_email', authenticate, validate(dmSchema), profanity.middleware, async (req, res) => {
   const from_email = req.user.email;
   const to_email = decodeURIComponent(req.params.partner_email);
   const { message } = req.body;
@@ -986,7 +998,7 @@ app.get('/api/dm/:partner_email/stream', (req, res) => {
 // ── AI Tools ──
 
 // Project Idea Generator
-app.post('/api/ai/ideas', authenticate, aiLimiter, botProtection, aiPromptSanityCheck, async (req, res) => {
+app.post('/api/ai/ideas', authenticate, validate(aiIdeasSchema), aiLimiter, botProtection, aiPromptSanityCheck, aiSecurityCheck, async (req, res) => {
   const { theme, problem, level, duration, skills } = req.body;
   if (!theme) return res.status(400).json({ error: 'Theme is required' });
 
@@ -1032,7 +1044,7 @@ Return ONLY a valid JSON array in this exact format, no markdown, no explanation
 });
 
 // Hackathon Difficulty Analyzer
-app.post('/api/ai/analyze', authenticate, aiLimiter, botProtection, aiPromptSanityCheck, async (req, res) => {
+app.post('/api/ai/analyze', authenticate, validate(aiAnalyzeSchema), aiLimiter, botProtection, aiPromptSanityCheck, aiSecurityCheck, async (req, res) => {
   const { name, details, skills } = req.body;
   if (!details) return res.status(400).json({ error: 'Hackathon details required' });
 
