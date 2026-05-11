@@ -172,6 +172,7 @@ function bindCoreButtonHandlers() {
   bind('#get-started-btn2', () => goTo('signup'));
   bind('.hero-actions .btn-hero.secondary', () => goTo('dashboard'));
   bind('#floating-bot', () => goTo('bot'));
+  bind('#nav-menu-btn', () => toggleNavMenu());
 
   // Auth form submits (fallback when inline onsubmit is blocked)
   const loginForm = document.querySelector('#page-login form');
@@ -224,6 +225,23 @@ function bindCoreButtonHandlers() {
     });
     femaleLabel.dataset.boundClick = '1';
   }
+
+  // Nav dropdown actions (fallback when inline onclick is blocked)
+  const navDropdown = document.getElementById('nav-dropdown');
+  if (navDropdown && navDropdown.dataset.boundMenuActions !== '1') {
+    navDropdown.querySelectorAll('button').forEach(btn => {
+      const text = (btn.textContent || '').toLowerCase();
+      if (text.includes('profile')) btn.addEventListener('click', () => { goTo('profile'); toggleNavMenu(); });
+      else if (text.includes('teams')) btn.addEventListener('click', () => { goTo('teams'); toggleNavMenu(); });
+      else if (text.includes('calendar')) btn.addEventListener('click', () => { goTo('calendar'); toggleNavMenu(); });
+      else if (text.includes('showcase')) btn.addEventListener('click', () => { goTo('showcase'); toggleNavMenu(); });
+      else if (text.includes('messages')) btn.addEventListener('click', () => { goTo('messages'); toggleNavMenu(); });
+      else if (text.includes('ai tools')) btn.addEventListener('click', () => { goTo('ai-tools'); toggleNavMenu(); });
+      else if (text.includes('find friends')) btn.addEventListener('click', () => { showUserSearch(); toggleNavMenu(); });
+      else if (text.includes('logout')) btn.addEventListener('click', () => { logout(); toggleNavMenu(); });
+    });
+    navDropdown.dataset.boundMenuActions = '1';
+  }
 }
 
 function startHeartbeat() {
@@ -263,17 +281,24 @@ async function fetchHackathons() {
 
   try {
     const response = await fetch(HACKATHON_API_URL);
-    allHackathons = await response.json();
-    if (!allHackathons || allHackathons.length === 0) {
-      allHackathons = getFallbackHackathons();
+    if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('loggedIn');
+        goTo('login');
+        showToast('⚠️', 'Session Expired', 'Please login again.');
+        return;
+      }
+      throw new Error(`Failed to load hackathons (${response.status})`);
     }
+    allHackathons = await response.json();
+    if (!Array.isArray(allHackathons)) allHackathons = [];
     allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
     renderHackathons(allHackathons);
   } catch (error) {
     console.error("API Error:", error);
-    allHackathons = getFallbackHackathons();
-    allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
+    allHackathons = [];
     renderHackathons(allHackathons);
+    showToast('⚠️', 'Hackathons Unavailable', 'Could not load live hackathons right now.');
   }
 }
 
@@ -494,11 +519,13 @@ async function sendChat() {
   }
 
   try {
-    const res = await fetch('/ask', {
+    const res = await fetch('/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: chatHistory }) // Send full history
     });
+
+    if (!res.ok) throw new Error('Bot endpoint unavailable');
 
     const data = await res.json();
     removeTyping();
@@ -512,7 +539,16 @@ async function sendChat() {
     }
   } catch (err) {
     removeTyping();
-    appendMessage('bot', "⚠️ Couldn't reach the server. Make sure the backend is running.");
+    if (!allHackathons.length) {
+      appendMessage('bot', "⚠️ Live bot is unavailable right now. Please try again in a moment.");
+      return;
+    }
+    const next = allHackathons[0];
+    appendMessage(
+      'bot',
+      `Live AI is unavailable, but I can still help: try <strong>"Hackathons in India"</strong> or <strong>"Online hackathons"</strong>. Next upcoming: <strong>${escapeHTML(next.name)}</strong> on ${new Date(next.start).toLocaleDateString()}.`,
+      true
+    );
   }
 }
 
