@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const hackathonsController = require('../controllers/hackathons.controller');
-const authenticate = require('../middleware/security').authenticate;
-const validate = require('../middleware/validate');
+const { authenticate } = require('../middleware/security');
+const { validate } = require('../middleware/validate');
 const { hackathonSchema } = require('../schemas/hackathon.schema');
 
 router.use(authenticate);

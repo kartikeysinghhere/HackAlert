@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const aiController = require('../controllers/ai.controller');
-const authenticate = require('../middleware/security').authenticate;
-const validate = require('../middleware/validate');
+const { authenticate } = require('../middleware/security');
+const { validate } = require('../middleware/validate');
 const { aiIdeasSchema, aiAnalyzeSchema } = require('../schemas/ai.schema');
-const { aiLimiter, botProtection, aiPromptSanityCheck, aiSecurityCheck } = require('../middleware/security');
+const { aiLimiter, botProtection, aiPromptSanityCheck } = require('../middleware/security');
+const { aiSecurityCheck } = require('../validators/ai.validator');
 
 router.use(authenticate);
 

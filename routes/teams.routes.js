@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const teamsController = require('../controllers/teams.controller');
-const authenticate = require('../middleware/security').authenticate;
-const validate = require('../middleware/validate');
+const { authenticate } = require('../middleware/security');
+const { validate } = require('../middleware/validate');
 const { teamSchema, teamRequestSchema, handleRequestSchema } = require('../schemas/team.schema');
 
 router.use(authenticate);

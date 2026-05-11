@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const messagingController = require('../controllers/messaging.controller');
-const authenticate = require('../middleware/security').authenticate;
-const validate = require('../middleware/validate');
+const { authenticate } = require('../middleware/security');
+const { validate } = require('../middleware/validate');
 const profanity = require('../validators/profanity.validator');
 const { dmSchema } = require('../schemas/team.schema');
 

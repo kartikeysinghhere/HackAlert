@@ -101,7 +101,10 @@ const aiPromptSanityCheck = (req, res, next) => {
     next();
 };
 
+const { authenticate } = require("./auth");
+
 module.exports = {
+    authenticate,
     globalLimiter,
     authLimiter,
     aiLimiter,

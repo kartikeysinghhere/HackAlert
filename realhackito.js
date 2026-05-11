@@ -1,3 +1,35 @@
+
+// --- Authentication Fetch Wrapper ---
+const originalFetch = window.fetch;
+window.fetch = async (...args) => {
+    let [resource, config] = args;
+    if (!config) config = {};
+    if (!config.credentials) config.credentials = 'include';
+
+    let response = await originalFetch(resource, config);
+
+    // Auto-refresh token if 401
+    if (response.status === 401 && !resource.includes('/api/login') && !resource.includes('/api/refresh')) {
+        const refreshRes = await originalFetch('/api/refresh', { method: 'POST', credentials: 'include' });
+        if (refreshRes.ok) {
+            const data = await refreshRes.json();
+            if (data.token) {
+                localStorage.setItem('authToken', data.token);
+                // Retry original request
+                if (config.headers && config.headers['Authorization']) {
+                    config.headers['Authorization'] = 'Bearer ' + data.token;
+                }
+                response = await originalFetch(resource, config);
+            }
+        } else {
+            // Refresh failed, force logout
+            console.warn('Session expired, logging out...');
+            if (typeof confirmLogout === 'function') confirmLogout();
+        }
+    }
+    return response;
+};
+
 // ── Hack Club Live API ──
 const HACKATHON_API_URL = "/api/hackathons";
 let allHackathons = [];
@@ -527,7 +559,8 @@ function hideLogoutModal() {
   document.getElementById('logout-modal').style.display = 'none';
 }
 
-function confirmLogout() {
+async function confirmLogout() {
+  try { await fetch('/api/logout', { method: 'POST' }); } catch(e) {}
   document.getElementById('logout-modal').style.display = 'none';
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display = 'none';

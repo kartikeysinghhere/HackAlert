@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 module.exports = {
+  ACCESS_TOKEN_EXPIRY: process.env.ACCESS_TOKEN_EXPIRY || "15m",
+  REFRESH_TOKEN_EXPIRY: process.env.REFRESH_TOKEN_EXPIRY || "7d",
   PORT: process.env.PORT || 3000,
   JWT_SECRET: process.env.JWT_SECRET,
   SUPABASE_URL: process.env.SUPABASE_URL,
