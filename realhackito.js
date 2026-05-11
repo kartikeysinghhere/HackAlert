@@ -36,6 +36,7 @@ let allHackathons = [];
 
 // Add chatHistory array for the bot
 let chatHistory = [];
+let onlineUsers = new Set();
 
 // Banned words list and censor function
 const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap']; // Extend as needed
@@ -82,6 +83,9 @@ function getCountdown(dateStr) {
 
 // ── Auto-load on page ready ──
 window.addEventListener('DOMContentLoaded', () => {
+  // Fallback click bindings for environments where inline onclick is blocked
+  bindCoreButtonHandlers();
+
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
   if (isLoggedIn) {
     fetchHackathons();
@@ -112,6 +116,69 @@ window.addEventListener('DOMContentLoaded', () => {
     window.history.replaceState({}, '', window.location.pathname);
   }
 });
+
+function bindCoreButtonHandlers() {
+  const bind = (selector, handler) => {
+    document.querySelectorAll(selector).forEach(el => {
+      if (el.dataset.boundClick === '1') return;
+      el.addEventListener('click', handler);
+      el.dataset.boundClick = '1';
+    });
+  };
+
+  bind('.nav-logo', () => goTo('landing'));
+  bind('#theme-btn', () => {
+    if (typeof toggleTheme === 'function') toggleTheme();
+  });
+
+  const navAuth = document.getElementById('nav-auth');
+  if (navAuth) {
+    const authButtons = navAuth.querySelectorAll('button');
+    if (authButtons[0] && authButtons[0].dataset.boundClick !== '1') {
+      authButtons[0].addEventListener('click', () => goTo('login'));
+      authButtons[0].dataset.boundClick = '1';
+    }
+    if (authButtons[1] && authButtons[1].dataset.boundClick !== '1') {
+      authButtons[1].addEventListener('click', () => goTo('signup'));
+      authButtons[1].dataset.boundClick = '1';
+    }
+  }
+
+  bind('#get-started-btn', () => goTo('signup'));
+  bind('#get-started-btn2', () => goTo('signup'));
+  bind('.hero-actions .btn-hero.secondary', () => goTo('dashboard'));
+  bind('#floating-bot', () => goTo('bot'));
+}
+
+function startHeartbeat() {
+  fetchOnlineUsers();
+}
+
+async function fetchOnlineUsers() {
+  try {
+    const res = await fetch('/api/online-users', { headers: authHeaders() });
+    if (!res.ok) return;
+    const payload = await res.json();
+    const users = Array.isArray(payload)
+      ? payload
+      : Array.isArray(payload.users)
+        ? payload.users
+        : [];
+    onlineUsers = new Set(users.map(u => (u || '').toString().toLowerCase()));
+  } catch (e) {
+    // Ignore connectivity issues for presence features.
+  }
+}
+
+function isOnline(email) {
+  if (!email) return false;
+  return onlineUsers.has(String(email).toLowerCase());
+}
+
+function onlineDot(email, size = 8) {
+  const online = isOnline(email);
+  return `<span title="${online ? 'Online' : 'Offline'}" style="display:inline-block;width:${size}px;height:${size}px;border-radius:50%;background:${online ? '#22c55e' : '#64748b'};${online ? 'box-shadow:0 0 8px #22c55e;' : ''}"></span>`;
+}
 
 // ── Fetch hackathons from live API ──
 async function fetchHackathons() {
