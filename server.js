@@ -1,59 +1,568 @@
+const bcrypt = require('bcrypt');
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const Groq = require('groq-sdk');
+const { createClient } = require('@supabase/supabase-js');
+const { Resend } = require('resend');
+const cron = require('node-cron');
+const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
-const env = require('./config/env');
-const { globalLimiter } = require('./middleware/security');
-const sanitize = require('./middleware/sanitize');
 
-// Import Routes
-const authRoutes = require('./routes/auth.routes');
-const aiRoutes = require('./routes/ai.routes');
-const hackathonsRoutes = require('./routes/hackathons.routes');
-const messagingRoutes = require('./routes/messaging.routes');
-const teamsRoutes = require('./routes/teams.routes');
-const usersRoutes = require('./routes/users.routes');
-
-// Import Jobs
-const initAlertJobs = require('./jobs/alerts.job');
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error('CRITICAL: JWT_SECRET missing in environment');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const dmClients = {};
+const teamClients = {};
 
-// Middleware
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use(globalLimiter);
-app.use(sanitize);
-app.use(express.static('.'));
-
-// Routes mapping for frontend compatibility
-app.use('/api', authRoutes);      // /api/register, /api/login
-app.use('/api/ai', aiRoutes);    // /api/ai/ideas, /api/ai/analyze
-app.use('/api/hackathons', hackathonsRoutes); // /api/hackathons, /api/hackathons/saved, etc.
-app.use('/api/dm', messagingRoutes); // /api/dm/conversations, /api/dm/:email, etc.
-app.use('/api/teams', teamsRoutes);   // /api/teams/:id, /api/teams/requests, etc.
-app.use('/api', usersRoutes);     // /api/profile, /api/friends, /api/users/online, /api/ping
-
-// Error Handling Middleware
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-
-  console.error(`[Error] ${statusCode} - ${message}`);
-  if (err.stack && env.NODE_ENV === 'development') {
-    console.error(err.stack);
-  }
-
-  res.status(statusCode).json({
-    error: message,
-    ...(env.NODE_ENV === 'development' && { stack: err.stack })
+const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap'];
+function censorMessage(text) {
+  let censoredText = text;
+  bannedWords.forEach(word => {
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    censoredText = censoredText.replace(regex, '*'.repeat(word.length));
   });
+  return censoredText;
+}
+
+const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy');
+
+if (!process.env.RESEND_API_KEY) console.log('Missing RESEND_API_KEY. Email features will fail.');
+
+let globalHackathons = [];
+
+function authenticate(req, res, next) {
+  const auth = req.headers['authorization'];
+  if (!auth || !auth.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+  try {
+    req.user = jwt.verify(auth.slice(7), JWT_SECRET);
+    next();
+  } catch {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+}
+
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://hackalert-xwpd.onrender.com'
+    : 'http://localhost:3000'
+}));
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(express.json());
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/realhackito.html');
 });
 
-// Initialize Background Jobs
-initAlertJobs();
+cron.schedule('0 10 * * *', async () => {
+  if (!process.env.RESEND_API_KEY) return;
+  const twoMinsAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: upcoming } = await supabase.from('saved_hackathons').select('*').gte('hackathon_start', new Date().toISOString()).lte('hackathon_start', twoMinsAgo);
+  if (!upcoming?.length) return;
+  const byUser = {};
+  upcoming.forEach(row => {
+    if (!byUser[row.user_email]) byUser[row.user_email] = [];
+    byUser[row.user_email].push(row);
+  });
+  for (const [email, hacks] of Object.entries(byUser)) {
+    const hackList = hacks.map(h => `<li><strong>${h.hackathon_name}</strong> — <a href="${h.hackathon_website}">Register →</a></li>`).join('');
+    await resend.emails.send({
+      from: 'HackAlert <alerts@yourdomain.com>',
+      to: email,
+      subject: `⚡ ${hacks.length} hackathon(s) starting soon!`,
+      html: `<div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:32px;border-radius:12px;"><h2 style="color:#00f0ff;">Hack/Alert ⚡</h2><p>These hackathons you saved are starting soon:</p><ul>${hackList}</ul></div>`
+    });
+  }
+});
 
-const PORT = env.PORT;
+app.get('/api/hackathons', async (req, res) => {
+  try {
+    const [hackClub, supabaseRes] = await Promise.all([
+      fetch('https://hackathons.hackclub.com/api/events/upcoming').then(r => r.json()),
+      supabase.from('indian_hackathons').select('*')
+    ]);
+    const indian = supabaseRes.data || [];
+    const all = [...hackClub, ...indian];
+    const seen = new Set();
+    const unique = all.filter(h => {
+      const key = h.name.toLowerCase().trim();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    globalHackathons = unique;
+    res.json(unique);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed' });
+  }
+});
+
+app.post('/ask', async (req, res) => {
+  const { messages } = req.body;
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: 'No messages provided' });
+  }
+  const censoredMessages = messages.map(msg => ({ ...msg, content: censorMessage(msg.content) }));
+  const lastMsg = censoredMessages[censoredMessages.length - 1].content.toLowerCase();
+  let action = null, filterType = null;
+  if (lastMsg.includes('offline') || lastMsg.includes('in person')) { action = 'filter'; filterType = 'offline'; }
+  else if (lastMsg.includes('online') || lastMsg.includes('virtual')) { action = 'filter'; filterType = 'online'; }
+  else if (lastMsg.includes('hybrid')) { action = 'filter'; filterType = 'hybrid'; }
+
+  if (globalHackathons.length === 0) {
+    try {
+      const [hackClub, supabaseRes] = await Promise.all([
+        fetch('https://hackathons.hackclub.com/api/events/upcoming').then(r => r.json()),
+        supabase.from('indian_hackathons').select('*')
+      ]);
+      const all = [...hackClub, ...(supabaseRes.data || [])];
+      const seen = new Set();
+      globalHackathons = all.filter(h => { const key = h.name.toLowerCase().trim(); if (seen.has(key)) return false; seen.add(key); return true; });
+    } catch (e) { console.warn('Could not prefetch hackathons:', e.message); }
+  }
+
+  try {
+    const response = await client.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: `You are HackBot, an expert AI assistant for HackAlert. Help developers find, register for, and prepare for hackathons. Be concise, enthusiastic, and use relevant emojis. Keep responses under 150 words. Here is the current live list of hackathons:\n${JSON.stringify(globalHackathons.map(h => ({ name: h.name, start: h.start, city: h.city, country: h.country, virtual: h.virtual, website: h.website })).slice(0, 50))}` },
+        ...censoredMessages
+      ]
+    });
+    res.json({ answer: response.choices[0].message.content, action, filterType });
+  } catch (err) {
+    res.status(500).json({ error: 'AI error: ' + err.message });
+  }
+});
+
+app.post('/api/signup', async (req, res) => {
+  const { name, email, pass, mobile, college, username, gender, bio, skills } = req.body;
+  if (!name || !email || !pass || !username) return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
+  const { data: existing } = await supabase.from('users').select('username').eq('username', username).single();
+  if (existing) return res.status(400).json({ error: 'Username already taken.' });
+  const hashed = await bcrypt.hash(pass, 10);
+  const { error } = await supabase.from('users').insert([{ name, email, password: hashed, mobile, college, username, gender, bio, skills }]);
+  if (error) {
+    if (error.code === '23505') return res.status(400).json({ error: 'Email already exists' });
+    return res.status(500).json({ error: error.message });
+  }
+  const token = jwt.sign({ email, name, username }, JWT_SECRET, { expiresIn: '7d' });
+  res.status(201).json({ message: 'Signup successful', token });
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, pass } = req.body;
+  if (!email || !pass) return res.status(400).json({ error: 'Fields required' });
+  const { data, error } = await supabase.from('users').select('id, name, email, password, mobile, college, username, gender, bio, skills').eq('email', email).single();
+  if (error || !data) return res.status(401).json({ error: 'Invalid email or password' });
+  const match = await bcrypt.compare(pass, data.password);
+  if (!match) return res.status(401).json({ error: 'Invalid email or password' });
+  const token = jwt.sign({ email: data.email, name: data.name, username: data.username }, JWT_SECRET, { expiresIn: '7d' });
+  res.json({ message: 'Login successful', token, user: { name: data.name, email: data.email, username: data.username, gender: data.gender, bio: data.bio, skills: data.skills, mobile: data.mobile, college: data.college } });
+});
+
+app.get('/api/teams', async (req, res) => {
+  const { data, error } = await supabase.from('teams').select('*').order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.get('/api/teams/:id', async (req, res) => {
+  const { data, error } = await supabase.from('teams').select('*').eq('id', req.params.id).single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.post('/api/teams/create', authenticate, async (req, res) => {
+  const { name, hackathon, skills, size } = req.body;
+  const leader_email = req.user.email;
+  if (!name) return res.status(400).json({ error: 'Team name required' });
+  const { data, error } = await supabase.from('teams').insert([{ name, leader_email, hackathon, skills, size, slots_left: size - 1 }]).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  await supabase.from('team_members').insert([{ team_id: data.id, user_email: leader_email }]);
+  res.json(data);
+});
+
+app.post('/api/teams/join', authenticate, async (req, res) => {
+  const { team_id } = req.body;
+  const user_email = req.user.email;
+  const user_name = req.user.name;
+  const { data: team } = await supabase.from('teams').select('*').eq('id', team_id).single();
+  if (!team || team.slots_left <= 0) return res.status(400).json({ error: 'Team full' });
+  const { error } = await supabase.from('team_members').insert([{ team_id, user_email, user_name }]);
+  if (error) {
+    if (error.code === '23505') return res.status(400).json({ error: 'Already a member' });
+    return res.status(500).json({ error: error.message });
+  }
+  const { data: updated } = await supabase.from('teams').update({ slots_left: team.slots_left - 1 }).eq('id', team_id).gt('slots_left', 0).select().single();
+  if (!updated) {
+    await supabase.from('team_members').delete().eq('team_id', team_id).eq('user_email', user_email);
+    return res.status(400).json({ error: 'Team just filled up.' });
+  }
+  res.json({ message: 'Joined successfully' });
+});
+
+app.get('/api/teams/:id/messages', async (req, res) => {
+  const { data, error } = await supabase.from('team_messages').select('*').eq('team_id', req.params.id).order('sent_at', { ascending: true });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.get('/api/teams/:id/stream', (req, res) => {
+  const { id } = req.params;
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+  if (!teamClients[id]) teamClients[id] = [];
+  teamClients[id].push(res);
+  req.on('close', () => { teamClients[id] = teamClients[id].filter(c => c !== res); });
+});
+
+app.post('/api/teams/:id/messages', authenticate, async (req, res) => {
+  const { message } = req.body;
+  const sender_email = req.user.email;
+  const sender_name = req.user.name;
+  if (!message) return res.status(400).json({ error: 'Empty message' });
+  if (bannedWords.some(w => message.toLowerCase().includes(w))) return res.status(400).json({ error: 'Message contains inappropriate language' });
+  const newMessage = { team_id: req.params.id, sender_email, sender_name, message };
+  const { data, error } = await supabase.from('team_messages').insert([newMessage]).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  if (teamClients[req.params.id]) teamClients[req.params.id].forEach(c => c.write(`data: ${JSON.stringify(data)}\n\n`));
+  res.json({ message: 'Sent' });
+});
+
+app.get('/api/teams/:id/tasks', async (req, res) => {
+  const { data, error } = await supabase.from('team_tasks').select('*').eq('team_id', req.params.id).order('created_at', { ascending: true });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+app.post('/api/teams/:id/tasks', authenticate, async (req, res) => {
+  const { title, status } = req.body;
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+  const { data, error } = await supabase.from('team_tasks').insert([{ team_id: req.params.id, title, status }]).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.put('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) => {
+  const { status } = req.body;
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+  const { data, error } = await supabase.from('team_tasks').update({ status }).eq('id', req.params.task_id).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.delete('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) => {
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+  const { error } = await supabase.from('team_tasks').delete().eq('id', req.params.task_id);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Deleted' });
+});
+
+app.get('/api/teams/:id/members', async (req, res) => {
+  const { data, error } = await supabase.from('team_members').select('*').eq('team_id', req.params.id);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.delete('/api/teams/:team_id/members/:user_email', authenticate, async (req, res) => {
+  const { team_id } = req.params;
+  const user_email = req.user.email;
+  const { data: team, error: teamError } = await supabase.from('teams').select('leader_email, slots_left').eq('id', team_id).single();
+  if (teamError || !team) return res.status(404).json({ error: 'Team not found' });
+  if (team.leader_email === user_email) return res.status(403).json({ error: 'Leader cannot leave. Delete the team instead.' });
+  const { error: deleteError } = await supabase.from('team_members').delete().eq('team_id', team_id).eq('user_email', user_email);
+  if (deleteError) return res.status(500).json({ error: deleteError.message });
+  await supabase.from('teams').update({ slots_left: team.slots_left + 1 }).eq('id', team_id);
+  res.json({ message: 'Successfully left the team' });
+});
+
+app.delete('/api/teams/:team_id', authenticate, async (req, res) => {
+  const { team_id } = req.params;
+  const leader_email = req.user.email;
+  const { data: team, error: teamError } = await supabase.from('teams').select('leader_email').eq('id', team_id).single();
+  if (teamError || !team) return res.status(404).json({ error: 'Team not found' });
+  if (team.leader_email !== leader_email) return res.status(403).json({ error: 'Only the leader can delete the team.' });
+  await supabase.from('team_tasks').delete().eq('team_id', team_id);
+  await supabase.from('team_messages').delete().eq('team_id', team_id);
+  await supabase.from('team_members').delete().eq('team_id', team_id);
+  const { error: deleteErr } = await supabase.from('teams').delete().eq('id', team_id);
+  if (deleteErr) return res.status(500).json({ error: deleteErr.message });
+  res.json({ message: 'Team deleted successfully' });
+});
+
+app.get('/api/projects', async (req, res) => {
+  const { data, error } = await supabase.from('team_projects').select('*, teams(name, hackathon)').order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+app.get('/api/teams/:id/project', async (req, res) => {
+  const { data, error } = await supabase.from('team_projects').select('*').eq('team_id', req.params.id).single();
+  if (error && error.code !== 'PGRST116') return res.status(500).json({ error: error.message });
+  res.json(data || null);
+});
+
+app.post('/api/teams/:id/project', authenticate, async (req, res) => {
+  const { title, description, github_link, demo_link, tech_stack } = req.body;
+  const team_id = req.params.id;
+  const submitted_by = req.user.email;
+  if (!title) return res.status(400).json({ error: 'Title is required' });
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', team_id).eq('user_email', submitted_by).single();
+  if (!member) return res.status(403).json({ error: 'Only team members can submit a project' });
+  const { data, error } = await supabase.from('team_projects').upsert([{ team_id, title, description, github_link, demo_link, tech_stack, submitted_by }], { onConflict: 'team_id' }).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.delete('/api/teams/:id/project', authenticate, async (req, res) => {
+  const team_id = req.params.id;
+  const user_email = req.user.email;
+  const { data: team } = await supabase.from('teams').select('leader_email').eq('id', team_id).single();
+  if (!team || team.leader_email !== user_email) return res.status(403).json({ error: 'Only team leader can delete the project' });
+  const { error } = await supabase.from('team_projects').delete().eq('team_id', team_id);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Project deleted' });
+});
+
+app.get('/api/reviews/:hackathon_name', async (req, res) => {
+  const name = decodeURIComponent(req.params.hackathon_name);
+  const { data, error } = await supabase.from('hackathon_reviews').select('*').eq('hackathon_name', name).order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+app.post('/api/reviews', authenticate, async (req, res) => {
+  const { hackathon_name, rating, review } = req.body;
+  const user_email = req.user.email;
+  if (!hackathon_name || !rating) return res.status(400).json({ error: 'Name and rating required' });
+  if (rating < 1 || rating > 5) return res.status(400).json({ error: 'Rating must be 1-5' });
+  const { data, error } = await supabase.from('hackathon_reviews').upsert([{ hackathon_name, user_email, rating, review }], { onConflict: 'hackathon_name,user_email' }).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.delete('/api/reviews/:hackathon_name', authenticate, async (req, res) => {
+  const name = decodeURIComponent(req.params.hackathon_name);
+  const user_email = req.user.email;
+  const { error } = await supabase.from('hackathon_reviews').delete().eq('hackathon_name', name).eq('user_email', user_email);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Review deleted' });
+});
+
+app.post('/api/saved', authenticate, async (req, res) => {
+  const { hackathon_name, hackathon_start, hackathon_website } = req.body;
+  const user_email = req.user.email;
+  const { error } = await supabase.from('saved_hackathons').upsert([{ user_email, hackathon_name, hackathon_start, hackathon_website }], { onConflict: 'user_email,hackathon_name' });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Saved' });
+});
+
+app.delete('/api/saved/:name', authenticate, async (req, res) => {
+  const user_email = req.user.email;
+  const hackathon_name = decodeURIComponent(req.params.name);
+  const { error } = await supabase.from('saved_hackathons').delete().eq('user_email', user_email).eq('hackathon_name', hackathon_name);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Removed' });
+});
+
+app.get('/api/saved', authenticate, async (req, res) => {
+  const { data, error } = await supabase.from('saved_hackathons').select('*').eq('user_email', req.user.email);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+app.get('/api/users/search', authenticate, async (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.status(400).json({ error: 'Query required' });
+  const { data, error } = await supabase.from('users').select('name, email, username, gender, bio, skills, college').ilike('username', `%${q}%`).neq('email', req.user.email).limit(10);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+app.post('/api/friends/request', authenticate, async (req, res) => {
+  const { to_email } = req.body;
+  const from_email = req.user.email;
+  if (!to_email) return res.status(400).json({ error: 'to_email required' });
+  if (to_email === from_email) return res.status(400).json({ error: 'Cannot add yourself' });
+  const { data: existing } = await supabase.from('friendships').select('*').or(`and(user1_email.eq.${from_email},user2_email.eq.${to_email}),and(user1_email.eq.${to_email},user2_email.eq.${from_email})`).single();
+  if (existing) return res.status(400).json({ error: 'Already friends' });
+  const { error } = await supabase.from('friend_requests').upsert([{ from_email, to_email, status: 'pending' }], { onConflict: 'from_email,to_email' });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ message: 'Friend request sent' });
+});
+
+app.get('/api/friends/requests', authenticate, async (req, res) => {
+  const { data, error } = await supabase.from('friend_requests').select('*').eq('to_email', req.user.email).eq('status', 'pending');
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
+});
+
+app.put('/api/friends/requests/:id', authenticate, async (req, res) => {
+  const { status } = req.body;
+  const { id } = req.params;
+  const { data: request } = await supabase.from('friend_requests').select('*').eq('id', id).eq('to_email', req.user.email).single();
+  if (!request) return res.status(404).json({ error: 'Request not found' });
+  await supabase.from('friend_requests').update({ status }).eq('id', id);
+  if (status === 'accepted') {
+    await supabase.from('friendships').upsert([{ user1_email: request.from_email, user2_email: request.to_email }], { onConflict: 'user1_email,user2_email' });
+  }
+  res.json({ message: `Request ${status}` });
+});
+
+app.get('/api/friends', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const { data, error } = await supabase.from('friendships').select('*').or(`user1_email.eq.${email},user2_email.eq.${email}`);
+  if (error) return res.status(500).json({ error: error.message });
+  const friendEmails = (data || []).map(f => f.user1_email === email ? f.user2_email : f.user1_email);
+  if (!friendEmails.length) return res.json([]);
+  const { data: friends } = await supabase.from('users').select('name, email, username, gender, bio, skills, college').in('email', friendEmails);
+  res.json(friends || []);
+});
+
+app.delete('/api/friends/:friend_email', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const friend_email = decodeURIComponent(req.params.friend_email);
+  await supabase.from('friendships').delete().or(`and(user1_email.eq.${email},user2_email.eq.${friend_email}),and(user1_email.eq.${friend_email},user2_email.eq.${email})`);
+  res.json({ message: 'Friend removed' });
+});
+
+app.get('/api/dm/conversations', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const { data, error } = await supabase.from('direct_messages').select('*').or(`from_email.eq.${email},to_email.eq.${email}`).order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  const conversations = {};
+  (data || []).forEach(msg => {
+    const partner = msg.from_email === email ? msg.to_email : msg.from_email;
+    if (!conversations[partner]) conversations[partner] = { partner_email: partner, last_message: msg.message, last_time: msg.created_at, unread: 0 };
+    if (msg.to_email === email && !msg.seen) conversations[partner].unread++;
+  });
+  const partnerEmails = Object.keys(conversations);
+  if (!partnerEmails.length) return res.json([]);
+  const { data: users } = await supabase.from('users').select('name, email, username, gender').in('email', partnerEmails);
+  const result = Object.values(conversations).map(conv => ({ ...conv, partner: users?.find(u => u.email === conv.partner_email) || { email: conv.partner_email, name: conv.partner_email } }));
+  res.json(result);
+});
+
+app.get('/api/dm/:partner_email', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const partner = decodeURIComponent(req.params.partner_email);
+  const { data, error } = await supabase.from('direct_messages').select('*').or(`and(from_email.eq.${email},to_email.eq.${partner}),and(from_email.eq.${partner},to_email.eq.${email})`).order('created_at', { ascending: true });
+  if (error) return res.status(500).json({ error: error.message });
+  await supabase.from('direct_messages').update({ seen: true }).eq('to_email', email).eq('from_email', partner).eq('seen', false);
+  res.json(data || []);
+});
+
+app.post('/api/dm/:partner_email', authenticate, async (req, res) => {
+  const from_email = req.user.email;
+  const to_email = decodeURIComponent(req.params.partner_email);
+  const { message } = req.body;
+  if (!message) return res.status(400).json({ error: 'Message required' });
+  const { data: friendship } = await supabase.from('friendships').select('*').or(`and(user1_email.eq.${from_email},user2_email.eq.${to_email}),and(user1_email.eq.${to_email},user2_email.eq.${from_email})`).single();
+  if (!friendship) return res.status(403).json({ error: 'You can only DM friends' });
+  const { data, error } = await supabase.from('direct_messages').insert([{ from_email, to_email, message, seen: false }]).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  const dmKey = [from_email, to_email].sort().join('::');
+  if (dmClients[dmKey]) dmClients[dmKey].forEach(c => c.write(`data: ${JSON.stringify(data)}\n\n`));
+  res.json(data);
+});
+
+app.put('/api/dm/:partner_email/seen', authenticate, async (req, res) => {
+  const email = req.user.email;
+  const partner = decodeURIComponent(req.params.partner_email);
+  await supabase.from('direct_messages').update({ seen: true }).eq('to_email', email).eq('from_email', partner);
+  const dmKey = [email, partner].sort().join('::');
+  if (dmClients[dmKey]) dmClients[dmKey].forEach(c => c.write(`data: ${JSON.stringify({ type: 'seen', from: email })}\n\n`));
+  res.json({ message: 'Marked seen' });
+});
+
+app.get('/api/dm/:partner_email/stream', (req, res) => {
+  const token = req.query.token;
+  if (!token) return res.status(401).end();
+  let user;
+  try { user = jwt.verify(token, JWT_SECRET); } catch { return res.status(401).end(); }
+  const email = user.email;
+  const partner = decodeURIComponent(req.params.partner_email);
+  const dmKey = [email, partner].sort().join('::');
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+  if (!dmClients[dmKey]) dmClients[dmKey] = [];
+  dmClients[dmKey].push(res);
+  req.on('close', () => { dmClients[dmKey] = dmClients[dmKey].filter(c => c !== res); });
+});
+
+app.post('/api/ai/ideas', authenticate, async (req, res) => {
+  const { theme, problem, level, duration, skills } = req.body;
+  if (!theme) return res.status(400).json({ error: 'Theme is required' });
+  try {
+    const prompt = `You are an expert hackathon mentor. Generate exactly 5 unique project ideas for a hackathon.\n\nHackathon Theme: ${theme}\nProblem Statement: ${problem || 'Not specified'}\nDifficulty Level: ${level}\nDuration: ${duration} hours\nTeam Skills: ${skills || 'General programming'}\n\nReturn ONLY a valid JSON array, no markdown:\n[\n  {\n    "title": "Project Name",\n    "tagline": "One line description",\n    "description": "2-3 sentence description",\n    "tech_stack": ["Tech1", "Tech2"],\n    "winning_potential": 85,\n    "innovation_score": 90,\n    "feasibility_score": 75,\n    "wow_factor": "What makes judges love this",\n    "mvp_features": ["Feature 1", "Feature 2"]\n  }\n]`;
+    const response = await client.chat.completions.create({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], max_tokens: 2000, temperature: 0.8 });
+    const raw = response.choices[0].message.content.trim().replace(/```json|```/g, '').trim();
+    res.json({ ideas: JSON.parse(raw) });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to generate ideas: ' + err.message });
+  }
+});
+
+app.post('/api/ai/analyze', authenticate, async (req, res) => {
+  const { name, details, skills } = req.body;
+  if (!details) return res.status(400).json({ error: 'Hackathon details required' });
+  try {
+    const prompt = `You are an expert hackathon analyst. Analyze this hackathon.\n\nName: ${name || 'Unknown'}\nDetails: ${details}\nUser Skills: ${skills || 'Not specified'}\n\nReturn ONLY valid JSON, no markdown:\n{\n  "overall_difficulty": "Easy/Medium/Hard/Expert",\n  "difficulty_score": 75,\n  "required_skills": ["Skill 1"],\n  "skill_match_percentage": 60,\n  "preparation_time_days": 7,\n  "winning_chances": "Medium",\n  "winning_percentage": 35,\n  "key_challenges": ["Challenge 1"],\n  "advantages": ["Advantage 1"],\n  "recommended_stack": ["Tech 1"],\n  "preparation_plan": ["Day 1-2: ..."],\n  "verdict": "2-3 sentence verdict"\n}`;
+    const response = await client.chat.completions.create({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], max_tokens: 1500, temperature: 0.3 });
+    const raw = response.choices[0].message.content.trim().replace(/```json|```/g, '').trim();
+    res.json({ analysis: JSON.parse(raw) });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to analyze: ' + err.message });
+  }
+});
+
+app.post('/api/teams/match', authenticate, async (req, res) => {
+  const { user_skills } = req.body;
+  if (!user_skills?.trim()) return res.status(400).json({ error: 'Provide your skills.' });
+  const { data: teams } = await supabase.from('teams').select('id, name, hackathon, skills, slots_left, size, leader_email').gt('slots_left', 0);
+  if (!teams?.length) return res.status(200).json({ matches: [], message: 'No open teams found.' });
+  try {
+    const prompt = `You are a team matchmaking engine.\n\nUser skills: "${user_skills}"\n\nOpen teams: ${JSON.stringify(teams.map(t => ({ id: t.id, name: t.name, hackathon: t.hackathon, looking_for: t.skills, slots_left: t.slots_left })))}\n\nReturn ONLY a JSON array of top 3 matches:\n[\n  {\n    "id": <team_id>,\n    "name": "<team_name>",\n    "match_score": <0-100>,\n    "reason": "<one sentence why>"\n  }\n]`;
+    const response = await client.chat.completions.create({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], max_tokens: 500, temperature: 0.3 });
+    const raw = response.choices[0].message.content.trim().replace(/```json|```/g, '').trim();
+    const matches = JSON.parse(raw);
+    const enriched = matches.map(m => ({ ...m, ...teams.find(t => t.id === m.id) }));
+    res.json({ matches: enriched });
+  } catch (err) {
+    res.status(500).json({ error: 'Matchmaking failed: ' + err.message });
+  }
+});
+
+app.post('/api/ping', authenticate, async (req, res) => {
+  await supabase.from('users').update({ last_seen: new Date().toISOString() }).eq('email', req.user.email);
+  res.json({ ok: true });
+});
+
+app.get('/api/users/online', authenticate, async (req, res) => {
+  const twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+  const { data } = await supabase.from('users').select('email, last_seen').gte('last_seen', twoMinsAgo);
+  res.json((data || []).map(u => u.email));
+});
+
+app.get('/debug-env', (req, res) => {
+  res.json({ has_groq: !!process.env.GROQ_API_KEY, has_jwt: !!process.env.JWT_SECRET, has_supabase_url: !!process.env.SUPABASE_URL, has_supabase_key: !!process.env.SUPABASE_KEY });
+});
+
 app.listen(PORT, () => {
   console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
   console.log(`✅ Supabase connected!`);
