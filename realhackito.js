@@ -1,42 +1,9 @@
-
-// --- Authentication Fetch Wrapper ---
-const originalFetch = window.fetch;
-window.fetch = async (...args) => {
-    let [resource, config] = args;
-    if (!config) config = {};
-    if (!config.credentials) config.credentials = 'include';
-
-    let response = await originalFetch(resource, config);
-
-    // Auto-refresh token if 401
-    if (response.status === 401 && !resource.includes('/api/login') && !resource.includes('/api/refresh')) {
-        const refreshRes = await originalFetch('/api/refresh', { method: 'POST', credentials: 'include' });
-        if (refreshRes.ok) {
-            const data = await refreshRes.json();
-            if (data.token) {
-                localStorage.setItem('authToken', data.token);
-                // Retry original request
-                if (config.headers && config.headers['Authorization']) {
-                    config.headers['Authorization'] = 'Bearer ' + data.token;
-                }
-                response = await originalFetch(resource, config);
-            }
-        } else {
-            // Refresh failed, force logout
-            console.warn('Session expired, logging out...');
-            if (typeof confirmLogout === 'function') confirmLogout();
-        }
-    }
-    return response;
-};
-
 // ── Hack Club Live API ──
 const HACKATHON_API_URL = "/api/hackathons";
 let allHackathons = [];
 
 // Add chatHistory array for the bot
 let chatHistory = [];
-let onlineUsers = new Set();
 
 // Banned words list and censor function
 const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap']; // Extend as needed
@@ -65,8 +32,10 @@ function safeJSString(str) {
 }
 
 function authHeaders() {
+  const token = localStorage.getItem('authToken');
   return {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
   };
 }
 
@@ -81,10 +50,17 @@ function getCountdown(dateStr) {
 
 // ── Auto-load on page ready ──
 window.addEventListener('DOMContentLoaded', () => {
-  // Fallback click bindings for environments where inline onclick is blocked
-  bindCoreButtonHandlers();
-
-  initializeAuthState();
+  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+  if (isLoggedIn) {
+    fetchHackathons();
+    document.getElementById('nav-auth').style.display = 'none';
+    document.getElementById('nav-app').style.display = 'flex';
+    const btn = document.getElementById('get-started-btn');
+    if (btn) btn.style.display = 'none';
+    startHeartbeat();
+    setInterval(fetchOnlineUsers, 15000);
+    fetchOnlineUsers();
+  }
   showWelcomeMessage();
 
   // ADDED: handle invite link
@@ -105,175 +81,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-async function initializeAuthState() {
-  const navAuth = document.getElementById('nav-auth');
-  const navApp = document.getElementById('nav-app');
-  const btn = document.getElementById('get-started-btn');
-
-  try {
-    const res = await fetch('/api/profile');
-    if (!res.ok) throw new Error('Unauthenticated');
-    const data = await res.json();
-    localStorage.setItem('loggedIn', 'true');
-    if (data?.user) {
-      localStorage.setItem('userEmail', data.user.email || '');
-      localStorage.setItem('userName', data.user.name || '');
-      localStorage.setItem('userUsername', data.user.username || '');
-      localStorage.setItem('userGender', data.user.gender || '');
-      localStorage.setItem('userBio', data.user.bio || '');
-      localStorage.setItem('userSkills', data.user.skills || '');
-      localStorage.setItem('userMobile', data.user.mobile || '');
-      localStorage.setItem('userCollege', data.user.college || '');
-    }
-    if (navAuth) navAuth.style.display = 'none';
-    if (navApp) navApp.style.display = 'flex';
-    if (btn) btn.style.display = 'none';
-    fetchHackathons();
-    startHeartbeat();
-    setInterval(fetchOnlineUsers, 15000);
-    fetchOnlineUsers();
-  } catch (e) {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('authToken');
-    if (navAuth) navAuth.style.display = '';
-    if (navApp) navApp.style.display = 'none';
-    if (btn) btn.style.display = '';
-  }
-}
-
-function bindCoreButtonHandlers() {
-  const bind = (selector, handler) => {
-    document.querySelectorAll(selector).forEach(el => {
-      if (el.dataset.boundClick === '1') return;
-      el.addEventListener('click', handler);
-      el.dataset.boundClick = '1';
-    });
-  };
-
-  bind('.nav-logo', () => goTo('landing'));
-  bind('#theme-btn', () => {
-    if (typeof toggleTheme === 'function') toggleTheme();
-  });
-
-  const navAuth = document.getElementById('nav-auth');
-  if (navAuth) {
-    const authButtons = navAuth.querySelectorAll('button');
-    if (authButtons[0] && authButtons[0].dataset.boundClick !== '1') {
-      authButtons[0].addEventListener('click', () => goTo('login'));
-      authButtons[0].dataset.boundClick = '1';
-    }
-    if (authButtons[1] && authButtons[1].dataset.boundClick !== '1') {
-      authButtons[1].addEventListener('click', () => goTo('signup'));
-      authButtons[1].dataset.boundClick = '1';
-    }
-  }
-
-  bind('#get-started-btn', () => goTo('signup'));
-  bind('#get-started-btn2', () => goTo('signup'));
-  bind('.hero-actions .btn-hero.secondary', () => goTo('dashboard'));
-  bind('#floating-bot', () => goTo('bot'));
-  bind('#nav-menu-btn', () => toggleNavMenu());
-
-  // Auth form submits (fallback when inline onsubmit is blocked)
-  const loginForm = document.querySelector('#page-login form');
-  if (loginForm && loginForm.dataset.boundSubmit !== '1') {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      loginUser();
-    });
-    loginForm.dataset.boundSubmit = '1';
-  }
-
-  const signupForm = document.querySelector('#page-signup form');
-  if (signupForm && signupForm.dataset.boundSubmit !== '1') {
-    signupForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      signupUser();
-    });
-    signupForm.dataset.boundSubmit = '1';
-  }
-
-  // Auth page text links
-  bind('#page-login .auth-footer a', () => goTo('signup'));
-  bind('#page-signup .auth-footer a', () => goTo('login'));
-
-  // Gender selection fallback (when inline onchange/onclick is blocked)
-  const maleInput = document.getElementById('gender-male');
-  const femaleInput = document.getElementById('gender-female');
-  const maleLabel = document.getElementById('gender-male-label');
-  const femaleLabel = document.getElementById('gender-female-label');
-
-  if (maleInput && maleInput.dataset.boundChange !== '1') {
-    maleInput.addEventListener('change', () => selectGender('male'));
-    maleInput.dataset.boundChange = '1';
-  }
-  if (femaleInput && femaleInput.dataset.boundChange !== '1') {
-    femaleInput.addEventListener('change', () => selectGender('female'));
-    femaleInput.dataset.boundChange = '1';
-  }
-  if (maleLabel && maleLabel.dataset.boundClick !== '1' && maleInput) {
-    maleLabel.addEventListener('click', () => {
-      maleInput.checked = true;
-      selectGender('male');
-    });
-    maleLabel.dataset.boundClick = '1';
-  }
-  if (femaleLabel && femaleLabel.dataset.boundClick !== '1' && femaleInput) {
-    femaleLabel.addEventListener('click', () => {
-      femaleInput.checked = true;
-      selectGender('female');
-    });
-    femaleLabel.dataset.boundClick = '1';
-  }
-
-  // Nav dropdown actions (fallback when inline onclick is blocked)
-  const navDropdown = document.getElementById('nav-dropdown');
-  if (navDropdown && navDropdown.dataset.boundMenuActions !== '1') {
-    navDropdown.querySelectorAll('button').forEach(btn => {
-      const text = (btn.textContent || '').toLowerCase();
-      if (text.includes('profile')) btn.addEventListener('click', () => { goTo('profile'); toggleNavMenu(); });
-      else if (text.includes('teams')) btn.addEventListener('click', () => { goTo('teams'); toggleNavMenu(); });
-      else if (text.includes('calendar')) btn.addEventListener('click', () => { goTo('calendar'); toggleNavMenu(); });
-      else if (text.includes('showcase')) btn.addEventListener('click', () => { goTo('showcase'); toggleNavMenu(); });
-      else if (text.includes('messages')) btn.addEventListener('click', () => { goTo('messages'); toggleNavMenu(); });
-      else if (text.includes('ai tools')) btn.addEventListener('click', () => { goTo('ai-tools'); toggleNavMenu(); });
-      else if (text.includes('find friends')) btn.addEventListener('click', () => { showUserSearch(); toggleNavMenu(); });
-      else if (text.includes('logout')) btn.addEventListener('click', () => { logout(); toggleNavMenu(); });
-    });
-    navDropdown.dataset.boundMenuActions = '1';
-  }
-}
-
-function startHeartbeat() {
-  fetchOnlineUsers();
-}
-
-async function fetchOnlineUsers() {
-  try {
-    const res = await fetch('/api/online-users', { headers: authHeaders() });
-    if (!res.ok) return;
-    const payload = await res.json();
-    const users = Array.isArray(payload)
-      ? payload
-      : Array.isArray(payload.users)
-        ? payload.users
-        : [];
-    onlineUsers = new Set(users.map(u => (u || '').toString().toLowerCase()));
-  } catch (e) {
-    // Ignore connectivity issues for presence features.
-  }
-}
-
-function isOnline(email) {
-  if (!email) return false;
-  return onlineUsers.has(String(email).toLowerCase());
-}
-
-function onlineDot(email, size = 8) {
-  const online = isOnline(email);
-  return `<span title="${online ? 'Online' : 'Offline'}" style="display:inline-block;width:${size}px;height:${size}px;border-radius:50%;background:${online ? '#22c55e' : '#64748b'};${online ? 'box-shadow:0 0 8px #22c55e;' : ''}"></span>`;
-}
-
 // ── Fetch hackathons from live API ──
 async function fetchHackathons() {
   const grid = document.getElementById("hackathon-grid");
@@ -281,24 +88,17 @@ async function fetchHackathons() {
 
   try {
     const response = await fetch(HACKATHON_API_URL);
-    if (!response.ok) {
-      if (response.status === 401) {
-        localStorage.removeItem('loggedIn');
-        goTo('login');
-        showToast('⚠️', 'Session Expired', 'Please login again.');
-        return;
-      }
-      throw new Error(`Failed to load hackathons (${response.status})`);
-    }
     allHackathons = await response.json();
-    if (!Array.isArray(allHackathons)) allHackathons = [];
+    if (!allHackathons || allHackathons.length === 0) {
+      allHackathons = getFallbackHackathons();
+    }
     allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
     renderHackathons(allHackathons);
   } catch (error) {
     console.error("API Error:", error);
-    allHackathons = [];
+    allHackathons = getFallbackHackathons();
+    allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
     renderHackathons(allHackathons);
-    showToast('⚠️', 'Hackathons Unavailable', 'Could not load live hackathons right now.');
   }
 }
 
@@ -519,13 +319,11 @@ async function sendChat() {
   }
 
   try {
-    const res = await fetch('/api/ask', {
+    const res = await fetch('/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: chatHistory }) // Send full history
     });
-
-    if (!res.ok) throw new Error('Bot endpoint unavailable');
 
     const data = await res.json();
     removeTyping();
@@ -539,16 +337,7 @@ async function sendChat() {
     }
   } catch (err) {
     removeTyping();
-    if (!allHackathons.length) {
-      appendMessage('bot', "⚠️ Live bot is unavailable right now. Please try again in a moment.");
-      return;
-    }
-    const next = allHackathons[0];
-    appendMessage(
-      'bot',
-      `Live AI is unavailable, but I can still help: try <strong>"Hackathons in India"</strong> or <strong>"Online hackathons"</strong>. Next upcoming: <strong>${escapeHTML(next.name)}</strong> on ${new Date(next.start).toLocaleDateString()}.`,
-      true
-    );
+    appendMessage('bot', "⚠️ Couldn't reach the server. Make sure the backend is running.");
   }
 }
 
@@ -616,13 +405,14 @@ async function signupUser() {
   if (!name || !email || !pass) return alert('Name, Email, and Password are required.');
 
   try {
-    const res = await fetch('/api/register', {
+    const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, pass, mobile, college, username, gender, bio, skills })
     });
     const data = await res.json();
     if (res.ok) {
+      localStorage.setItem('authToken', data.token); // YE LINE MISSING THI
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userName', name);
       localStorage.setItem('userEmail', email);
@@ -635,12 +425,7 @@ async function signupUser() {
 
       goTo('dashboard');
       showToast('🥳', 'Signup Successful!', `Welcome to Hack/Alert, ${name}!`);
-    } else {
-      const detailMsg = Array.isArray(data.details) && data.details.length
-        ? `${data.details[0].path}: ${data.details[0].message}`
-        : '';
-      showToast('❌', 'Signup Failed', detailMsg || data.error || 'Something went wrong during signup.');
-    }
+    } else showToast('❌', 'Signup Failed', data.error || 'Something went wrong during signup.');
   } catch (err) {
     console.error('Signup error:', err);
     showToast('❌', 'Server Error', 'Could not connect to the server. Please try again.');
@@ -742,8 +527,7 @@ function hideLogoutModal() {
   document.getElementById('logout-modal').style.display = 'none';
 }
 
-async function confirmLogout() {
-  try { await fetch('/api/logout', { method: 'POST' }); } catch(e) {}
+function confirmLogout() {
   document.getElementById('logout-modal').style.display = 'none';
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display = 'none';

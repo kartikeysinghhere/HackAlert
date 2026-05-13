@@ -1,11 +1,9 @@
-const path = require('path');
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const env = require('./config/env');
 const { globalLimiter } = require('./middleware/security');
-const { sanitizeBody } = require('./middleware/sanitize');
+const sanitize = require('./middleware/sanitize');
 
 // Import Routes
 const authRoutes = require('./routes/auth.routes');
@@ -14,7 +12,6 @@ const hackathonsRoutes = require('./routes/hackathons.routes');
 const messagingRoutes = require('./routes/messaging.routes');
 const teamsRoutes = require('./routes/teams.routes');
 const usersRoutes = require('./routes/users.routes');
-const chatRoutes = require('./routes/chat.routes');
 
 // Import Jobs
 const initAlertJobs = require('./jobs/alerts.job');
@@ -23,28 +20,10 @@ const app = express();
 
 // Middleware
 app.use(helmet());
-const allowedOrigins = (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || '')
-  .split(',')
-  .map(o => o.trim())
-  .filter(Boolean);
-app.use(cors({
-  origin(origin, callback) {
-    // Allow non-browser requests (no Origin header)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.length === 0 && env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error('CORS origin not allowed'));
-  },
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 app.use(globalLimiter);
-app.use(sanitizeBody);
+app.use(sanitize);
 app.use(express.static('.'));
 
 // Routes mapping for frontend compatibility
@@ -54,15 +33,6 @@ app.use('/api/hackathons', hackathonsRoutes); // /api/hackathons, /api/hackathon
 app.use('/api/dm', messagingRoutes); // /api/dm/conversations, /api/dm/:email, etc.
 app.use('/api/teams', teamsRoutes);   // /api/teams/:id, /api/teams/requests, etc.
 app.use('/api', usersRoutes);     // /api/profile, /api/friends, /api/users/online, /api/ping
-app.use('/api', chatRoutes);      // /api/ask
-
-// Serve frontend for any other routes (SPA support)
-app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) {
-    return next();
-  }
-  res.sendFile(path.join(__dirname, 'realhackito.html'));
-});
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
