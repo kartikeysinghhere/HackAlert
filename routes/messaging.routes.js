@@ -10,6 +10,6 @@ router.get('/conversations', authenticate, messagingController.getConversations)
 router.get('/:partner_email', authenticate, messagingController.getMessages);
 router.post('/:partner_email', authenticate, validate(dmSchema), profanity.middleware, messagingController.sendMessage);
 router.put('/:partner_email/seen', authenticate, messagingController.markSeen);
-router.get('/:partner_email/stream', messagingController.streamMessages);
+router.get('/:partner_email/stream', authenticate, messagingController.streamMessages);
 
 module.exports = router;

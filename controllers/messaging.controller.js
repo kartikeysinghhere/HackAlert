@@ -25,17 +25,7 @@ const markSeen = asyncHandler(async (req, res) => {
 });
 
 const streamMessages = (req, res) => {
-  const token = req.query.token;
-  if (!token) return res.status(401).end();
-
-  let user;
-  try {
-    user = jwt.verify(token, JWT_SECRET);
-  } catch {
-    return res.status(401).end();
-  }
-
-  const email = user.email;
+  const email = req.user.email;
   const partner = decodeURIComponent(req.params.partner_email);
   const dmKey = [email, partner].sort().join('::');
 
