@@ -331,6 +331,7 @@ async function sendChat() {
     // handle whatever key your backend returns
     const reply = data.answer || data.reply || data.message || data.response || data.text || JSON.stringify(data);
     appendMessage('bot', reply);
+    speakText(reply);
     if (data.action === 'filter' && data.filterType) {
       const pill = document.querySelector(`.filter-pill[onclick*="${data.filterType}"]`);
       if (pill) filterCards(pill, data.filterType);
@@ -1889,4 +1890,80 @@ async function sendDM() {
     showToast('❌', 'Error', 'Could not send message.');
     input.value = message;
   }
+}
+// ── VOICE CHAT ──
+let speechSynth = window.speechSynthesis;
+let currentUtterance = null;
+let isListening = false;
+let recognition = null;
+
+function initSpeechRecognition() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    showToast('⚠️', 'Not Supported', 'Voice input not supported in this browser.');
+    return null;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const r = new SR();
+  r.continuous = false;
+  r.interimResults = false;
+  r.lang = 'en-US';
+
+  r.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    document.getElementById('chat-input').value = transcript;
+    stopListening();
+    sendChat();
+  };
+
+  r.onerror = () => { stopListening(); showToast('❌', 'Voice Error', 'Could not hear you. Try again.'); };
+  r.onend = () => { if (isListening) stopListening(); };
+  return r;
+}
+
+function toggleVoiceInput() {
+  if (isListening) { stopListening(); return; }
+  recognition = initSpeechRecognition();
+  if (!recognition) return;
+  isListening = true;
+  recognition.start();
+  const btn = document.getElementById('mic-btn');
+  btn.textContent = '🔴';
+  btn.style.borderColor = '#ef4444';
+  btn.style.color = '#ef4444';
+  showToast('🎤', 'Listening...', 'Speak now');
+}
+
+function stopListening() {
+  isListening = false;
+  if (recognition) { recognition.stop(); recognition = null; }
+  const btn = document.getElementById('mic-btn');
+  if (btn) { btn.textContent = '🎤'; btn.style.borderColor = 'var(--border-light)'; btn.style.color = 'var(--muted)'; }
+}
+
+function speakText(text) {
+  if (!speechSynth) return;
+  stopSpeech();
+
+  // Clean text — remove emojis and HTML tags
+  const clean = text.replace(/<[^>]*>/g, '').replace(/[\u{1F600}-\u{1F64F}]/gu, '').replace(/[\u{1F300}-\u{1F5FF}]/gu, '').replace(/[\u{1F680}-\u{1F6FF}]/gu, '').replace(/[\u{2600}-\u{26FF}]/gu, '').trim();
+
+  currentUtterance = new SpeechSynthesisUtterance(clean);
+  currentUtterance.rate = 1.0;
+  currentUtterance.pitch = 1.0;
+  currentUtterance.volume = 1.0;
+
+  const stopBtn = document.getElementById('stop-btn');
+
+  currentUtterance.onstart = () => { if (stopBtn) stopBtn.style.display = 'flex'; };
+  currentUtterance.onend = () => { if (stopBtn) stopBtn.style.display = 'none'; currentUtterance = null; };
+  currentUtterance.onerror = () => { if (stopBtn) stopBtn.style.display = 'none'; };
+
+  speechSynth.speak(currentUtterance);
+}
+
+function stopSpeech() {
+  if (speechSynth) speechSynth.cancel();
+  currentUtterance = null;
+  const stopBtn = document.getElementById('stop-btn');
+  if (stopBtn) stopBtn.style.display = 'none';
 }

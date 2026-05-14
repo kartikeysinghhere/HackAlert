@@ -76,6 +76,17 @@
       display: none !important;
     }
   </style>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </head>
 
 <body>
@@ -83,6 +94,7 @@
   <!-- NAVBAR -->
   <nav id="navbar">
     <div class="nav-logo" onclick="goTo('landing')">Hack<span>/</span>Alert</div>
+    <div id="google_translate_element" style="display:inline-flex;align-items:center;"></div>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
       <div class="nav-links" id="nav-auth">
@@ -427,7 +439,11 @@
       <button class="quick-chip" onclick="quickSend(this)">Hackathons for students</button>
     </div>
     <div class="chat-input-wrap">
+      <button id="mic-btn" onclick="toggleVoiceInput()" title="Voice input"
+        style="background:transparent;border:1px solid var(--border-light);border-radius:8px;padding:0 12px;height:44px;cursor:pointer;font-size:18px;color:var(--muted);transition:all 0.2s;flex-shrink:0;">🎤</button>
       <input type="text" id="chat-input" placeholder="Ask me about any hackathon..." />
+      <button id="stop-btn" onclick="stopSpeech()" title="Stop speaking"
+        style="display:none;background:#ef4444;border:none;border-radius:8px;padding:0 12px;height:44px;cursor:pointer;font-size:18px;color:#fff;flex-shrink:0;">⏹</button>
       <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
     </div>
   </div>
