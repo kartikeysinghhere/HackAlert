@@ -53,9 +53,12 @@ body::before {
 .page {
   display: none;
   min-height: 100vh;
-  position: relative;
-  z-index: 1;
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
   background: var(--bg);
+  z-index: 1;
+  padding-top: 70px;
 }
 
 .page.active {
@@ -65,14 +68,9 @@ body::before {
 #page-login.active,
 #page-signup.active {
   display: flex !important;
-  position: fixed;
-  inset: 0;
   z-index: 500;
-  overflow-y: auto;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 70px;
-  background: var(--bg);
 }
 
 #page-bot.active {
