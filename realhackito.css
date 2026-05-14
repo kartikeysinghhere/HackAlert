@@ -52,28 +52,32 @@ body::before {
 /* ─── PAGES ─── */
 .page {
   display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
 }
 
 .page.active {
   display: block;
 }
 
-#page-login,
-#page-signup {
-  display: none;
-}
-
 #page-login.active,
 #page-signup.active {
-  display: flex;
-}
-
-#page-bot {
-  display: none;
+  display: flex !important;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  overflow-y: auto;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 70px;
+  background: var(--bg);
 }
 
 #page-bot.active {
   display: flex;
+  flex-direction: column;
 }
 
 /* ─── NAVBAR ─── */
