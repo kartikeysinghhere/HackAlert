@@ -1463,6 +1463,7 @@ body.light #back-top {
   align-items: flex-start;
   justify-content: center;
   padding-top: 70px;
+  background: var(--bg);
 }
 
 #page-bot {
