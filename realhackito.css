@@ -1917,7 +1917,7 @@ body.light #back-top {
 }
 
 .goog-te-gadget::before {
-  content: '🌐';
+  content: '🗣️';
   position: absolute;
   left: 8px;
   top: 50%;
@@ -1933,10 +1933,21 @@ body.light #back-top {
   background-color: rgba(0, 240, 255, 0.06) !important;
 }
 
-.goog-logo-link { display: none !important; }
-.goog-te-gadget span { display: none !important; }
-.goog-te-gadget > span { display: none !important; }
+/* ── Nuke ALL Google branding elements ── */
+.goog-logo-link,
+.goog-logo-link *,
+.goog-te-gadget img,
+.goog-te-gadget a,
+.goog-te-gadget a img,
+#google_translate_element img,
+#google_translate_element a,
+.goog-te-gadget span,
+.goog-te-gadget > span,
+.VIpgJd-ZVi9od-xl07Ob-lTBxed,
+.VIpgJd-ZVi9od-aZ2wEe { display: none !important; }
 
-/* Hide Google Translate top banner */
-.goog-te-banner-frame { display: none !important; }
+/* Hide Google Translate top banner & body offset */
+.goog-te-banner-frame,
+.goog-te-balloon-frame { display: none !important; }
 body { top: 0 !important; }
+.skiptranslate { display: none !important; }

@@ -1896,6 +1896,8 @@ let speechSynth = window.speechSynthesis;
 let currentUtterance = null;
 let isListening = false;
 let recognition = null;
+let silenceTimer = null;
+let fullTranscript = '';
 
 function initSpeechRecognition() {
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -1904,24 +1906,57 @@ function initSpeechRecognition() {
   }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const r = new SR();
-  r.continuous = false;
-  r.interimResults = false;
+  r.continuous = true;       // Keep listening — don't stop after one sentence
+  r.interimResults = true;   // Show partial results while speaking
   r.lang = 'en-US';
 
   r.onresult = (e) => {
-    const transcript = e.results[0][0].transcript;
-    document.getElementById('chat-input').value = transcript;
-    stopListening();
-    sendChat();
+    // Accumulate all final results into full transcript
+    let interim = '';
+    fullTranscript = '';
+    for (let i = 0; i < e.results.length; i++) {
+      if (e.results[i].isFinal) {
+        fullTranscript += e.results[i][0].transcript + ' ';
+      } else {
+        interim += e.results[i][0].transcript;
+      }
+    }
+    // Show what's being heard in the input box
+    const input = document.getElementById('chat-input');
+    if (input) input.value = (fullTranscript + interim).trim();
+
+    // Reset the 5-second silence timer on every new word
+    clearTimeout(silenceTimer);
+    silenceTimer = setTimeout(() => {
+      if (isListening && fullTranscript.trim()) {
+        stopListening();
+        setTimeout(() => sendChat(), 100); // Small delay for input to settle
+        showToast('✅', 'Got it!', 'Sending your message...');
+      } else if (isListening) {
+        stopListening();
+        showToast('🎤', 'Nothing heard', 'Try speaking again.');
+      }
+    }, 5000);
   };
 
-  r.onerror = () => { stopListening(); showToast('❌', 'Voice Error', 'Could not hear you. Try again.'); };
-  r.onend = () => { if (isListening) stopListening(); };
+  r.onerror = (e) => {
+    if (e.error === 'no-speech') return; // Ignore no-speech, timer will handle it
+    stopListening();
+    showToast('❌', 'Voice Error', 'Could not hear you. Try again.');
+  };
+
+  r.onend = () => {
+    // Only auto-cleanup if we didn't intentionally stop
+    if (isListening) stopListening();
+  };
   return r;
 }
 
 function toggleVoiceInput() {
   if (isListening) { stopListening(); return; }
+  fullTranscript = '';
+  const input = document.getElementById('chat-input');
+  if (input) input.value = '';
   recognition = initSpeechRecognition();
   if (!recognition) return;
   isListening = true;
@@ -1930,12 +1965,22 @@ function toggleVoiceInput() {
   btn.textContent = '🔴';
   btn.style.borderColor = '#ef4444';
   btn.style.color = '#ef4444';
-  showToast('🎤', 'Listening...', 'Speak now');
+  showToast('🎤', 'Listening...', 'Speak freely — pauses auto-send in 5s');
+
+  // Fallback: if user never speaks, stop after 5s
+  silenceTimer = setTimeout(() => {
+    if (isListening) {
+      stopListening();
+      showToast('🎤', 'Nothing heard', 'Try speaking again.');
+    }
+  }, 5000);
 }
 
 function stopListening() {
   isListening = false;
-  if (recognition) { recognition.stop(); recognition = null; }
+  clearTimeout(silenceTimer);
+  silenceTimer = null;
+  if (recognition) { try { recognition.stop(); } catch(e){} recognition = null; }
   const btn = document.getElementById('mic-btn');
   if (btn) { btn.textContent = '🎤'; btn.style.borderColor = 'var(--border-light)'; btn.style.color = 'var(--muted)'; }
 }
@@ -1948,7 +1993,7 @@ function speakText(text) {
   const clean = text.replace(/<[^>]*>/g, '').replace(/[\u{1F600}-\u{1F64F}]/gu, '').replace(/[\u{1F300}-\u{1F5FF}]/gu, '').replace(/[\u{1F680}-\u{1F6FF}]/gu, '').replace(/[\u{2600}-\u{26FF}]/gu, '').trim();
 
   currentUtterance = new SpeechSynthesisUtterance(clean);
-  currentUtterance.rate = 0.82;
+  currentUtterance.rate = 0.75;
   currentUtterance.pitch = 1.0;
   currentUtterance.volume = 1.0;
 
