@@ -1965,7 +1965,7 @@ function toggleVoiceInput() {
   recognition = initSpeechRecognition();
   if (!recognition) return;
   isListening = true;
-  try { recognition.start(); } catch(e) { isListening = false; return; }
+  try { recognition.start(); } catch (e) { isListening = false; return; }
   const btn = document.getElementById('mic-btn');
   if (btn) { btn.textContent = '🔴'; btn.style.borderColor = '#ef4444'; btn.style.color = '#ef4444'; }
   showToast('🎤', 'Listening...', 'Speak freely — auto-sends after 5s pause');
@@ -1983,10 +1983,10 @@ function stopListening(autoSend = false) {
   isListening = false;
   clearTimeout(silenceTimer);
   silenceTimer = null;
-  if (recognition) { try { recognition.stop(); } catch(e){} recognition = null; }
+  if (recognition) { try { recognition.stop(); } catch (e) { } recognition = null; }
   const btn = document.getElementById('mic-btn');
   if (btn) { btn.textContent = '🎤'; btn.style.borderColor = 'var(--border-light)'; btn.style.color = 'var(--muted)'; }
-  
+
   if (autoSend) {
     const input = document.getElementById('chat-input');
     if (input && input.value.trim()) {
@@ -2022,4 +2022,7 @@ function stopSpeech() {
   currentUtterance = null;
   const stopBtn = document.getElementById('stop-btn');
   if (stopBtn) stopBtn.style.display = 'none';
+}
+function suggestTranslation() {
+  showToast('🌐', 'Translation', 'Right-click → Translate to your language, or use browser translation.');
 }
