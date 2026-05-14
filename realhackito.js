@@ -1897,7 +1897,6 @@ let currentUtterance = null;
 let isListening = false;
 let recognition = null;
 let silenceTimer = null;
-let fullTranscript = '';
 
 function initSpeechRecognition() {
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -1906,66 +1905,70 @@ function initSpeechRecognition() {
   }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const r = new SR();
-  r.continuous = true;       // Keep listening — don't stop after one sentence
-  r.interimResults = true;   // Show partial results while speaking
+  r.continuous = true;
+  r.interimResults = true;
   r.lang = 'en-US';
 
+  // LOCAL accumulated — persists across multiple onresult calls via closure
+  let accumulated = '';
+
   r.onresult = (e) => {
-    // Accumulate all final results into full transcript
     let interim = '';
-    fullTranscript = '';
-    for (let i = 0; i < e.results.length; i++) {
+    // Only process NEW results using resultIndex
+    for (let i = e.resultIndex; i < e.results.length; i++) {
       if (e.results[i].isFinal) {
-        fullTranscript += e.results[i][0].transcript + ' ';
+        accumulated += e.results[i][0].transcript + ' ';
       } else {
         interim += e.results[i][0].transcript;
       }
     }
-    // Show what's being heard in the input box
+    // Live preview in input box
     const input = document.getElementById('chat-input');
-    if (input) input.value = (fullTranscript + interim).trim();
+    if (input) input.value = (accumulated + interim).trim();
 
-    // Reset the 5-second silence timer on every new word
+    // Reset 5-second silence timer on each new word heard
     clearTimeout(silenceTimer);
     silenceTimer = setTimeout(() => {
-      if (isListening && fullTranscript.trim()) {
+      const finalText = accumulated.trim();
+      if (isListening) {
         stopListening();
-        setTimeout(() => sendChat(), 100); // Small delay for input to settle
-        showToast('✅', 'Got it!', 'Sending your message...');
-      } else if (isListening) {
-        stopListening();
-        showToast('🎤', 'Nothing heard', 'Try speaking again.');
+        if (finalText) {
+          // Set input value explicitly before sending
+          const inp = document.getElementById('chat-input');
+          if (inp) inp.value = finalText;
+          setTimeout(() => sendChat(), 150);
+          showToast('✅', 'Got it!', 'Sending your message...');
+        } else {
+          showToast('🎤', 'Nothing heard', 'Try speaking again.');
+        }
       }
     }, 5000);
   };
 
-  r.onerror = (e) => {
-    if (e.error === 'no-speech') return; // Ignore no-speech, timer will handle it
+  r.onerror = (ev) => {
+    if (ev.error === 'no-speech') return;
     stopListening();
     showToast('❌', 'Voice Error', 'Could not hear you. Try again.');
   };
 
   r.onend = () => {
-    // Only auto-cleanup if we didn't intentionally stop
     if (isListening) stopListening();
   };
+
   return r;
 }
 
 function toggleVoiceInput() {
   if (isListening) { stopListening(); return; }
-  fullTranscript = '';
   const input = document.getElementById('chat-input');
   if (input) input.value = '';
   recognition = initSpeechRecognition();
   if (!recognition) return;
   isListening = true;
-  recognition.start();
+  try { recognition.start(); } catch(e) { isListening = false; return; }
   const btn = document.getElementById('mic-btn');
-  btn.textContent = '🔴';
-  btn.style.borderColor = '#ef4444';
-  btn.style.color = '#ef4444';
-  showToast('🎤', 'Listening...', 'Speak freely — pauses auto-send in 5s');
+  if (btn) { btn.textContent = '🔴'; btn.style.borderColor = '#ef4444'; btn.style.color = '#ef4444'; }
+  showToast('🎤', 'Listening...', 'Speak freely — auto-sends after 5s pause');
 
   // Fallback: if user never speaks, stop after 5s
   silenceTimer = setTimeout(() => {

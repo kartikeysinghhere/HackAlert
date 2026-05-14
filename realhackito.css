@@ -1933,21 +1933,17 @@ body.light #back-top {
   background-color: rgba(0, 240, 255, 0.06) !important;
 }
 
-/* ── Nuke ALL Google branding elements ── */
-.goog-logo-link,
-.goog-logo-link *,
-.goog-te-gadget img,
-.goog-te-gadget a,
-.goog-te-gadget a img,
-#google_translate_element img,
-#google_translate_element a,
-.goog-te-gadget span,
-.goog-te-gadget > span,
-.VIpgJd-ZVi9od-xl07Ob-lTBxed,
+/* ── Hide Google branding ONLY — NOT .skiptranslate (it wraps the whole body!) ── */
+.goog-logo-link { display: none !important; }
+.goog-logo-link * { display: none !important; }
+.goog-te-gadget img { display: none !important; }
+.goog-te-gadget span { display: none !important; }
+.goog-te-gadget > span { display: none !important; }
+.VIpgJd-ZVi9od-xl07Ob-lTBxed { display: none !important; }
 .VIpgJd-ZVi9od-aZ2wEe { display: none !important; }
 
-/* Hide Google Translate top banner & body offset */
-.goog-te-banner-frame,
+/* Hide Google Translate top banner & fix body offset */
+.goog-te-banner-frame { display: none !important; }
 .goog-te-balloon-frame { display: none !important; }
 body { top: 0 !important; }
-.skiptranslate { display: none !important; }
+/* DO NOT add .skiptranslate here — Google wraps entire <body> with it! */
