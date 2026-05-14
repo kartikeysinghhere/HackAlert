@@ -6,7 +6,7 @@ let allHackathons = [];
 let chatHistory = [];
 
 // Banned words list and censor function
-const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap']; // Extend as needed
+const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap', 'chutiye', 'madarchod', 'bhadwe', 'randi', 'rand', 'bhosdi', 'bsdk', 'gandu', 'behenchod', 'behencho', 'bc', 'tmkc', 'jhatu', 'mc', 'bhenchod', 'pussy']; // Extend as needed
 function censorMessage(text) {
   let censoredText = text;
   bannedWords.forEach(word => { const regex = new RegExp(`\\b${word}\\b`, 'gi'); censoredText = censoredText.replace(regex, '*'.repeat(word.length)); });
@@ -1931,7 +1931,7 @@ function initSpeechRecognition() {
     silenceTimer = setTimeout(() => {
       const finalText = accumulated.trim();
       if (isListening) {
-        stopListening();
+        stopListening(true);
         if (finalText) {
           // Set input value explicitly before sending
           const inp = document.getElementById('chat-input');
@@ -1959,7 +1959,7 @@ function initSpeechRecognition() {
 }
 
 function toggleVoiceInput() {
-  if (isListening) { stopListening(); return; }
+  if (isListening) { stopListening(true); return; } // SEND when manually stopped
   const input = document.getElementById('chat-input');
   if (input) input.value = '';
   recognition = initSpeechRecognition();
@@ -1979,13 +1979,21 @@ function toggleVoiceInput() {
   }, 5000);
 }
 
-function stopListening() {
+function stopListening(autoSend = false) {
   isListening = false;
   clearTimeout(silenceTimer);
   silenceTimer = null;
   if (recognition) { try { recognition.stop(); } catch(e){} recognition = null; }
   const btn = document.getElementById('mic-btn');
   if (btn) { btn.textContent = '🎤'; btn.style.borderColor = 'var(--border-light)'; btn.style.color = 'var(--muted)'; }
+  
+  if (autoSend) {
+    const input = document.getElementById('chat-input');
+    if (input && input.value.trim()) {
+      setTimeout(() => sendChat(), 150);
+      showToast('✅', 'Got it!', 'Sending your message...');
+    }
+  }
 }
 
 function speakText(text) {

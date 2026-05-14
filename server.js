@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 const dmClients = {};
 const teamClients = {};
 
-const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap'];
+const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap', 'chutiye', 'madarchod', 'bhadwe', 'randi', 'rand', 'bhosdi', 'bsdk', 'gandu', 'behenchod', 'behencho', 'bc', 'tmkc', 'jhatu', 'mc', 'bhenchod', 'pussy'];
 function censorMessage(text) {
   let censoredText = text;
   bannedWords.forEach(word => {
