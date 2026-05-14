@@ -1886,3 +1886,35 @@ body.light #back-top {
   flex: 1;
   overflow: hidden;
 }
+
+/* ── GOOGLE TRANSLATE ── */
+.goog-te-gadget {
+  font-family: var(--mono) !important;
+  font-size: 0 !important;
+}
+
+.goog-te-gadget select {
+  font-family: var(--mono) !important;
+  font-size: 11px !important;
+  background: transparent !important;
+  border: 1px solid var(--border-light) !important;
+  color: var(--muted) !important;
+  border-radius: 6px !important;
+  padding: 6px 8px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  height: 38px !important;
+}
+
+.goog-te-gadget select:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget span {
+  display: none !important;
+}
