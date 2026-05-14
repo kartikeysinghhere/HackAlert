@@ -863,6 +863,58 @@
     <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
   </div>
 
+  <!-- PUBLIC PROFILE -->
+  <div class="page" id="page-public-profile">
+    <div class="dash-header">
+      <div>
+        <h2>👤 <span id="pub-profile-title">Profile</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Public hacker profile</p>
+      </div>
+      <button onclick="goTo('dashboard')"
+        style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;cursor:pointer;">←
+        Back</button>
+    </div>
+
+    <div style="padding:32px 40px;max-width:900px;">
+      <!-- Profile Card -->
+      <div class="feature-card" style="margin-bottom:24px;">
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:20px;">
+          <div id="pub-avatar"
+            style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#050508;flex-shrink:0;">
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <h2 id="pub-name" style="color:#fff;margin:0;"></h2>
+              <span id="pub-gender" style="font-size:20px;"></span>
+            </div>
+            <p id="pub-username" style="color:var(--accent);font-family:var(--mono);font-size:13px;margin-bottom:8px;">
+            </p>
+            <p id="pub-bio" style="color:var(--muted);font-size:14px;line-height:1.6;font-style:italic;"></p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🎓 College:</strong>
+            <span id="pub-college" style="color:var(--text);"></span></p>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🛠 Skills:</strong>
+            <span id="pub-skills" style="color:var(--accent);"></span></p>
+        </div>
+      </div>
+
+      <!-- Projects -->
+      <div class="feature-card" style="margin-bottom:24px;">
+        <h3 style="margin-bottom:16px;">🚀 Projects</h3>
+        <div id="pub-projects"></div>
+      </div>
+
+      <!-- Teams -->
+      <div class="feature-card">
+        <h3 style="margin-bottom:16px;">🤝 Teams</h3>
+        <div id="pub-teams"></div>
+      </div>
+    </div>
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍</footer>
+  </div>
+
   <!-- LOGOUT MODAL -->
   <div id="logout-modal"
     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">

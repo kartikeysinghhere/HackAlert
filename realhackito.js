@@ -60,6 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
     startHeartbeat();
     setInterval(fetchOnlineUsers, 15000);
     fetchOnlineUsers();
+    startCountdowns();
   }
   showWelcomeMessage();
 
@@ -137,7 +138,7 @@ function createHackathonCard(hack, isDimmed = false) {
       <h3>${escapeHTML(hack.name)}</h3>
     </div>
     <p><strong>📅 Date:</strong> ${startDate}</p>
-    <p><strong>⏳ Deadline:</strong> ${getCountdown(hack.start)}</p>
+    <p><strong>⏳ Deadline:</strong> <span data-countdown="${hack.start}">${getCountdown(hack.start)}</span></p>
     <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : escapeHTML(location)}</p>
     <p><strong>💻 Mode:</strong> ${mode}</p>
     ${hack.state ? `<p><strong>📍 State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
@@ -227,7 +228,7 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages', 'ai-tools'];
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages', 'ai-tools', 'public-profile'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {
@@ -244,6 +245,7 @@ function goTo(pageId) {
   if (pageId === 'showcase') loadShowcase();
   if (pageId === 'messages') loadConversations();
   if (pageId === 'ai-tools') { }
+  if (pageId === 'public-profile') { }
 }
 
 // ── Append message bubble to chat ──
@@ -322,13 +324,20 @@ async function sendChat() {
     const res = await fetch('/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: chatHistory }) // Send full history
+      body: JSON.stringify({
+        messages: chatHistory,
+        user_profile: {
+          name: localStorage.getItem('userName'),
+          skills: localStorage.getItem('userSkills'),
+          college: localStorage.getItem('userCollege'),
+          bio: localStorage.getItem('userBio')
+        }
+      })
     });
 
     const data = await res.json();
     removeTyping();
 
-    // handle whatever key your backend returns
     const reply = data.answer || data.reply || data.message || data.response || data.text || JSON.stringify(data);
     appendMessage('bot', reply);
     speakText(reply);
@@ -338,7 +347,7 @@ async function sendChat() {
     }
   } catch (err) {
     removeTyping();
-    appendMessage('bot', "⚠️ Couldn't reach the server. Make sure the backend is running.");
+    appendMessage('bot', "😅 Oops! I took a quick nap — please try again in a moment!");
   }
 }
 
@@ -1394,7 +1403,7 @@ function searchUsers(q) {
           </div>
           <div style="flex:1;">
             <div style="display:flex;align-items:center;gap:6px;">
-              <strong style="color:#fff;font-size:14px;">${escapeHTML(u.name)}</strong>
+              <strong onclick="openPublicProfile('${escapeHTML(u.username)}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
               <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
             </div>
             <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
@@ -1472,7 +1481,7 @@ async function loadFriends() {
             </div>
             <div style="flex:1;min-width:0;">
               <div style="display:flex;align-items:center;gap:4px;">
-                <strong style="color:#fff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
+                <strong onclick="openPublicProfile('${escapeHTML(f.username)}')" style="color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
                 <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
 ${onlineDot(f.email, 8)}
                 <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
@@ -2025,4 +2034,93 @@ function stopSpeech() {
 }
 function suggestTranslation() {
   showToast('🌐', 'Translation', 'Right-click → Translate to your language, or use browser translation.');
+}
+// ── LIVE COUNTDOWN ──
+function startCountdowns() {
+  setInterval(() => {
+    document.querySelectorAll('[data-countdown]').forEach(el => {
+      const target = new Date(el.dataset.countdown);
+      const diff = target - new Date();
+      if (diff <= 0) { el.textContent = 'Ended'; el.style.color = '#ef4444'; return; }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (days > 0) el.textContent = `${days}d ${hours}h ${mins}m left`;
+      else if (hours > 0) el.textContent = `${hours}h ${mins}m ${secs}s left`;
+      else el.textContent = `${mins}m ${secs}s left ⚡`;
+
+      // Color urgency
+      if (days <= 1) el.style.color = '#ef4444';
+      else if (days <= 5) el.style.color = '#f59e0b';
+      else el.style.color = 'var(--accent)';
+    });
+  }, 1000);
+}
+
+// ── PUBLIC PROFILE ──
+async function openPublicProfile(username) {
+  try {
+    const res = await fetch(`/api/users/${encodeURIComponent(username)}`);
+    if (!res.ok) { showToast('❌', 'Not Found', 'User not found.'); return; }
+    const user = await res.json();
+
+    // Set page title
+    document.getElementById('pub-profile-title').textContent = user.name;
+
+    // Avatar
+    const avatar = document.getElementById('pub-avatar');
+    avatar.textContent = user.name.charAt(0).toUpperCase();
+
+    // Basic info
+    document.getElementById('pub-name').textContent = user.name;
+    document.getElementById('pub-username').textContent = '@' + user.username;
+    document.getElementById('pub-bio').textContent = user.bio || 'No bio yet.';
+    document.getElementById('pub-college').textContent = user.college || '—';
+    document.getElementById('pub-skills').textContent = user.skills || '—';
+
+    // Gender
+    const genderEl = document.getElementById('pub-gender');
+    if (user.gender === 'male') { genderEl.textContent = '♂'; genderEl.style.color = '#60a5fa'; }
+    else if (user.gender === 'female') { genderEl.textContent = '♀'; genderEl.style.color = '#f472b6'; }
+    else genderEl.textContent = '';
+
+    // Projects
+    const projectsDiv = document.getElementById('pub-projects');
+    if (!user.projects?.length) {
+      projectsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No projects submitted yet.</p>';
+    } else {
+      projectsDiv.innerHTML = user.projects.map(p => `
+        <div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid var(--border);margin-bottom:8px;">
+          <strong style="color:#fff;">${escapeHTML(p.title)}</strong>
+          <p style="color:var(--muted);font-size:12px;margin:4px 0;">${escapeHTML(p.description || '')}</p>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+            ${p.tech_stack ? p.tech_stack.split(',').map(t => `<span class="tech-tag">${escapeHTML(t.trim())}</span>`).join('') : ''}
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            ${p.github_link ? `<a href="${escapeHTML(p.github_link)}" target="_blank" class="project-link-btn github">⬡ GitHub</a>` : ''}
+            ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">▶ Demo</a>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Teams
+    const teamsDiv = document.getElementById('pub-teams');
+    if (!user.teams?.length) {
+      teamsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">Not in any teams yet.</p>';
+    } else {
+      teamsDiv.innerHTML = user.teams.map(t => `
+        <div style="padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+          <strong style="color:#fff;font-size:13px;">${escapeHTML(t.teams?.name || 'Team')}</strong>
+          <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">🏆 ${escapeHTML(t.teams?.hackathon || 'Open')}</span>
+        </div>
+      `).join('');
+    }
+
+    goTo('public-profile');
+  } catch (err) {
+    showToast('❌', 'Error', 'Could not load profile.');
+  }
 }

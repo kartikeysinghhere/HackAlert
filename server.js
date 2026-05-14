@@ -105,7 +105,7 @@ app.get('/api/hackathons', async (req, res) => {
 });
 
 app.post('/ask', async (req, res) => {
-  const { messages } = req.body;
+  const { messages, user_profil } = req.body;
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'No messages provided' });
   }
@@ -132,7 +132,19 @@ app.post('/ask', async (req, res) => {
     const response = await client.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
-        { role: 'system', content: `You are HackBot, an expert AI assistant for HackAlert. Help developers find, register for, and prepare for hackathons. Be concise, enthusiastic, and use relevant emojis. Keep responses under 150 words. Here is the current live list of hackathons:\n${JSON.stringify(globalHackathons.map(h => ({ name: h.name, start: h.start, city: h.city, country: h.country, virtual: h.virtual, website: h.website })).slice(0, 50))}` },
+        {
+          role: 'system', content: `You are HackBot, an expert AI assistant for HackAlert. Help developers find, register for, and prepare for hackathons. Be concise, enthusiastic, and use relevant emojis. Keep responses under 150 words.
+
+${user_profile ? `User Profile:
+- Name: ${user_profile.name}
+- Skills: ${user_profile.skills || 'Not specified'}
+- College: ${user_profile.college || 'Not specified'}
+- Bio: ${user_profile.bio || 'Not specified'}
+
+Use this profile to give personalized hackathon recommendations.` : ''}
+
+Here is the current live list of hackathons:\n${JSON.stringify(globalHackathons.map(h => ({ name: h.name, start: h.start, city: h.city, country: h.country, virtual: h.virtual, website: h.website })).slice(0, 50))}`
+        },
         ...censoredMessages
       ]
     });
@@ -561,6 +573,33 @@ app.get('/api/users/online', authenticate, async (req, res) => {
 
 app.get('/debug-env', (req, res) => {
   res.json({ has_groq: !!process.env.GROQ_API_KEY, has_jwt: !!process.env.JWT_SECRET, has_supabase_url: !!process.env.SUPABASE_URL, has_supabase_key: !!process.env.SUPABASE_KEY });
+});
+
+// ── Public Profile ──
+app.get('/api/users/:username', async (req, res) => {
+  const { username } = req.params;
+  const { data, error } = await supabase
+    .from('users')
+    .select('name, username, gender, bio, skills, college, created_at')
+    .eq('username', username)
+    .single();
+  if (error || !data) return res.status(404).json({ error: 'User not found' });
+
+  // Get their teams
+  const { data: teams } = await supabase
+    .from('team_members')
+    .select('team_id, teams(name, hackathon)')
+    .eq('user_email', data.email || '')
+    .limit(5);
+
+  // Get their projects
+  const { data: projects } = await supabase
+    .from('team_projects')
+    .select('title, description, github_link, demo_link, tech_stack')
+    .eq('submitted_by', data.email || '')
+    .limit(5);
+
+  res.json({ ...data, teams: teams || [], projects: projects || [] });
 });
 
 app.listen(PORT, () => {
