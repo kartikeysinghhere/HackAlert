@@ -1953,3 +1953,19 @@ body.light [style*="color:var(--accent2)"],
 body.light [style*="color: var(--accent2)"] {
   color: #6d28d9 !important;
 }
+
+body.light h4 {
+  color: #0f172a !important;
+}
+
+body.light h2 {
+  color: #0f172a !important;
+}
+
+body.light h3 {
+  color: #0f172a !important;
+}
+
+body.light p {
+  color: #475569 !important;
+}
