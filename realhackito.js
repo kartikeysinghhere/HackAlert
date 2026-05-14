@@ -1948,7 +1948,7 @@ function speakText(text) {
   const clean = text.replace(/<[^>]*>/g, '').replace(/[\u{1F600}-\u{1F64F}]/gu, '').replace(/[\u{1F300}-\u{1F5FF}]/gu, '').replace(/[\u{1F680}-\u{1F6FF}]/gu, '').replace(/[\u{2600}-\u{26FF}]/gu, '').trim();
 
   currentUtterance = new SpeechSynthesisUtterance(clean);
-  currentUtterance.rate = 1.0;
+  currentUtterance.rate = 0.82;
   currentUtterance.pitch = 1.0;
   currentUtterance.volume = 1.0;
 
