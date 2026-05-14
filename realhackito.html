@@ -304,7 +304,8 @@
         <label>Password</label>
         <input type="password" id="signup-pass" placeholder="Create a password" required />
         <label>Mobile Number</label>
-        <input type="tel" id="signup-mobile" placeholder="+91 9999999999 (Optional)" />
+        <input type="tel" id="signup-mobile" placeholder="+91 9999999999 (Optional)"
+          oninput="this.value=this.value.replace(/[^0-9+]/g,'')" pattern="[0-9+]*" />
         <label>College / University</label>
         <input type="text" id="signup-college" placeholder="JiET (Optional)" />
         <label>Username *</label>
