@@ -2155,3 +2155,34 @@ async function openPublicProfile(username) {
     showToast('❌', 'Error', 'Could not load profile.');
   }
 }
+
+// ── ONLINE STATUS ──
+let onlineUsers = [];
+
+async function startHeartbeat() {
+  const ping = async () => {
+    if (localStorage.getItem('loggedIn') === 'true') {
+      try {
+        await fetch('/api/ping', { method: 'POST', headers: authHeaders() });
+      } catch (e) { }
+    }
+  };
+  ping();
+  setInterval(ping, 30000);
+}
+
+async function fetchOnlineUsers() {
+  try {
+    const res = await fetch('/api/users/online', { headers: authHeaders() });
+    onlineUsers = await res.json();
+  } catch (e) { }
+}
+
+function isOnline(email) {
+  return onlineUsers.includes(email);
+}
+
+function onlineDot(email, size = 10) {
+  const online = isOnline(email);
+  return `<span style="width:${size}px;height:${size}px;border-radius:50%;background:${online ? '#22c55e' : '#64748b'};display:inline-block;flex-shrink:0;box-shadow:${online ? '0 0 6px #22c55e' : 'none'};" title="${online ? 'Online' : 'Offline'}"></span>`;
+}
