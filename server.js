@@ -105,7 +105,7 @@ app.get('/api/hackathons', async (req, res) => {
 });
 
 app.post('/ask', async (req, res) => {
-  const { messages, user_profil } = req.body;
+  const { messages, user_profile } = req.body;
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'No messages provided' });
   }
