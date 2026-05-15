@@ -1364,12 +1364,13 @@ function selectGender(val) {
 // ── FRIEND SYSTEM ──
 
 function showUserSearch() {
-  if (!document.getElementById('page-profile').classList.contains('active')) {
-    goTo('profile');
-  }
   document.getElementById('user-search-modal').style.display = 'flex';
   document.getElementById('user-search-results').innerHTML = '';
   document.getElementById('user-search-input').value = '';
+  fetch(`/api/users/search?q=a`, { headers: authHeaders() })
+    .then(r => r.json())
+    .then(users => showUserResults(users))
+    .catch(() => { });
 }
 
 function hideUserSearch() {
@@ -1377,10 +1378,15 @@ function hideUserSearch() {
 }
 
 let searchUsersTimeout = null;
-function searchUsers(q) {
+async function searchUsers(q) {
   clearTimeout(searchUsersTimeout);
   if (!q.trim()) {
-    document.getElementById('user-search-results').innerHTML = '';
+    // Show all users as suggestions
+    try {
+      const res = await fetch(`/api/users/search?q=a`, { headers: authHeaders() });
+      const users = await res.json();
+      showUserResults(users);
+    } catch (e) { }
     return;
   }
   searchUsersTimeout = setTimeout(async () => {
@@ -1419,6 +1425,31 @@ function searchUsers(q) {
       document.getElementById('user-search-results').innerHTML = '<p style="color:#ef4444;font-size:13px;">Error searching users.</p>';
     }
   }, 400);
+}
+
+function showUserResults(users) {
+  const resultsDiv = document.getElementById('user-search-results');
+  if (!users.length) { resultsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No users found.</p>'; return; }
+  resultsDiv.innerHTML = users.map(u => `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#050508;flex-shrink:0;">
+        ${escapeHTML(u.name.charAt(0).toUpperCase())}
+      </div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <strong onclick="openPublicProfile('${escapeHTML(u.username)}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
+          <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
+          ${onlineDot(u.email, 8)}
+        </div>
+        <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
+        ${u.bio ? `<p style="color:var(--muted);font-size:12px;margin-top:2px;">${escapeHTML(u.bio)}</p>` : ''}
+      </div>
+      <button onclick="sendFriendRequest('${escapeHTML(u.email)}')"
+        style="background:var(--accent);color:#050508;border:none;padding:6px 14px;border-radius:8px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+        + Add
+      </button>
+    </div>
+  `).join('');
 }
 
 async function sendFriendRequest(to_email) {
