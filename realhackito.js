@@ -364,6 +364,7 @@ async function speakText(text) {
     const audioUrl = URL.createObjectURL(blob);
 
     const audio = new Audio(audioUrl);
+    audio.playbackRate = 1.15;
     audio.play();
 
   } catch (err) {
