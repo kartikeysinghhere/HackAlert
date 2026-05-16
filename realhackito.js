@@ -350,6 +350,26 @@ async function sendChat() {
     appendMessage('bot', "😅 Oops! I took a quick nap — please try again in a moment!");
   }
 }
+async function speakText(text) {
+  try {
+    const res = await fetch('/api/tts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text })
+    });
+
+    const blob = await res.blob();
+    const audioUrl = URL.createObjectURL(blob);
+
+    const audio = new Audio(audioUrl);
+    audio.play();
+
+  } catch (err) {
+    console.error('Voice error:', err);
+  }
+}
 
 // ── Quick send chips ──
 function quickSend(btn) {
