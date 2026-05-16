@@ -422,9 +422,11 @@ async function loginUser() {
   }
 }
 
+let pendingSignupData = null;
+
 async function signupUser() {
   const name = document.getElementById('signup-name').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
+  const email = document.getElementById('signup-email').value.trim().toLowerCase();
   const pass = document.getElementById('signup-pass').value.trim();
   const mobile = document.getElementById('signup-mobile').value.trim() || null;
   const college = document.getElementById('signup-college').value.trim() || null;
@@ -433,37 +435,108 @@ async function signupUser() {
   const bio = document.getElementById('signup-bio').value.trim() || null;
   const skills = document.getElementById('signup-skills').value.trim() || null;
 
-  if (!name || !email || !pass) return alert('Name, Email, and Password are required.');
+  if (!name || !email || !pass || !username) return alert('Name, Email, Password and Username are required.');
+
+  pendingSignupData = { name, email, pass, mobile, college, username, gender, bio, skills };
 
   try {
-    const res = await fetch('/api/signup', {
+    const res = await fetch('/api/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, pass, mobile, college, username, gender, bio, skills })
+      body: JSON.stringify({ email })
     });
     const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem('authToken', data.token); // YE LINE MISSING THI
-      localStorage.setItem('loggedIn', 'true');
-      localStorage.setItem('userName', name);
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('userUsername', username);
-      localStorage.setItem('userGender', gender || '');
-      localStorage.setItem('userBio', bio || '');
-      localStorage.setItem('userSkills', skills || '');
-      localStorage.setItem('userMobile', mobile || '');
-      localStorage.setItem('userCollege', college || '');
+    if (!res.ok) {
+      showToast('Error', 'OTP Failed', data.error || 'Could not send OTP.');
+      return;
+    }
 
-      goTo('dashboard');
-      showToast('🥳', 'Signup Successful!', `Welcome to Hack/Alert, ${name}!`);
-    } else showToast('❌', 'Signup Failed', data.error || 'Something went wrong during signup.');
+    document.getElementById('otp-email-display').textContent = `We sent a code to ${email}`;
+    document.getElementById('otp-modal').style.display = 'flex';
+    document.getElementById('otp-input').value = '';
+    document.getElementById('otp-input').focus();
   } catch (err) {
-    console.error('Signup error:', err);
-    showToast('❌', 'Server Error', 'Could not connect to the server. Please try again.');
+    console.error('Signup OTP error:', err);
+    showToast('Error', 'Server Error', 'Could not send OTP. Please try again.');
   }
 }
 
-// ── Toggle interest chip ──
+async function verifyOTP() {
+  const otp = document.getElementById('otp-input').value.trim();
+  if (!/^\d{6}$/.test(otp)) {
+    showToast('Invalid', 'Invalid', 'Enter the 6-digit code.');
+    return;
+  }
+
+  const email = pendingSignupData?.email;
+  if (!email) return;
+
+  try {
+    const verifyRes = await fetch('/api/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp })
+    });
+    const verifyData = await verifyRes.json();
+    if (!verifyRes.ok) {
+      showToast('Error', 'Wrong Code', verifyData.error || 'Invalid OTP');
+      return;
+    }
+
+    document.getElementById('otp-modal').style.display = 'none';
+
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pendingSignupData)
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('userName', pendingSignupData.name);
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userUsername', pendingSignupData.username);
+      localStorage.setItem('userGender', pendingSignupData.gender || '');
+      localStorage.setItem('userBio', pendingSignupData.bio || '');
+      localStorage.setItem('userSkills', pendingSignupData.skills || '');
+      localStorage.setItem('userMobile', pendingSignupData.mobile || '');
+      localStorage.setItem('userCollege', pendingSignupData.college || '');
+
+      const signedUpName = pendingSignupData.name;
+      pendingSignupData = null;
+      document.getElementById('nav-auth').style.display = 'none';
+      document.getElementById('nav-app').style.display = 'flex';
+      goTo('dashboard');
+      showToast('Success', 'Signup Successful!', `Welcome to Hack/Alert, ${signedUpName}!`);
+    } else {
+      showToast('Error', 'Signup Failed', data.error || 'Something went wrong during signup.');
+    }
+  } catch (err) {
+    console.error('OTP verification error:', err);
+    showToast('Error', 'Error', 'Something went wrong.');
+  }
+}
+
+async function resendOTP() {
+  const email = pendingSignupData?.email;
+  if (!email) return;
+
+  try {
+    const res = await fetch('/api/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (res.ok) showToast('Email', 'Sent!', 'New OTP sent to your email.');
+    else showToast('Error', 'Error', data.error || 'Could not resend.');
+  } catch (err) {
+    showToast('Error', 'Error', 'Could not resend.');
+  }
+}
+
 function toggleChip(el) {
   el.classList.toggle('selected');
 }

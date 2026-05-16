@@ -942,6 +942,26 @@
     <div class="toast-msg" id="toast-msg"></div>
   </div>
 
+  <!-- OTP MODAL -->
+  <div id="otp-modal"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+    <div
+      style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:48px;max-width:400px;width:90%;text-align:center;">
+      <div style="font-size:40px;margin-bottom:16px;">📧</div>
+      <h3 style="color:#fff;margin-bottom:8px;">Check your email</h3>
+      <p id="otp-email-display"
+        style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:28px;"></p>
+      <input id="otp-input" type="text" maxlength="6" placeholder="000000" inputmode="numeric"
+        style="width:100%;text-align:center;letter-spacing:12px;font-size:32px;font-family:var(--mono);font-weight:700;background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:12px;padding:16px;color:var(--accent);outline:none;margin-bottom:20px;">
+      <button onclick="verifyOTP()"
+        style="width:100%;background:var(--accent);color:#050508;border:none;border-radius:12px;padding:16px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px;">Verify
+        →</button>
+      <button onclick="resendOTP()"
+        style="background:transparent;border:none;color:var(--muted);font-family:var(--mono);font-size:12px;cursor:pointer;text-decoration:underline;">Resend
+        code</button>
+    </div>
+  </div>
+
   <!-- FLOATING BOT -->
   <div id="floating-bot" onclick="goTo('bot')" title="Talk to HackBot">🤖</div>
 
@@ -973,6 +993,10 @@
     });
 
     // ── BACK TO TOP BUTTON ──
+    document.getElementById('otp-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') verifyOTP();
+    });
+
     window.addEventListener('scroll', () => {
       const btn = document.getElementById('back-top');
       if (window.scrollY > 300) btn.style.display = 'block';

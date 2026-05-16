@@ -9,6 +9,7 @@ const cron = require('node-cron');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const axios = require('axios');
+const crypto = require('crypto');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error('CRITICAL: JWT_SECRET missing in environment');
@@ -38,6 +39,24 @@ let globalHackathons = [];
 
 function compactText(value, max = 500) {
   return String(value || '').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function escapeEmailHTML(value) {
+  return String(value || '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
 }
 
 function normalizeHackathon(h) {
@@ -297,9 +316,88 @@ app.post('/api/tts', async (req, res) => {
     res.status(500).json({ error: 'TTS failed' });
   }
 });
+
+app.post('/api/send-otp', async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  if (!email) return res.status(400).json({ error: 'Email required' });
+  if (!isValidEmail(email)) return res.status(400).json({ error: 'Invalid email' });
+  if (!process.env.RESEND_API_KEY) return res.status(500).json({ error: 'Email service not configured' });
+
+  const otp = crypto.randomInt(100000, 1000000).toString();
+  const expires_at = new Date(Date.now() + 10 * 60 * 1000);
+
+  await supabase.from('email_otps').delete().eq('email', email);
+
+  const { error } = await supabase.from('email_otps').insert([{
+    email,
+    otp,
+    expires_at: expires_at.toISOString(),
+    used: false
+  }]);
+
+  if (error) return res.status(500).json({ error: 'Failed to generate OTP' });
+
+  try {
+    await resend.emails.send({
+      from: 'HackAlert <onboarding@resend.dev>',
+      to: email,
+      subject: 'Your HackAlert verification code',
+      html: `
+        <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:480px;margin:0 auto;">
+          <h2 style="color:#00f0ff;margin-bottom:8px;">Hack/Alert ⚡</h2>
+          <p style="color:#b9cacb;margin-bottom:24px;">Your verification code:</p>
+          <div style="font-size:48px;font-weight:700;color:#00f0ff;letter-spacing:12px;margin-bottom:24px;">${otp}</div>
+          <p style="color:#b9cacb;font-size:13px;">Expires in 10 minutes. Don't share this with anyone.</p>
+        </div>
+      `
+    });
+    res.json({ message: 'OTP sent' });
+  } catch (err) {
+    console.error('Resend error:', err);
+    res.status(500).json({ error: 'Failed to send email' });
+  }
+});
+
+app.post('/api/verify-otp', async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  const otp = String(req.body.otp || '').trim();
+  if (!email || !otp) return res.status(400).json({ error: 'Email and OTP required' });
+  if (!isValidEmail(email) || !/^\d{6}$/.test(otp)) return res.status(400).json({ error: 'Invalid OTP' });
+
+  const { data, error } = await supabase
+    .from('email_otps')
+    .select('*')
+    .eq('email', email)
+    .eq('otp', otp)
+    .eq('used', false)
+    .single();
+
+  if (error || !data) return res.status(400).json({ error: 'Invalid OTP' });
+
+  if (new Date(data.expires_at) < new Date()) {
+    return res.status(400).json({ error: 'OTP expired. Request a new one.' });
+  }
+
+  await supabase.from('email_otps').update({ used: true }).eq('id', data.id);
+
+  res.json({ verified: true });
+});
+
 app.post('/api/signup', async (req, res) => {
-  const { name, email, pass, mobile, college, username, gender, bio, skills } = req.body;
+  const { name, pass, mobile, college, username, gender, bio, skills } = req.body;
+  const email = normalizeEmail(req.body.email);
   if (!name || !email || !pass || !username) return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
+  if (!isValidEmail(email)) return res.status(400).json({ error: 'Invalid email' });
+  const { data: verifiedOtp } = await supabase
+    .from('email_otps')
+    .select('id, expires_at')
+    .eq('email', email)
+    .eq('used', true)
+    .gte('expires_at', new Date().toISOString())
+    .order('expires_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!verifiedOtp) return res.status(403).json({ error: 'Please verify your email before signup.' });
   const { data: existing } = await supabase.from('users').select('username').eq('username', username).single();
   if (existing) return res.status(400).json({ error: 'Username already taken.' });
   const hashed = await bcrypt.hash(pass, 10);
@@ -307,6 +405,23 @@ app.post('/api/signup', async (req, res) => {
   if (error) {
     if (error.code === '23505') return res.status(400).json({ error: 'Email already exists' });
     return res.status(500).json({ error: error.message });
+  }
+  await supabase.from('email_otps').delete().eq('email', email);
+  try {
+    await resend.emails.send({
+      from: 'HackAlert <onboarding@resend.dev>',
+      to: email,
+      subject: 'Welcome to Hack/Alert ⚡',
+      html: `
+        <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:480px;margin:0 auto;">
+          <h2 style="color:#00f0ff;">Welcome, ${escapeEmailHTML(name)}! ⚡</h2>
+          <p style="color:#b9cacb;">You're now part of 18,000+ devs tracking hackathons.</p>
+          <a href="https://hackalert-xwpd.onrender.com" style="display:inline-block;margin-top:24px;background:#00f0ff;color:#050508;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;">Browse Hackathons →</a>
+        </div>
+      `
+    });
+  } catch (e) {
+    console.error('Welcome email failed:', e.message);
   }
   const token = jwt.sign({ email, name, username }, JWT_SECRET, { expiresIn: '7d' });
   res.status(201).json({ message: 'Signup successful', token });
