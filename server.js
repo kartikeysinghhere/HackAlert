@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const Groq = require('groq-sdk');
 const { createClient } = require('@supabase/supabase-js');
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
@@ -31,9 +31,19 @@ function censorMessage(text) {
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy');
+const mailTransporter = process.env.BREVO_SMTP_USER && process.env.BREVO_SMTP_PASS
+  ? nodemailer.createTransport({
+    host: process.env.BREVO_SMTP_HOST || 'smtp-relay.brevo.com',
+    port: Number(process.env.BREVO_SMTP_PORT || 587),
+    secure: false,
+    auth: {
+      user: process.env.BREVO_SMTP_USER,
+      pass: process.env.BREVO_SMTP_PASS
+    }
+  })
+  : null;
 
-if (!process.env.RESEND_API_KEY) console.log('Missing RESEND_API_KEY. Email features will fail.');
+if (!mailTransporter) console.log('Missing Brevo SMTP env. Email features will fail.');
 
 let globalHackathons = [];
 
@@ -57,6 +67,19 @@ function escapeEmailHTML(value) {
     '"': '&quot;',
     "'": '&#39;'
   }[ch]));
+}
+
+async function sendEmail({ to, subject, html }) {
+  if (!mailTransporter) {
+    throw new Error('Email service not configured');
+  }
+
+  return mailTransporter.sendMail({
+    from: process.env.EMAIL_FROM || 'HackAlert <no-reply@hackalert.local>',
+    to,
+    subject,
+    html
+  });
 }
 
 function normalizeHackathon(h) {
@@ -148,7 +171,7 @@ app.get('/', (req, res) => {
 });
 
 cron.schedule('0 10 * * *', async () => {
-  if (!process.env.RESEND_API_KEY) return;
+  if (!mailTransporter) return;
   const twoMinsAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
   const { data: upcoming } = await supabase.from('saved_hackathons').select('*').gte('hackathon_start', new Date().toISOString()).lte('hackathon_start', twoMinsAgo);
   if (!upcoming?.length) return;
@@ -159,8 +182,7 @@ cron.schedule('0 10 * * *', async () => {
   });
   for (const [email, hacks] of Object.entries(byUser)) {
     const hackList = hacks.map(h => `<li><strong>${h.hackathon_name}</strong> — <a href="${h.hackathon_website}">Register →</a></li>`).join('');
-    await resend.emails.send({
-      from: 'HackAlert <alerts@yourdomain.com>',
+    await sendEmail({
       to: email,
       subject: `⚡ ${hacks.length} hackathon(s) starting soon!`,
       html: `<div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:32px;border-radius:12px;"><h2 style="color:#00f0ff;">Hack/Alert ⚡</h2><p>These hackathons you saved are starting soon:</p><ul>${hackList}</ul></div>`
@@ -321,7 +343,7 @@ app.post('/api/send-otp', async (req, res) => {
   const email = normalizeEmail(req.body.email);
   if (!email) return res.status(400).json({ error: 'Email required' });
   if (!isValidEmail(email)) return res.status(400).json({ error: 'Invalid email' });
-  if (!process.env.RESEND_API_KEY) return res.status(500).json({ error: 'Email service not configured' });
+  if (!mailTransporter) return res.status(500).json({ error: 'Email service not configured' });
 
   const otp = crypto.randomInt(100000, 1000000).toString();
   const expires_at = new Date(Date.now() + 10 * 60 * 1000);
@@ -338,8 +360,7 @@ app.post('/api/send-otp', async (req, res) => {
   if (error) return res.status(500).json({ error: 'Failed to generate OTP' });
 
   try {
-    await resend.emails.send({
-      from: 'HackAlert <onboarding@resend.dev>',
+    await sendEmail({
       to: email,
       subject: 'Your HackAlert verification code',
       html: `
@@ -353,7 +374,7 @@ app.post('/api/send-otp', async (req, res) => {
     });
     res.json({ message: 'OTP sent' });
   } catch (err) {
-    console.error('Resend error:', err);
+    console.error('Brevo email error:', err);
     res.status(500).json({ error: 'Failed to send email' });
   }
 });
@@ -408,8 +429,7 @@ app.post('/api/signup', async (req, res) => {
   }
   await supabase.from('email_otps').delete().eq('email', email);
   try {
-    await resend.emails.send({
-      from: 'HackAlert <onboarding@resend.dev>',
+    await sendEmail({
       to: email,
       subject: 'Welcome to Hack/Alert ⚡',
       html: `
