@@ -1,6 +1,7 @@
 const authService = require('../services/auth.service');
 const asyncHandler = require('../utils/asyncHandler');
 const { NODE_ENV } = require('../config/env');
+const { ApiError } = require('../utils/errorHandler');
 
 const isProduction = NODE_ENV === 'production';
 const cookieSameSiteEnv = (process.env.COOKIE_SAME_SITE || '').toLowerCase();
@@ -83,5 +84,7 @@ module.exports = {
   register,
   login,
   refresh,
-  logout
+  logout,
+  sendOTP,
+  verifyOTP
 };
