@@ -65,6 +65,20 @@ const logout = asyncHandler(async (req, res) => {
   res.json({ message: 'Logged out successfully' });
 });
 
+const sendOTP = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  if (!email) throw new ApiError(400, 'Email required');
+  const result = await authService.sendOTP(email);
+  res.json(result);
+});
+
+const verifyOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) throw new ApiError(400, 'Email and OTP required');
+  const result = await authService.verifyOTP(email, otp);
+  res.json(result);
+});
+
 module.exports = {
   register,
   login,
