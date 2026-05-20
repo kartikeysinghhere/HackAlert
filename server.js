@@ -4,7 +4,6 @@ const express = require('express');
 const cors = require('cors');
 const Groq = require('groq-sdk');
 const { createClient } = require('@supabase/supabase-js');
-const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
@@ -31,20 +30,29 @@ function censorMessage(text) {
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-const mailTransporter = process.env.BREVO_SMTP_USER && process.env.BREVO_SMTP_PASS
-  ? nodemailer.createTransport({
-    host: process.env.BREVO_SMTP_HOST || 'smtp-relay.brevo.com',
-    port: Number(process.env.BREVO_SMTP_PORT || 587),
-    secure: false,
-    auth: {
-      user: process.env.BREVO_SMTP_USER,
-      pass: process.env.BREVO_SMTP_PASS
-    }
-  })
-  : null;
 
-if (!mailTransporter) console.log('Missing Brevo SMTP env. Email features will fail.');
-
+async function sendEmail({ to, subject, html }) {
+  if (!process.env.BREVO_API_KEY) {
+    throw new Error('Email service not configured');
+  }
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': process.env.BREVO_API_KEY
+    },
+    body: JSON.stringify({
+      sender: { name: 'HackAlert', email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html
+    })
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || 'Email send failed');
+  }
+}
 let globalHackathons = [];
 
 function compactText(value, max = 500) {
@@ -69,18 +77,6 @@ function escapeEmailHTML(value) {
   }[ch]));
 }
 
-async function sendEmail({ to, subject, html }) {
-  if (!mailTransporter) {
-    throw new Error('Email service not configured');
-  }
-
-  return mailTransporter.sendMail({
-    from: process.env.EMAIL_FROM || 'HackAlert <no-reply@hackalert.local>',
-    to,
-    subject,
-    html
-  });
-}
 
 function normalizeHackathon(h) {
   const mode = h.hybrid ? 'hybrid' : h.virtual ? 'online' : 'offline';
@@ -171,7 +167,7 @@ app.get('/', (req, res) => {
 });
 
 cron.schedule('0 10 * * *', async () => {
-  if (!mailTransporter) return;
+  if (!process.env.BREVO_API_KEY) return;
   const twoMinsAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
   const { data: upcoming } = await supabase.from('saved_hackathons').select('*').gte('hackathon_start', new Date().toISOString()).lte('hackathon_start', twoMinsAgo);
   if (!upcoming?.length) return;
@@ -343,7 +339,7 @@ app.post('/api/send-otp', async (req, res) => {
   const email = normalizeEmail(req.body.email);
   if (!email) return res.status(400).json({ error: 'Email required' });
   if (!isValidEmail(email)) return res.status(400).json({ error: 'Invalid email' });
-  if (!mailTransporter) return res.status(500).json({ error: 'Email service not configured' });
+  if (!process.env.BREVO_API_KEY) return res.status(500).json({ error: 'Email service not configured' });
 
   const otp = crypto.randomInt(100000, 1000000).toString();
   const expires_at = new Date(Date.now() + 10 * 60 * 1000);
