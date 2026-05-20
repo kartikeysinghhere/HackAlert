@@ -893,7 +893,7 @@ async function createTeam() {
     showToast('❌', 'Error', 'Team Name and Team Size are required.');
     return;
   }
-  const res = await fetch('/api/teams/create', {
+  const res = await fetch('/api/teams', {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({ name, hackathon, skills, size })
@@ -903,10 +903,10 @@ async function createTeam() {
 }
 
 async function joinTeam(teamId, teamName) {
-  const res = await fetch('/api/teams/join', {
+  const res = await fetch(`/api/teams/${teamId}/members`, {
     method: 'POST',
     headers: authHeaders(),
-    body: JSON.stringify({ team_id: teamId })
+    body: JSON.stringify({})
   });
   const d = await res.json();
   if (res.ok) {

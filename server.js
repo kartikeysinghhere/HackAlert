@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 const dmClients = {};
 const teamClients = {};
 
-const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap', 'chutiye', 'madarchod', 'bhadwe', 'randi', 'rand', 'bhosdi', 'bsdk', 'gandu', 'behenchod', 'behencho', 'bc', 'tmkc', 'jhatu', 'mc', 'bhenchod', 'pussy'];
+const bannedWords = require('./bannedWords.json');
 function censorMessage(text) {
   let censoredText = text;
   bannedWords.forEach(word => {
@@ -495,7 +495,7 @@ app.get('/api/teams/:id', async (req, res) => {
   res.json(data);
 });
 
-app.post('/api/teams/create', authenticate, async (req, res) => {
+app.post('/api/teams', authenticate, async (req, res) => {
   const { name, hackathon, skills, size } = req.body;
   const leader_email = req.user.email;
   if (!name) return res.status(400).json({ error: 'Team name required' });
@@ -510,8 +510,8 @@ app.post('/api/teams/create', authenticate, async (req, res) => {
   res.json(data);
 });
 
-app.post('/api/teams/join', authenticate, async (req, res) => {
-  const { team_id } = req.body;
+app.post('/api/teams/:id/members', authenticate, async (req, res) => {
+  const team_id = req.params.id;
   const user_email = req.user.email;
   const user_name = req.user.name;
   const { data: team } = await supabase.from('teams').select('*').eq('id', team_id).single();
