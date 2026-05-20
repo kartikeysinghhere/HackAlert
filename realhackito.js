@@ -2282,6 +2282,7 @@ async function startHeartbeat() {
 }
 
 async function fetchOnlineUsers() {
+  if (document.hidden) return;
   try {
     const res = await fetch('/api/users/online', { headers: authHeaders() });
     onlineUsers = await res.json();
