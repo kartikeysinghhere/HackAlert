@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const supabase = require('../config/db');
+const mailer = require('../config/mailer');
 const { JWT_SECRET, ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } = require('../config/env');
 const { ApiError } = require('../utils/errorHandler');
 
@@ -76,7 +77,7 @@ const register = async ({ email, pass, name, username, gender, college }) => {
 
   const { accessToken, refreshToken } = generateTokens(user);
   await storeRefreshToken(user.email, refreshToken);
-    await sendWelcomeEmail(email, name); 
+  await sendWelcomeEmail(email, name); 
 
   return { user, accessToken, refreshToken };
 };
@@ -144,8 +145,6 @@ const logout = async (refreshToken) => {
     await supabase.from('refresh_tokens').delete().eq('token', refreshToken);
   }
 };
-
-const mailer = require('../config/mailer');
 
 const sendOTP = async (email) => {
   // Delete any existing unused OTPs for this email
