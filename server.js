@@ -259,10 +259,7 @@ app.post('/ask', async (req, res) => {
   }
 
   const lastMsg = censoredMessages[censoredMessages.length - 1].content.toLowerCase();
-  let action = null, filterType = null;
-  if (lastMsg.includes('offline') || lastMsg.includes('in person')) { action = 'filter'; filterType = 'offline'; }
-  else if (lastMsg.includes('online') || lastMsg.includes('virtual')) { action = 'filter'; filterType = 'online'; }
-  else if (lastMsg.includes('hybrid')) { action = 'filter'; filterType = 'hybrid'; }
+  let action = null, payload = null;
 
   if (globalHackathons.length === 0) {
     try {
@@ -295,6 +292,24 @@ app.post('/ask', async (req, res) => {
       model: 'llama-3.3-70b-versatile',
       temperature: 0.45,
       max_tokens: 420,
+      tools: [
+        {
+          type: "function",
+          function: {
+            name: "trigger_ui_action",
+            description: "Trigger an action in the user's browser UI, like navigating to a page or filtering hackathons.",
+            parameters: {
+              type: "object",
+              properties: {
+                action: { type: "string", description: "The action to perform, e.g., 'navigate', 'filter'" },
+                payload: { type: "string", description: "The target, e.g., 'teams', 'projects', 'profile', 'online', 'offline', 'hybrid'" }
+              },
+              required: ["action", "payload"]
+            }
+          }
+        }
+      ],
+      tool_choice: "auto",
       messages: [
         {
           role: 'system', content: `You are HackBot, the AI assistant inside HackAlert, a hackathon and cybersecurity platform.
@@ -324,7 +339,21 @@ Upcoming Fallback: ${JSON.stringify(upcomingHackathons)}
         ...censoredMessages
       ]
     });
-    res.json({ answer: response.choices[0].message.content, action, filterType });
+    
+    const msgObj = response.choices[0].message;
+    if (msgObj.tool_calls && msgObj.tool_calls.length > 0) {
+      const toolCall = msgObj.tool_calls[0];
+      if (toolCall.function.name === 'trigger_ui_action') {
+        try {
+          const args = JSON.parse(toolCall.function.arguments);
+          action = args.action;
+          payload = args.payload;
+        } catch (e) {}
+      }
+    }
+    
+    const reply = msgObj.content || (action === 'navigate' ? `Taking you to ${payload}!` : (action === 'filter' ? `Filtering by ${payload}!` : "Done."));
+    res.json({ answer: reply, action, payload });
   } catch (err) {
     res.status(500).json({ error: 'AI error: ' + err.message });
   }

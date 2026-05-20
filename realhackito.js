@@ -4,6 +4,10 @@ let allHackathons = [];
 
 // Add chatHistory array for the bot
 let chatHistory = [];
+try {
+  const saved = localStorage.getItem('hackBotHistory');
+  if (saved) chatHistory = JSON.parse(saved);
+} catch (e) {}
 
 // Banned words list and censor function
 const bannedWords = ['fuck', 'shit', 'ass', 'bastard', 'bitch', 'damn', 'crap', 'chutiye', 'madarchod', 'bhadwe', 'randi', 'rand', 'bhosdi', 'bsdk', 'gandu', 'behenchod', 'behencho', 'bc', 'tmkc', 'jhatu', 'mc', 'bhenchod', 'pussy']; // Extend as needed
@@ -249,7 +253,7 @@ function goTo(pageId) {
 }
 
 // ── Append message bubble to chat ──
-function appendMessage(role, text, isHTML = false) {
+function appendMessage(role, text, isHTML = false, saveHistory = true) {
   const area = document.getElementById('chat-area');
   const msg = document.createElement('div');
   msg.className = `msg ${role}`;
@@ -271,10 +275,13 @@ function appendMessage(role, text, isHTML = false) {
   area.scrollTop = area.scrollHeight;
 
   // Store the (potentially censored) message in chatHistory
-  if (role === 'bot' && chatHistory.some(m => m.content === text)) return; // Avoid duplicate welcome
-  chatHistory.push({ role: role === 'user' ? 'user' : 'assistant', content: censorMessage(text) });
-  // Cap chatHistory to prevent memory leak
-  if (chatHistory.length > 30) chatHistory = chatHistory.slice(-30);
+  if (saveHistory) {
+    if (role === 'bot' && chatHistory.some(m => m.content === text)) return; // Avoid duplicate welcome
+    chatHistory.push({ role: role === 'user' ? 'user' : 'assistant', content: censorMessage(text), isHTML });
+    // Cap chatHistory to prevent memory leak
+    if (chatHistory.length > 30) chatHistory = chatHistory.slice(-30);
+    localStorage.setItem('hackBotHistory', JSON.stringify(chatHistory));
+  }
 }
 
 // ── Show typing indicator ──
@@ -303,8 +310,14 @@ function removeTyping() {
 // ── Welcome message on load ──
 function showWelcomeMessage() {
   setTimeout(() => {
-    const welcomeMsg = "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
-    appendMessage('bot', welcomeMsg, true);
+    if (chatHistory.length > 0) {
+      chatHistory.forEach(msg => {
+        appendMessage(msg.role === 'user' ? 'user' : 'bot', msg.content, msg.isHTML || false, false);
+      });
+    } else {
+      const welcomeMsg = "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
+      appendMessage('bot', welcomeMsg, true);
+    }
   }, 600);
 }
 
@@ -350,9 +363,11 @@ async function sendChat() {
     const reply = data.answer || data.reply || data.message || data.response || data.text || JSON.stringify(data);
     appendMessage('bot', reply);
     speakText(reply);
-    if (data.action === 'filter' && data.filterType) {
-      const pill = document.querySelector(`.filter-pill[onclick*="${data.filterType}"]`);
-      if (pill) filterCards(pill, data.filterType);
+    if (data.action === 'filter' && data.payload) {
+      const pill = document.querySelector(`.filter-pill[onclick*="${data.payload}"]`);
+      if (pill) filterCards(pill, data.payload);
+    } else if (data.action === 'navigate' && data.payload) {
+      goTo(data.payload);
     }
   } catch (err) {
     removeTyping();
