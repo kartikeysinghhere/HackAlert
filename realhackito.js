@@ -653,10 +653,26 @@ function confirmLogout() {
 // ── Fallback Data ──
 function getFallbackHackathons() {
   return [
-    { name: "Global AI Hack 2026", start: "2026-05-15", city: "San Francisco", country: "USA", virtual: false, hybrid: true, website: "#" },
-    { name: "Web3 Weekend", start: "2026-05-20", city: "", country: "", virtual: true, hybrid: false, website: "#" },
-    { name: "India HackFest", start: "2026-06-01", city: "Bangalore", country: "India", virtual: false, hybrid: false, website: "#" },
-    { name: "ML Marathon", start: "2026-06-10", city: "New York", country: "USA", virtual: true, hybrid: false, website: "#" }
+    { name: "Smart Horizon 2026 International Hackathon", start: "2026-09-03", city: "Bengaluru", country: "India", virtual: false, hybrid: false, website: "https://newhorizonindia.edu/" },
+    { name: "PSB's Cybersecurity, Fraud & AI Hackathon", start: "2026-08-27", city: "Hyderabad", country: "India", virtual: false, hybrid: true, website: "https://boihackathon.cse.iith.ac.in/hackathon2026/" },
+    { name: "India Food Systems Transformation Hackathon 2026", start: "2026-08-01", city: "Bengaluru", country: "India", virtual: false, hybrid: true, website: "https://www.tdu.edu.in/outreach/india-food-systems-transformation-hackathon-2026" },
+    { name: "Ocean Hackathon® 2026 (India Edition)", start: "2026-10-16", city: "Chennai", country: "India", virtual: false, hybrid: false, website: "https://www.campusmer.fr/ocean-hackathon" },
+    { name: "2026 Data, AI & Policy APAC Hackathon", start: "2026-09-26", city: "", country: "India", virtual: true, hybrid: false, website: "https://www.apru.org/event/2026-hackathon-financial-health-frontiers/" },
+    { name: "Tech Horizon 2.0 National Hackathon", start: "2026-11-13", city: "Hyderabad", country: "India", virtual: false, hybrid: false, website: "https://www.gniindia.org/" },
+    { name: "Great Indian Hackathon 2026", start: "2026-11-01", city: "", country: "India", virtual: true, hybrid: false, website: "https://sahrdaya.ac.in/" },
+    { name: "CODEX 2026 AI Hackathon", start: "2026-06-13", city: "", country: "India", virtual: true, hybrid: false, website: "https://www.codexbitblaze.in/" },
+    { name: "MLH Global Hack Week: Build 2026", start: "2026-06-12", city: "", country: "India", virtual: true, hybrid: false, website: "https://ghw.mlh.io/" },
+    { name: "MLH Agents Hack Week", start: "2026-08-07", city: "", country: "India", virtual: true, hybrid: false, website: "https://ghw.mlh.io/" },
+    { name: "Solution Challenge 2026", start: "2026-06-20", city: "", country: "India", virtual: true, hybrid: false, website: "https://developers.google.com/community/gdsc-solution-challenge" },
+    { name: "Build with AI: PromptWars", start: "2026-10-10", city: "New Delhi", country: "India", virtual: false, hybrid: false, website: "https://hack2skill.com/" },
+    { name: "Gen AI Academy APAC Hackathon", start: "2026-05-28", city: "Bengaluru", country: "India", virtual: false, hybrid: true, website: "https://hack2skill.com/" },
+    { name: "Robotics Innovation Hackathon 2026", start: "2026-11-05", city: "Hyderabad", country: "India", virtual: false, hybrid: false, website: "https://icmacc.org/" },
+    { name: "Agri-Excellence Hackathon 2026", start: "2026-07-01", city: "Kolkata", country: "India", virtual: false, hybrid: true, website: "https://agriexcellence.in/hackathon" },
+    { name: "Tata Steel AI Hackathon 2026", start: "2026-06-01", city: "", country: "India", virtual: true, hybrid: false, website: "https://www.hackerearth.com/community/challenges/competitive/tata-steel-ai-hackathon/" },
+    { name: "Flying Wings 2026: National Level Hackathon", start: "2026-07-17", city: "Jodhpur", country: "India", virtual: false, hybrid: false, website: "https://www.iitj.ac.in/flying-wings" },
+    { name: "PSBs National Hackathon on Cyber Security", start: "2026-07-17", city: "Allahabad", country: "India", virtual: false, hybrid: false, website: "https://www.mnnit.ac.in/hackathon2026/" },
+    { name: "Health Hackathon 2026", start: "2026-10-15", city: "Bhopal", country: "India", virtual: false, hybrid: false, website: "https://vitbhopal.ac.in/ibcd2026/" },
+    { name: "5G Innovation Hackathon 2026", start: "2026-09-14", city: "New Delhi", country: "India", virtual: false, hybrid: true, website: "https://www.preprodeservices.dot.gov.in/5ghackathon/" }
   ];
 }
 
