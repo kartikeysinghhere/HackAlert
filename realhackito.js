@@ -253,7 +253,16 @@ function appendMessage(role, text, isHTML = false) {
   const area = document.getElementById('chat-area');
   const msg = document.createElement('div');
   msg.className = `msg ${role}`;
-  const displayText = isHTML ? text : escapeHTML(censorMessage(text));
+  let displayText;
+  if (isHTML) {
+    displayText = text;
+  } else if (role === 'bot') {
+    displayText = (window.marked && window.DOMPurify) 
+      ? DOMPurify.sanitize(marked.parse(censorMessage(text)))
+      : escapeHTML(censorMessage(text));
+  } else {
+    displayText = escapeHTML(censorMessage(text));
+  }
   msg.innerHTML = `
     <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
     <div class="msg-bubble">${displayText}</div>
