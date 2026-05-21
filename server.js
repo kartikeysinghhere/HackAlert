@@ -166,25 +166,136 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/realhackito.html');
 });
 
+// ── DAILY DIGEST — runs every day at 10 AM ──
 cron.schedule('0 10 * * *', async () => {
+  console.log('Running daily hackathon digest...');
   if (!process.env.BREVO_API_KEY) return;
-  const twoMinsAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-  const { data: upcoming } = await supabase.from('saved_hackathons').select('*').gte('hackathon_start', new Date().toISOString()).lte('hackathon_start', twoMinsAgo);
-  if (!upcoming?.length) return;
-  const byUser = {};
-  upcoming.forEach(row => {
-    if (!byUser[row.user_email]) byUser[row.user_email] = [];
-    byUser[row.user_email].push(row);
-  });
-  for (const [email, hacks] of Object.entries(byUser)) {
-    const hackList = hacks.map(h => `<li><strong>${h.hackathon_name}</strong> — <a href="${h.hackathon_website}">Register →</a></li>`).join('');
-    await sendEmail({
-      to: email,
-      subject: `⚡ ${hacks.length} hackathon(s) starting soon!`,
-      html: `<div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:32px;border-radius:12px;"><h2 style="color:#00f0ff;">Hack/Alert ⚡</h2><p>These hackathons you saved are starting soon:</p><ul>${hackList}</ul></div>`
-    });
+
+  const thirtyDaysLater = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  const now = new Date().toISOString();
+
+  const upcoming = [];
+
+  // Also get from HackClub
+  let hackClubUpcoming = [];
+  try {
+    const hc = await fetch('https://hackathons.hackclub.com/api/events/upcoming').then(r => r.json());
+    hackClubUpcoming = hc.filter(h => {
+      const start = new Date(h.start);
+      return start >= new Date() && start <= new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    }).slice(0, 10);
+  } catch (e) { }
+
+  const allUpcoming = [...hackClubUpcoming];
+  if (!allUpcoming.length) return;
+
+  // Get all users
+  const { data: users } = await supabase.from('users').select('email, name');
+  if (!users?.length) return;
+
+  const hackList = allUpcoming.slice(0, 15).map(h => `
+    <tr>
+      <td style="padding:12px;border-bottom:1px solid #1a1a2e;">
+        <strong style="color:#00f0ff;">${escapeEmailHTML(h.name || '')}</strong><br>
+        <span style="color:#b9cacb;font-size:12px;">📅 ${new Date(h.start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+        ${h.city ? `<span style="color:#b9cacb;font-size:12px;"> · 📍 ${escapeEmailHTML(h.city)}</span>` : ''}
+      </td>
+      <td style="padding:12px;border-bottom:1px solid #1a1a2e;text-align:right;">
+        <a href="${escapeEmailHTML(h.website || h.url || '#')}" 
+           style="background:#00f0ff;color:#050508;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;">
+          Register →
+        </a>
+      </td>
+    </tr>
+  `).join('');
+
+  // Send to each user
+  for (const user of users) {
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: `⚡ ${allUpcoming.length} Hackathons Coming Up — Daily Digest`,
+        html: `
+          <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:600px;margin:0 auto;">
+            <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert ⚡</h2>
+            <p style="color:#b9cacb;font-size:13px;margin-bottom:24px;">Daily digest for ${new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+            <h3 style="color:#fff;margin-bottom:16px;">🚀 ${allUpcoming.length} Hackathons in the next 30 days</h3>
+            <table style="width:100%;border-collapse:collapse;">
+              ${hackList}
+            </table>
+            <div style="margin-top:32px;text-align:center;">
+              <a href="https://hackalert-xwpd.onrender.com" 
+                 style="background:#00f0ff;color:#050508;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">
+                View All Hackathons →
+              </a>
+            </div>
+            <p style="color:#555;font-size:11px;margin-top:24px;text-align:center;">
+              You're receiving this because you have a Hack/Alert account.<br>
+              <a href="https://hackalert-xwpd.onrender.com" style="color:#555;">Manage preferences</a>
+            </p>
+          </div>
+        `
+      });
+    } catch (e) {
+      console.error(`Digest email failed for ${user.email}:`, e.message);
+    }
   }
+  console.log(`Digest sent to ${users.length} users`);
 });
+
+// ── NEW HACKATHON ALERT — runs every hour ──
+cron.schedule('0 * * * *', async () => {
+  if (!process.env.BREVO_API_KEY) return;
+
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
+  // Check for hackathons added in last hour
+  const { data: newHacks } = await supabase
+    .from('indian_hackathons')
+    .select('*')
+    .gte('created_at', oneHourAgo);
+
+  if (!newHacks?.length) return;
+
+  const { data: users } = await supabase.from('users').select('email, name');
+  if (!users?.length) return;
+
+  const hackList = newHacks.map(h => `
+    <div style="background:#0a0a1a;border:1px solid #00f0ff33;border-radius:10px;padding:16px;margin-bottom:12px;">
+      <h4 style="color:#00f0ff;margin:0 0 8px;">${escapeEmailHTML(h.name || '')}</h4>
+      <p style="color:#b9cacb;font-size:13px;margin:4px 0;">📅 ${new Date(h.start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+      ${h.city ? `<p style="color:#b9cacb;font-size:13px;margin:4px 0;">📍 ${escapeEmailHTML(h.city)}, ${escapeEmailHTML(h.country || '')}</p>` : ''}
+      <a href="${escapeEmailHTML(h.website || '#')}" style="display:inline-block;margin-top:10px;background:#00f0ff;color:#050508;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;">Register →</a>
+    </div>
+  `).join('');
+
+  for (const user of users) {
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: `🆕 ${newHacks.length} New Hackathon${newHacks.length > 1 ? 's' : ''} Just Listed on Hack/Alert!`,
+        html: `
+          <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:600px;margin:0 auto;">
+            <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert ⚡</h2>
+            <p style="color:#b9cacb;font-size:13px;margin-bottom:24px;">New hackathons just dropped!</p>
+            <h3 style="color:#fff;margin-bottom:16px;">🆕 ${newHacks.length} New Hackathon${newHacks.length > 1 ? 's' : ''}</h3>
+            ${hackList}
+            <div style="margin-top:24px;text-align:center;">
+              <a href="https://hackalert-xwpd.onrender.com" 
+                 style="background:#00f0ff;color:#050508;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">
+                View All →
+              </a>
+            </div>
+          </div>
+        `
+      });
+    } catch (e) {
+      console.error(`New hack alert failed for ${user.email}:`, e.message);
+    }
+  }
+  console.log(`New hackathon alert sent to ${users.length} users`);
+});
+
 app.get('/api/hackathons', async (req, res) => {
   try {
     // Fetch from HackClub
@@ -221,7 +332,7 @@ app.get('/api/hackathons', async (req, res) => {
 
     // Merge everything together!
     const all = [...hackClub, ...indianDb, ...myCustomHackathons];
-    
+
     // Remove duplicates
     const seen = new Set();
     const unique = all.filter(h => {
@@ -334,7 +445,7 @@ Upcoming Fallback: ${JSON.stringify(upcomingHackathons).substring(0, 1000)}
         ...censoredMessages
       ]
     });
-    
+
     const msgObj = response.choices[0].message;
     if (msgObj.tool_calls && msgObj.tool_calls.length > 0) {
       const toolCall = msgObj.tool_calls[0];
@@ -343,10 +454,10 @@ Upcoming Fallback: ${JSON.stringify(upcomingHackathons).substring(0, 1000)}
           const args = JSON.parse(toolCall.function.arguments);
           action = args.action;
           payload = args.payload;
-        } catch (e) {}
+        } catch (e) { }
       }
     }
-    
+
     const reply = msgObj.content || (action === 'navigate' ? `Taking you to ${payload}!` : (action === 'filter' ? `Filtering by ${payload}!` : "Done."));
     res.json({ answer: reply, action, payload });
   } catch (err) {
