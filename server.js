@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const Groq = require('groq-sdk');
 const { createClient } = require('@supabase/supabase-js');
@@ -9,12 +10,36 @@ const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const axios = require('axios');
 const crypto = require('crypto');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
+
+function sanitizeInput(text) {
+  if (typeof text !== 'string') return text;
+  return DOMPurify.sanitize(text, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
+}
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error('CRITICAL: JWT_SECRET missing in environment');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Rate Limiters
+const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  message: { error: 'Too many requests, slow down.' }
+});
+
+const emailLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  message: { error: 'Too many OTP requests.' }
+});
+
 const dmClients = {};
 const teamClients = {};
 
@@ -162,6 +187,11 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
 app.use(express.static(__dirname));
 
+// Apply Rate Limiters
+app.use('/ask', aiLimiter);
+app.use('/api/ai', aiLimiter);
+app.use('/api/send-otp', emailLimiter);
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/realhackito.html');
 });
@@ -296,13 +326,13 @@ cron.schedule('0 * * * *', async () => {
   console.log(`New hackathon alert sent to ${users.length} users`);
 });
 
-app.get('/api/hackathons', async (req, res) => {
+// ── HACKATHON SYNC — runs every 4 hours ──
+async function syncHackathons() {
+  console.log('🔄 Syncing hackathons to cache...');
   try {
-    // Fetch from HackClub
     const hackClubRes = await fetch('https://hackathons.hackclub.com/api/events/upcoming');
     const hackClub = await hackClubRes.json();
 
-    // Your custom list of hackathons
     const myCustomHackathons = [
       { name: "Smart Horizon 2026 International Hackathon", start: "2026-09-03", city: "Bengaluru", country: "India", virtual: false, hybrid: false, website: "https://newhorizonindia.edu/" },
       { name: "PSB's Cybersecurity, Fraud & AI Hackathon", start: "2026-08-27", city: "Hyderabad", country: "India", virtual: false, hybrid: true, website: "https://boihackathon.cse.iith.ac.in/hackathon2026/" },
@@ -326,14 +356,10 @@ app.get('/api/hackathons', async (req, res) => {
       { name: "5G Innovation Hackathon 2026", start: "2026-09-14", city: "New Delhi", country: "India", virtual: false, hybrid: true, website: "https://www.preprodeservices.dot.gov.in/5ghackathon/" }
     ];
 
-    // Attempt to fetch from Supabase (fails silently if table is missing)
     const supabaseRes = await supabase.from('indian_hackathons').select('*');
     const indianDb = supabaseRes.data || [];
 
-    // Merge everything together!
     const all = [...hackClub, ...indianDb, ...myCustomHackathons];
-
-    // Remove duplicates
     const seen = new Set();
     const unique = all.filter(h => {
       if (!h || !h.name) return false;
@@ -343,12 +369,30 @@ app.get('/api/hackathons', async (req, res) => {
       return true;
     });
 
+    // Cache in global variable for immediate use
     globalHackathons = unique;
-    res.json(unique);
+
+    // Optional: Sync to a 'hackathon_cache' table if you want persistence across restarts
+    // await supabase.from('hackathon_cache').delete().neq('id', 0);
+    // await supabase.from('hackathon_cache').insert(unique);
+    
+    console.log(`✅ Cached ${unique.length} hackathons`);
   } catch (err) {
-    console.error("Hackathon fetch error:", err);
-    res.status(500).json({ error: 'Failed' });
+    console.error("Hackathon sync error:", err);
   }
+}
+
+cron.schedule('0 */4 * * *', syncHackathons);
+// Run on startup
+syncHackathons();
+
+app.get('/api/hackathons', async (req, res) => {
+  if (globalHackathons.length > 0) {
+    return res.json(globalHackathons);
+  }
+  // Fallback if cache is empty
+  await syncHackathons();
+  res.json(globalHackathons);
 });
 
 app.post('/ask', async (req, res) => {
@@ -565,7 +609,15 @@ app.post('/api/verify-otp', async (req, res) => {
 });
 
 app.post('/api/signup', async (req, res) => {
-  const { name, pass, mobile, college, username, gender, bio, skills } = req.body;
+  const { pass, gender } = req.body;
+  
+  const name = sanitizeInput(req.body.name);
+  const mobile = sanitizeInput(req.body.mobile);
+  const college = sanitizeInput(req.body.college);
+  const username = sanitizeInput(req.body.username);
+  const bio = sanitizeInput(req.body.bio);
+  const skills = sanitizeInput(req.body.skills);
+  
   const email = normalizeEmail(req.body.email);
   if (!name || !email || !pass || !username) return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
   if (!isValidEmail(email)) return res.status(400).json({ error: 'Invalid email' });
@@ -646,20 +698,14 @@ app.post('/api/teams', authenticate, async (req, res) => {
 });
 
 app.post('/api/teams/:id/members', authenticate, async (req, res) => {
-  const team_id = req.params.id;
-  const user_email = req.user.email;
-  const user_name = req.user.name;
-  const { data: team } = await supabase.from('teams').select('*').eq('id', team_id).single();
-  if (!team || team.slots_left <= 0) return res.status(400).json({ error: 'Team full' });
-  const { error } = await supabase.from('team_members').insert([{ team_id, user_email, user_name }]);
+  const { error } = await supabase.rpc('join_team', {
+    team_id_input: parseInt(req.params.id),
+    user_email_input: req.user.email,
+    user_name_input: req.user.name
+  });
   if (error) {
-    if (error.code === '23505') return res.status(400).json({ error: 'Already a member' });
-    return res.status(500).json({ error: error.message });
-  }
-  const { data: updated } = await supabase.from('teams').update({ slots_left: team.slots_left - 1 }).eq('id', team_id).gt('slots_left', 0).select().single();
-  if (!updated) {
-    await supabase.from('team_members').delete().eq('team_id', team_id).eq('user_email', user_email);
-    return res.status(400).json({ error: 'Team just filled up.' });
+    if (error.message.includes('Team is full')) return res.status(400).json({ error: 'Team full' });
+    return res.status(400).json({ error: error.message });
   }
   res.json({ message: 'Joined successfully' });
 });
@@ -686,8 +732,11 @@ app.post('/api/teams/:id/messages', authenticate, async (req, res) => {
   const sender_email = req.user.email;
   const sender_name = req.user.name;
   if (!message) return res.status(400).json({ error: 'Empty message' });
-  if (bannedWords.some(w => message.toLowerCase().includes(w))) return res.status(400).json({ error: 'Message contains inappropriate language' });
-  const newMessage = { team_id: req.params.id, sender_email, sender_name, message };
+  
+  const sanitizedMessage = sanitizeInput(message);
+  
+  if (bannedWords.some(w => sanitizedMessage.toLowerCase().includes(w))) return res.status(400).json({ error: 'Message contains inappropriate language' });
+  const newMessage = { team_id: req.params.id, sender_email, sender_name, message: sanitizedMessage };
   const { data, error } = await supabase.from('team_messages').insert([newMessage]).select().single();
   if (error) return res.status(500).json({ error: error.message });
   if (teamClients[req.params.id]) teamClients[req.params.id].forEach(c => c.write(`data: ${JSON.stringify(data)}\n\n`));
@@ -771,7 +820,12 @@ app.get('/api/teams/:id/project', async (req, res) => {
 });
 
 app.post('/api/teams/:id/project', authenticate, async (req, res) => {
-  const { title, description, github_link, demo_link, tech_stack } = req.body;
+  const title = sanitizeInput(req.body.title);
+  const description = sanitizeInput(req.body.description);
+  const github_link = sanitizeInput(req.body.github_link);
+  const demo_link = sanitizeInput(req.body.demo_link);
+  const tech_stack = sanitizeInput(req.body.tech_stack);
+  
   const team_id = req.params.id;
   const submitted_by = req.user.email;
   if (!title) return res.status(400).json({ error: 'Title is required' });
