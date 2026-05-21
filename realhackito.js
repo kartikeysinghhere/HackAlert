@@ -337,7 +337,7 @@ async function sendChat() {
     const next = allHackathons[0];
     if (next) {
       removeTyping();
-      appendMessage('bot', `🏆 Nearest hackathon is <strong>${next.name}</strong> on 📅 ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? '🌐 Online' : `📍 ${next.city}, ${next.country}`}. <a href="${next.website}" target="_blank">Visit →</a>`);
+      appendMessage('bot', `🏆 Nearest hackathon is <strong>${escapeHTML(next.name)}</strong> on 📅 ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? '🌐 Online' : `📍 ${escapeHTML(next.city)}, ${escapeHTML(next.country)}`}. <a href="${escapeHTML(next.website)}" target="_blank">Visit →</a>`, true);
       return;
     }
   }
