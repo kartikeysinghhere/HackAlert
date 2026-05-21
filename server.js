@@ -16,6 +16,11 @@ const { JSDOM } = require('jsdom');
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
+function handleError(res, error, customMsg = 'Internal Server Error', status = 500) {
+  console.error('Error Details:', error);
+  res.status(status).json({ error: customMsg });
+}
+
 function sanitizeInput(text) {
   if (typeof text !== 'string') return text;
   return DOMPurify.sanitize(text, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
@@ -387,12 +392,17 @@ cron.schedule('0 */4 * * *', syncHackathons);
 syncHackathons();
 
 app.get('/api/hackathons', async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const start = (page - 1) * limit;
+  const end = start + limit;
+
   if (globalHackathons.length > 0) {
-    return res.json(globalHackathons);
+    return res.json(globalHackathons.slice(start, end));
   }
   // Fallback if cache is empty
   await syncHackathons();
-  res.json(globalHackathons);
+  res.json(globalHackathons.slice(start, end));
 });
 
 app.post('/ask', async (req, res) => {
@@ -637,7 +647,7 @@ app.post('/api/signup', async (req, res) => {
   const { error } = await supabase.from('users').insert([{ name, email, password: hashed, mobile, college, username, gender, bio, skills }]);
   if (error) {
     if (error.code === '23505') return res.status(400).json({ error: 'Email already exists' });
-    return res.status(500).json({ error: error.message });
+    return handleError(res, error);
   }
   await supabase.from('email_otps').delete().eq('email', email);
   try {
@@ -671,14 +681,24 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.get('/api/teams', async (req, res) => {
-  const { data, error } = await supabase.from('teams').select('*').order('created_at', { ascending: false });
-  if (error) return res.status(500).json({ error: error.message });
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const start = (page - 1) * limit;
+  const end = start + limit - 1;
+
+  const { data, error } = await supabase
+    .from('teams')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .range(start, end);
+    
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
 app.get('/api/teams/:id', async (req, res) => {
   const { data, error } = await supabase.from('teams').select('*').eq('id', req.params.id).single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -693,7 +713,7 @@ app.post('/api/teams', authenticate, async (req, res) => {
     p_skills: skills || null,
     p_size: size || 4
   });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -712,7 +732,7 @@ app.post('/api/teams/:id/members', authenticate, async (req, res) => {
 
 app.get('/api/teams/:id/messages', async (req, res) => {
   const { data, error } = await supabase.from('team_messages').select('*').eq('team_id', req.params.id).order('sent_at', { ascending: true });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -738,14 +758,14 @@ app.post('/api/teams/:id/messages', authenticate, async (req, res) => {
   if (bannedWords.some(w => sanitizedMessage.toLowerCase().includes(w))) return res.status(400).json({ error: 'Message contains inappropriate language' });
   const newMessage = { team_id: req.params.id, sender_email, sender_name, message: sanitizedMessage };
   const { data, error } = await supabase.from('team_messages').insert([newMessage]).select().single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   if (teamClients[req.params.id]) teamClients[req.params.id].forEach(c => c.write(`data: ${JSON.stringify(data)}\n\n`));
   res.json({ message: 'Sent' });
 });
 
 app.get('/api/teams/:id/tasks', async (req, res) => {
   const { data, error } = await supabase.from('team_tasks').select('*').eq('team_id', req.params.id).order('created_at', { ascending: true });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data || []);
 });
 
@@ -754,7 +774,7 @@ app.post('/api/teams/:id/tasks', authenticate, async (req, res) => {
   const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.id).eq('user_email', req.user.email).single();
   if (!member) return res.status(403).json({ error: 'Not a team member' });
   const { data, error } = await supabase.from('team_tasks').insert([{ team_id: req.params.id, title, status }]).select().single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -763,7 +783,7 @@ app.put('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) => 
   const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
   if (!member) return res.status(403).json({ error: 'Not a team member' });
   const { data, error } = await supabase.from('team_tasks').update({ status }).eq('id', req.params.task_id).select().single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -771,13 +791,13 @@ app.delete('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) 
   const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
   if (!member) return res.status(403).json({ error: 'Not a team member' });
   const { error } = await supabase.from('team_tasks').delete().eq('id', req.params.task_id);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json({ message: 'Deleted' });
 });
 
 app.get('/api/teams/:id/members', async (req, res) => {
   const { data, error } = await supabase.from('team_members').select('*').eq('team_id', req.params.id);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -808,8 +828,18 @@ app.delete('/api/teams/:team_id', authenticate, async (req, res) => {
 });
 
 app.get('/api/projects', async (req, res) => {
-  const { data, error } = await supabase.from('team_projects').select('*, teams(name, hackathon)').order('created_at', { ascending: false });
-  if (error) return res.status(500).json({ error: error.message });
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const start = (page - 1) * limit;
+  const end = start + limit - 1;
+
+  const { data, error } = await supabase
+    .from('team_projects')
+    .select('*, teams(name, hackathon)')
+    .order('created_at', { ascending: false })
+    .range(start, end);
+
+  if (error) return handleError(res, error);
   res.json(data || []);
 });
 
@@ -832,7 +862,7 @@ app.post('/api/teams/:id/project', authenticate, async (req, res) => {
   const { data: member } = await supabase.from('team_members').select('*').eq('team_id', team_id).eq('user_email', submitted_by).single();
   if (!member) return res.status(403).json({ error: 'Only team members can submit a project' });
   const { data, error } = await supabase.from('team_projects').upsert([{ team_id, title, description, github_link, demo_link, tech_stack, submitted_by }], { onConflict: 'team_id' }).select().single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -842,14 +872,14 @@ app.delete('/api/teams/:id/project', authenticate, async (req, res) => {
   const { data: team } = await supabase.from('teams').select('leader_email').eq('id', team_id).single();
   if (!team || team.leader_email !== user_email) return res.status(403).json({ error: 'Only team leader can delete the project' });
   const { error } = await supabase.from('team_projects').delete().eq('team_id', team_id);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json({ message: 'Project deleted' });
 });
 
 app.get('/api/reviews/:hackathon_name', async (req, res) => {
   const name = decodeURIComponent(req.params.hackathon_name);
   const { data, error } = await supabase.from('hackathon_reviews').select('*').eq('hackathon_name', name).order('created_at', { ascending: false });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data || []);
 });
 
@@ -859,7 +889,7 @@ app.post('/api/reviews', authenticate, async (req, res) => {
   if (!hackathon_name || !rating) return res.status(400).json({ error: 'Name and rating required' });
   if (rating < 1 || rating > 5) return res.status(400).json({ error: 'Rating must be 1-5' });
   const { data, error } = await supabase.from('hackathon_reviews').upsert([{ hackathon_name, user_email, rating, review }], { onConflict: 'hackathon_name,user_email' }).select().single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -867,7 +897,7 @@ app.delete('/api/reviews/:hackathon_name', authenticate, async (req, res) => {
   const name = decodeURIComponent(req.params.hackathon_name);
   const user_email = req.user.email;
   const { error } = await supabase.from('hackathon_reviews').delete().eq('hackathon_name', name).eq('user_email', user_email);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json({ message: 'Review deleted' });
 });
 
@@ -875,7 +905,7 @@ app.post('/api/saved', authenticate, async (req, res) => {
   const { hackathon_name, hackathon_start, hackathon_website } = req.body;
   const user_email = req.user.email;
   const { error } = await supabase.from('saved_hackathons').upsert([{ user_email, hackathon_name, hackathon_start, hackathon_website }], { onConflict: 'user_email,hackathon_name' });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json({ message: 'Saved' });
 });
 
@@ -883,13 +913,13 @@ app.delete('/api/saved/:name', authenticate, async (req, res) => {
   const user_email = req.user.email;
   const hackathon_name = decodeURIComponent(req.params.name);
   const { error } = await supabase.from('saved_hackathons').delete().eq('user_email', user_email).eq('hackathon_name', hackathon_name);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json({ message: 'Removed' });
 });
 
 app.get('/api/saved', authenticate, async (req, res) => {
   const { data, error } = await supabase.from('saved_hackathons').select('*').eq('user_email', req.user.email);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data);
 });
 
@@ -897,7 +927,7 @@ app.get('/api/users/search', authenticate, async (req, res) => {
   const { q } = req.query;
   if (!q) return res.status(400).json({ error: 'Query required' });
   const { data, error } = await supabase.from('users').select('name, email, username, gender, bio, skills, college').ilike('username', `%${q}%`).neq('email', req.user.email).limit(10);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data || []);
 });
 
@@ -909,13 +939,13 @@ app.post('/api/friends/request', authenticate, async (req, res) => {
   const { data: existing } = await supabase.from('friendships').select('*').or(`and(user1_email.eq.${from_email},user2_email.eq.${to_email}),and(user1_email.eq.${to_email},user2_email.eq.${from_email})`).single();
   if (existing) return res.status(400).json({ error: 'Already friends' });
   const { error } = await supabase.from('friend_requests').upsert([{ from_email, to_email, status: 'pending' }], { onConflict: 'from_email,to_email' });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json({ message: 'Friend request sent' });
 });
 
 app.get('/api/friends/requests', authenticate, async (req, res) => {
   const { data, error } = await supabase.from('friend_requests').select('*').eq('to_email', req.user.email).eq('status', 'pending');
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   res.json(data || []);
 });
 
@@ -934,7 +964,7 @@ app.put('/api/friends/requests/:id', authenticate, async (req, res) => {
 app.get('/api/friends', authenticate, async (req, res) => {
   const email = req.user.email;
   const { data, error } = await supabase.from('friendships').select('*').or(`user1_email.eq.${email},user2_email.eq.${email}`);
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   const friendEmails = (data || []).map(f => f.user1_email === email ? f.user2_email : f.user1_email);
   if (!friendEmails.length) return res.json([]);
   const { data: friends } = await supabase.from('users').select('name, email, username, gender, bio, skills, college').in('email', friendEmails);
@@ -951,7 +981,7 @@ app.delete('/api/friends/:friend_email', authenticate, async (req, res) => {
 app.get('/api/dm/conversations', authenticate, async (req, res) => {
   const email = req.user.email;
   const { data, error } = await supabase.from('direct_messages').select('*').or(`from_email.eq.${email},to_email.eq.${email}`).order('created_at', { ascending: false });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   const conversations = {};
   (data || []).forEach(msg => {
     const partner = msg.from_email === email ? msg.to_email : msg.from_email;
@@ -969,7 +999,7 @@ app.get('/api/dm/:partner_email', authenticate, async (req, res) => {
   const email = req.user.email;
   const partner = decodeURIComponent(req.params.partner_email);
   const { data, error } = await supabase.from('direct_messages').select('*').or(`and(from_email.eq.${email},to_email.eq.${partner}),and(from_email.eq.${partner},to_email.eq.${email})`).order('created_at', { ascending: true });
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   await supabase.from('direct_messages').update({ seen: true }).eq('to_email', email).eq('from_email', partner).eq('seen', false);
   res.json(data || []);
 });
@@ -982,7 +1012,7 @@ app.post('/api/dm/:partner_email', authenticate, async (req, res) => {
   const { data: friendship } = await supabase.from('friendships').select('*').or(`and(user1_email.eq.${from_email},user2_email.eq.${to_email}),and(user1_email.eq.${to_email},user2_email.eq.${from_email})`).single();
   if (!friendship) return res.status(403).json({ error: 'You can only DM friends' });
   const { data, error } = await supabase.from('direct_messages').insert([{ from_email, to_email, message, seen: false }]).select().single();
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return handleError(res, error);
   const dmKey = [from_email, to_email].sort().join('::');
   if (dmClients[dmKey]) dmClients[dmKey].forEach(c => c.write(`data: ${JSON.stringify(data)}\n\n`));
   res.json(data);
