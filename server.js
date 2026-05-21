@@ -297,12 +297,12 @@ app.post('/ask', async (req, res) => {
           type: "function",
           function: {
             name: "trigger_ui_action",
-            description: "ONLY call this when the user explicitly asks to be navigated to a page like 'take me to the dashboard'. Do NOT call this if they are just asking about hackathons or their details.",
+            description: "ONLY call this when the user explicitly asks to be navigated to a different page (e.g., 'take me to the dashboard'). Do NOT call this for searching, filtering, or asking about hackathons.",
             parameters: {
               type: "object",
               properties: {
                 action: { type: "string", enum: ["navigate", "filter"], description: "navigate = go to a page, filter = filter by mode" },
-                payload: { type: "string", description: "Target page or filter value. Must be one of: dashboard, teams, projects, profile, saved, online, offline, hybrid" }
+                payload: { type: "string", description: "Target page. Must be one of: dashboard, teams, projects, profile, saved, online, offline, hybrid" }
               },
               required: ["action", "payload"]
             }
@@ -316,7 +316,8 @@ app.post('/ask', async (req, res) => {
 Goals:
 - Help users discover hackathons, form teams, and answer cybersecurity/tech questions.
 - For conversational greetings (like "hello", "how are you"), ALWAYS reply warmly in plain text WITHOUT using any tools.
-- ONLY call trigger_ui_action if the user issues a direct navigation command. Do NOT use it if they just ask about hackathons, their format, or details; answer them in text instead.
+- If the user asks about hackathons (e.g. "Hackathons in India", "AI hackathons"), provide the details directly in your text response using the <context_data>. Do NOT call trigger_ui_action for this.
+- ONLY call trigger_ui_action if the user issues a direct navigation command like "take me to the dashboard".
 - If you call a tool, do NOT output conversational text announcing it. Let the UI handle it.
 - Keep answers concise (under 50 words) unless asked for details.
 
