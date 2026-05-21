@@ -9,7 +9,7 @@
       "source_file": "main.js",
       "source_location": "L1",
       "id": "main_js",
-      "community": 7,
+      "community": 8,
       "norm_label": "main.js"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "main.js",
       "source_location": "L15",
       "id": "hackito_old_main_displaymessage",
-      "community": 7,
+      "community": 8,
       "norm_label": "displaymessage()"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "main.js",
       "source_location": "L27",
       "id": "hackito_old_main_askquestion",
-      "community": 7,
+      "community": 8,
       "norm_label": "askquestion()"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "main.js",
       "source_location": "L73",
       "id": "hackito_old_main_updatesuggestionbuttons",
-      "community": 7,
+      "community": 8,
       "norm_label": "updatesuggestionbuttons()"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "main.js",
       "source_location": "L85",
       "id": "hackito_old_main_toggleinputs",
-      "community": 7,
+      "community": 8,
       "norm_label": "toggleinputs()"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "main.js",
       "source_location": "L99",
       "id": "hackito_old_main_init",
-      "community": 7,
+      "community": 8,
       "norm_label": "init()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "react.js",
       "source_location": "L1",
       "id": "react_js",
-      "community": 18,
+      "community": 21,
       "norm_label": "react.js"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "react.js",
       "source_location": "L8",
       "id": "hackito_old_react_cn",
-      "community": 18,
+      "community": 21,
       "norm_label": "cn()"
     },
     {
@@ -88,7 +88,7 @@
       "label": "censorMessage()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L43",
+      "source_location": "L14",
       "id": "hackito_old_realhackito_censormessage",
       "community": 0,
       "norm_label": "censormessage()"
@@ -97,25 +97,25 @@
       "label": "escapeHTML()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L49",
+      "source_location": "L20",
       "id": "hackito_old_realhackito_escapehtml",
-      "community": 2,
+      "community": 0,
       "norm_label": "escapehtml()"
     },
     {
       "label": "safeJSString()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L62",
+      "source_location": "L33",
       "id": "hackito_old_realhackito_safejsstring",
-      "community": 2,
+      "community": 0,
       "norm_label": "safejsstring()"
     },
     {
       "label": "authHeaders()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L67",
+      "source_location": "L38",
       "id": "hackito_old_realhackito_authheaders",
       "community": 1,
       "norm_label": "authheaders()"
@@ -124,61 +124,16 @@
       "label": "getCountdown()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L75",
+      "source_location": "L46",
       "id": "hackito_old_realhackito_getcountdown",
-      "community": 2,
+      "community": 0,
       "norm_label": "getcountdown()"
-    },
-    {
-      "label": "bindCoreButtonHandlers()",
-      "file_type": "code",
-      "source_file": "realhackito.js",
-      "source_location": "L120",
-      "id": "hackito_old_realhackito_bindcorebuttonhandlers",
-      "community": 0,
-      "norm_label": "bindcorebuttonhandlers()"
-    },
-    {
-      "label": "startHeartbeat()",
-      "file_type": "code",
-      "source_file": "realhackito.js",
-      "source_location": "L153",
-      "id": "hackito_old_realhackito_startheartbeat",
-      "community": 0,
-      "norm_label": "startheartbeat()"
-    },
-    {
-      "label": "fetchOnlineUsers()",
-      "file_type": "code",
-      "source_file": "realhackito.js",
-      "source_location": "L157",
-      "id": "hackito_old_realhackito_fetchonlineusers",
-      "community": 0,
-      "norm_label": "fetchonlineusers()"
-    },
-    {
-      "label": "isOnline()",
-      "file_type": "code",
-      "source_file": "realhackito.js",
-      "source_location": "L173",
-      "id": "hackito_old_realhackito_isonline",
-      "community": 9,
-      "norm_label": "isonline()"
-    },
-    {
-      "label": "onlineDot()",
-      "file_type": "code",
-      "source_file": "realhackito.js",
-      "source_location": "L178",
-      "id": "hackito_old_realhackito_onlinedot",
-      "community": 9,
-      "norm_label": "onlinedot()"
     },
     {
       "label": "fetchHackathons()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L184",
+      "source_location": "L90",
       "id": "hackito_old_realhackito_fetchhackathons",
       "community": 0,
       "norm_label": "fetchhackathons()"
@@ -187,16 +142,16 @@
       "label": "createHackathonCard()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L205",
+      "source_location": "L111",
       "id": "hackito_old_realhackito_createhackathoncard",
-      "community": 2,
+      "community": 0,
       "norm_label": "createhackathoncard()"
     },
     {
       "label": "renderHackathons()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L255",
+      "source_location": "L161",
       "id": "hackito_old_realhackito_renderhackathons",
       "community": 0,
       "norm_label": "renderhackathons()"
@@ -205,7 +160,7 @@
       "label": "searchHackathons()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L274",
+      "source_location": "L180",
       "id": "hackito_old_realhackito_searchhackathons",
       "community": 0,
       "norm_label": "searchhackathons()"
@@ -214,16 +169,16 @@
       "label": "renderHackathonsSorted()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L300",
+      "source_location": "L206",
       "id": "hackito_old_realhackito_renderhackathonssorted",
-      "community": 2,
+      "community": 0,
       "norm_label": "renderhackathonssorted()"
     },
     {
       "label": "filterCards()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L315",
+      "source_location": "L221",
       "id": "hackito_old_realhackito_filtercards",
       "community": 0,
       "norm_label": "filtercards()"
@@ -232,7 +187,7 @@
       "label": "goTo()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L328",
+      "source_location": "L234",
       "id": "hackito_old_realhackito_goto",
       "community": 0,
       "norm_label": "goto()"
@@ -241,7 +196,7 @@
       "label": "appendMessage()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L349",
+      "source_location": "L256",
       "id": "hackito_old_realhackito_appendmessage",
       "community": 0,
       "norm_label": "appendmessage()"
@@ -250,7 +205,7 @@
       "label": "showTyping()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L369",
+      "source_location": "L288",
       "id": "hackito_old_realhackito_showtyping",
       "community": 0,
       "norm_label": "showtyping()"
@@ -259,7 +214,7 @@
       "label": "removeTyping()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L386",
+      "source_location": "L305",
       "id": "hackito_old_realhackito_removetyping",
       "community": 0,
       "norm_label": "removetyping()"
@@ -268,7 +223,7 @@
       "label": "showWelcomeMessage()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L392",
+      "source_location": "L311",
       "id": "hackito_old_realhackito_showwelcomemessage",
       "community": 0,
       "norm_label": "showwelcomemessage()"
@@ -277,16 +232,25 @@
       "label": "sendChat()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L400",
+      "source_location": "L325",
       "id": "hackito_old_realhackito_sendchat",
       "community": 0,
       "norm_label": "sendchat()"
     },
     {
+      "label": "speakText()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L377",
+      "id": "hackito_old_realhackito_speaktext",
+      "community": 0,
+      "norm_label": "speaktext()"
+    },
+    {
       "label": "quickSend()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L444",
+      "source_location": "L400",
       "id": "hackito_old_realhackito_quicksend",
       "community": 0,
       "norm_label": "quicksend()"
@@ -295,7 +259,7 @@
       "label": "loginUser()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L450",
+      "source_location": "L406",
       "id": "hackito_old_realhackito_loginuser",
       "community": 0,
       "norm_label": "loginuser()"
@@ -304,16 +268,34 @@
       "label": "signupUser()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L493",
+      "source_location": "L451",
       "id": "hackito_old_realhackito_signupuser",
       "community": 0,
       "norm_label": "signupuser()"
     },
     {
+      "label": "verifyOTP()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L488",
+      "id": "hackito_old_realhackito_verifyotp",
+      "community": 0,
+      "norm_label": "verifyotp()"
+    },
+    {
+      "label": "resendOTP()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L546",
+      "id": "hackito_old_realhackito_resendotp",
+      "community": 1,
+      "norm_label": "resendotp()"
+    },
+    {
       "label": "toggleChip()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L535",
+      "source_location": "L564",
       "id": "hackito_old_realhackito_togglechip",
       "community": 0,
       "norm_label": "togglechip()"
@@ -322,7 +304,7 @@
       "label": "loadProfile()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L538",
+      "source_location": "L567",
       "id": "hackito_old_realhackito_loadprofile",
       "community": 0,
       "norm_label": "loadprofile()"
@@ -331,7 +313,7 @@
       "label": "logout()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L621",
+      "source_location": "L650",
       "id": "hackito_old_realhackito_logout",
       "community": 0,
       "norm_label": "logout()"
@@ -340,7 +322,7 @@
       "label": "hideLogoutModal()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L625",
+      "source_location": "L654",
       "id": "hackito_old_realhackito_hidelogoutmodal",
       "community": 0,
       "norm_label": "hidelogoutmodal()"
@@ -349,7 +331,7 @@
       "label": "confirmLogout()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L629",
+      "source_location": "L658",
       "id": "hackito_old_realhackito_confirmlogout",
       "community": 0,
       "norm_label": "confirmlogout()"
@@ -358,7 +340,7 @@
       "label": "getFallbackHackathons()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L650",
+      "source_location": "L678",
       "id": "hackito_old_realhackito_getfallbackhackathons",
       "community": 0,
       "norm_label": "getfallbackhackathons()"
@@ -367,7 +349,7 @@
       "label": "toggleSave()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L659",
+      "source_location": "L703",
       "id": "hackito_old_realhackito_togglesave",
       "community": 0,
       "norm_label": "togglesave()"
@@ -376,7 +358,7 @@
       "label": "copyLink()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L683",
+      "source_location": "L727",
       "id": "hackito_old_realhackito_copylink",
       "community": 0,
       "norm_label": "copylink()"
@@ -385,7 +367,7 @@
       "label": "fallbackCopy()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L702",
+      "source_location": "L746",
       "id": "hackito_old_realhackito_fallbackcopy",
       "community": 0,
       "norm_label": "fallbackcopy()"
@@ -394,7 +376,7 @@
       "label": "unsaveHackathon()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L716",
+      "source_location": "L760",
       "id": "hackito_old_realhackito_unsavehackathon",
       "community": 0,
       "norm_label": "unsavehackathon()"
@@ -403,7 +385,7 @@
       "label": "updateStats()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L723",
+      "source_location": "L767",
       "id": "hackito_old_realhackito_updatestats",
       "community": 0,
       "norm_label": "updatestats()"
@@ -412,7 +394,7 @@
       "label": "filterByCountry()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L731",
+      "source_location": "L775",
       "id": "hackito_old_realhackito_filterbycountry",
       "community": 0,
       "norm_label": "filterbycountry()"
@@ -421,7 +403,7 @@
       "label": "buildCountryList()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L743",
+      "source_location": "L787",
       "id": "hackito_old_realhackito_buildcountrylist",
       "community": 0,
       "norm_label": "buildcountrylist()"
@@ -430,7 +412,7 @@
       "label": "filterCountryList()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L767",
+      "source_location": "L811",
       "id": "hackito_old_realhackito_filtercountrylist",
       "community": 0,
       "norm_label": "filtercountrylist()"
@@ -439,7 +421,7 @@
       "label": "selectCountry()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L775",
+      "source_location": "L819",
       "id": "hackito_old_realhackito_selectcountry",
       "community": 0,
       "norm_label": "selectcountry()"
@@ -448,16 +430,16 @@
       "label": "openModal()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L784",
+      "source_location": "L828",
       "id": "hackito_old_realhackito_openmodal",
-      "community": 2,
+      "community": 0,
       "norm_label": "openmodal()"
     },
     {
       "label": "closeModal()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L820",
+      "source_location": "L864",
       "id": "hackito_old_realhackito_closemodal",
       "community": 0,
       "norm_label": "closemodal()"
@@ -466,7 +448,7 @@
       "label": "loadTeams()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L828",
+      "source_location": "L872",
       "id": "hackito_old_realhackito_loadteams",
       "community": 1,
       "norm_label": "loadteams()"
@@ -475,7 +457,7 @@
       "label": "showCreateTeam()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L860",
+      "source_location": "L904",
       "id": "hackito_old_realhackito_showcreateteam",
       "community": 0,
       "norm_label": "showcreateteam()"
@@ -484,7 +466,7 @@
       "label": "hideCreateTeam()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L863",
+      "source_location": "L907",
       "id": "hackito_old_realhackito_hidecreateteam",
       "community": 1,
       "norm_label": "hidecreateteam()"
@@ -493,7 +475,7 @@
       "label": "createTeam()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L867",
+      "source_location": "L911",
       "id": "hackito_old_realhackito_createteam",
       "community": 1,
       "norm_label": "createteam()"
@@ -502,7 +484,7 @@
       "label": "joinTeam()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L885",
+      "source_location": "L929",
       "id": "hackito_old_realhackito_jointeam",
       "community": 1,
       "norm_label": "jointeam()"
@@ -511,16 +493,16 @@
       "label": "openTeamChat()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L900",
+      "source_location": "L944",
       "id": "hackito_old_realhackito_openteamchat",
-      "community": 0,
+      "community": 1,
       "norm_label": "openteamchat()"
     },
     {
       "label": "copyInviteLink()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L950",
+      "source_location": "L994",
       "id": "hackito_old_realhackito_copyinvitelink",
       "community": 1,
       "norm_label": "copyinvitelink()"
@@ -529,7 +511,7 @@
       "label": "closeTeamChat()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L968",
+      "source_location": "L1012",
       "id": "hackito_old_realhackito_closeteamchat",
       "community": 1,
       "norm_label": "closeteamchat()"
@@ -538,25 +520,25 @@
       "label": "appendTeamMessage()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L977",
+      "source_location": "L1021",
       "id": "hackito_old_realhackito_appendteammessage",
-      "community": 2,
+      "community": 0,
       "norm_label": "appendteammessage()"
     },
     {
       "label": "loadTeamMessages()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L989",
+      "source_location": "L1033",
       "id": "hackito_old_realhackito_loadteammessages",
-      "community": 0,
+      "community": 1,
       "norm_label": "loadteammessages()"
     },
     {
       "label": "sendTeamMessage()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L997",
+      "source_location": "L1041",
       "id": "hackito_old_realhackito_sendteammessage",
       "community": 1,
       "norm_label": "sendteammessage()"
@@ -565,7 +547,7 @@
       "label": "leaveTeam()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1016",
+      "source_location": "L1060",
       "id": "hackito_old_realhackito_leaveteam",
       "community": 1,
       "norm_label": "leaveteam()"
@@ -574,7 +556,7 @@
       "label": "showToast()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1045",
+      "source_location": "L1089",
       "id": "hackito_old_realhackito_showtoast",
       "community": 1,
       "norm_label": "showtoast()"
@@ -583,7 +565,7 @@
       "label": "deleteTeam()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1054",
+      "source_location": "L1098",
       "id": "hackito_old_realhackito_deleteteam",
       "community": 1,
       "norm_label": "deleteteam()"
@@ -592,7 +574,7 @@
       "label": "showMatchmaker()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1064",
+      "source_location": "L1108",
       "id": "hackito_old_realhackito_showmatchmaker",
       "community": 0,
       "norm_label": "showmatchmaker()"
@@ -601,7 +583,7 @@
       "label": "hideMatchmaker()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1069",
+      "source_location": "L1113",
       "id": "hackito_old_realhackito_hidematchmaker",
       "community": 0,
       "norm_label": "hidematchmaker()"
@@ -610,7 +592,7 @@
       "label": "runMatchmaker()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1073",
+      "source_location": "L1117",
       "id": "hackito_old_realhackito_runmatchmaker",
       "community": 1,
       "norm_label": "runmatchmaker()"
@@ -619,7 +601,7 @@
       "label": "goToCalendar()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1124",
+      "source_location": "L1168",
       "id": "hackito_old_realhackito_gotocalendar",
       "community": 0,
       "norm_label": "gotocalendar()"
@@ -628,7 +610,7 @@
       "label": "renderCalendar()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1128",
+      "source_location": "L1172",
       "id": "hackito_old_realhackito_rendercalendar",
       "community": 0,
       "norm_label": "rendercalendar()"
@@ -637,7 +619,7 @@
       "label": "prevMonth()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1197",
+      "source_location": "L1241",
       "id": "hackito_old_realhackito_prevmonth",
       "community": 0,
       "norm_label": "prevmonth()"
@@ -646,7 +628,7 @@
       "label": "nextMonth()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1202",
+      "source_location": "L1246",
       "id": "hackito_old_realhackito_nextmonth",
       "community": 0,
       "norm_label": "nextmonth()"
@@ -655,16 +637,16 @@
       "label": "loadShowcase()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1209",
+      "source_location": "L1253",
       "id": "hackito_old_realhackito_loadshowcase",
-      "community": 1,
+      "community": 0,
       "norm_label": "loadshowcase()"
     },
     {
       "label": "showSubmitProject()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1262",
+      "source_location": "L1306",
       "id": "hackito_old_realhackito_showsubmitproject",
       "community": 0,
       "norm_label": "showsubmitproject()"
@@ -673,34 +655,34 @@
       "label": "hideSubmitProject()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1290",
+      "source_location": "L1334",
       "id": "hackito_old_realhackito_hidesubmitproject",
-      "community": 1,
+      "community": 0,
       "norm_label": "hidesubmitproject()"
     },
     {
       "label": "submitProject()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1294",
+      "source_location": "L1338",
       "id": "hackito_old_realhackito_submitproject",
-      "community": 1,
+      "community": 0,
       "norm_label": "submitproject()"
     },
     {
       "label": "deleteProject()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1329",
+      "source_location": "L1373",
       "id": "hackito_old_realhackito_deleteproject",
-      "community": 1,
+      "community": 0,
       "norm_label": "deleteproject()"
     },
     {
       "label": "setRating()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1348",
+      "source_location": "L1392",
       "id": "hackito_old_realhackito_setrating",
       "community": 0,
       "norm_label": "setrating()"
@@ -709,7 +691,7 @@
       "label": "showReviewForm()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1355",
+      "source_location": "L1399",
       "id": "hackito_old_realhackito_showreviewform",
       "community": 1,
       "norm_label": "showreviewform()"
@@ -718,7 +700,7 @@
       "label": "loadReviews()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1362",
+      "source_location": "L1406",
       "id": "hackito_old_realhackito_loadreviews",
       "community": 1,
       "norm_label": "loadreviews()"
@@ -727,7 +709,7 @@
       "label": "submitReview()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1403",
+      "source_location": "L1447",
       "id": "hackito_old_realhackito_submitreview",
       "community": 1,
       "norm_label": "submitreview()"
@@ -736,7 +718,7 @@
       "label": "deleteReview()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1429",
+      "source_location": "L1473",
       "id": "hackito_old_realhackito_deletereview",
       "community": 1,
       "norm_label": "deletereview()"
@@ -745,7 +727,7 @@
       "label": "selectGender()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1438",
+      "source_location": "L1482",
       "id": "hackito_old_realhackito_selectgender",
       "community": 0,
       "norm_label": "selectgender()"
@@ -754,7 +736,7 @@
       "label": "showUserSearch()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1456",
+      "source_location": "L1500",
       "id": "hackito_old_realhackito_showusersearch",
       "community": 0,
       "norm_label": "showusersearch()"
@@ -763,7 +745,7 @@
       "label": "hideUserSearch()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1465",
+      "source_location": "L1510",
       "id": "hackito_old_realhackito_hideusersearch",
       "community": 0,
       "norm_label": "hideusersearch()"
@@ -772,16 +754,25 @@
       "label": "searchUsers()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1470",
+      "source_location": "L1515",
       "id": "hackito_old_realhackito_searchusers",
-      "community": 0,
+      "community": 1,
       "norm_label": "searchusers()"
+    },
+    {
+      "label": "showUserResults()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L1564",
+      "id": "hackito_old_realhackito_showuserresults",
+      "community": 1,
+      "norm_label": "showuserresults()"
     },
     {
       "label": "sendFriendRequest()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1514",
+      "source_location": "L1589",
       "id": "hackito_old_realhackito_sendfriendrequest",
       "community": 1,
       "norm_label": "sendfriendrequest()"
@@ -790,7 +781,7 @@
       "label": "loadFriends()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1529",
+      "source_location": "L1604",
       "id": "hackito_old_realhackito_loadfriends",
       "community": 1,
       "norm_label": "loadfriends()"
@@ -799,7 +790,7 @@
       "label": "respondRequest()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1592",
+      "source_location": "L1667",
       "id": "hackito_old_realhackito_respondrequest",
       "community": 1,
       "norm_label": "respondrequest()"
@@ -808,7 +799,7 @@
       "label": "removeFriend()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1608",
+      "source_location": "L1683",
       "id": "hackito_old_realhackito_removefriend",
       "community": 1,
       "norm_label": "removefriend()"
@@ -817,25 +808,25 @@
       "label": "generateIdeas()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1619",
+      "source_location": "L1694",
       "id": "hackito_old_realhackito_generateideas",
-      "community": 2,
+      "community": 0,
       "norm_label": "generateideas()"
     },
     {
       "label": "analyzeHackathon()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1704",
+      "source_location": "L1779",
       "id": "hackito_old_realhackito_analyzehackathon",
-      "community": 2,
+      "community": 0,
       "norm_label": "analyzehackathon()"
     },
     {
       "label": "toggleNavMenu()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1809",
+      "source_location": "L1884",
       "id": "hackito_old_realhackito_togglenavmenu",
       "community": 0,
       "norm_label": "togglenavmenu()"
@@ -844,64 +835,172 @@
       "label": "eyeUnseen()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1827",
+      "source_location": "L1902",
       "id": "hackito_old_realhackito_eyeunseen",
-      "community": 2,
+      "community": 0,
       "norm_label": "eyeunseen()"
     },
     {
       "label": "eyeSeen()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1837",
+      "source_location": "L1912",
       "id": "hackito_old_realhackito_eyeseen",
-      "community": 2,
+      "community": 0,
       "norm_label": "eyeseen()"
     },
     {
       "label": "loadConversations()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1846",
+      "source_location": "L1921",
       "id": "hackito_old_realhackito_loadconversations",
-      "community": 9,
+      "community": 0,
       "norm_label": "loadconversations()"
     },
     {
       "label": "openDMChat()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1887",
+      "source_location": "L1962",
       "id": "hackito_old_realhackito_opendmchat",
-      "community": 9,
+      "community": 0,
       "norm_label": "opendmchat()"
     },
     {
       "label": "loadDMMessages()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1932",
+      "source_location": "L2007",
       "id": "hackito_old_realhackito_loaddmmessages",
-      "community": 9,
+      "community": 0,
       "norm_label": "loaddmmessages()"
     },
     {
       "label": "appendDMMessage()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1947",
+      "source_location": "L2022",
       "id": "hackito_old_realhackito_appenddmmessage",
-      "community": 2,
+      "community": 0,
       "norm_label": "appenddmmessage()"
     },
     {
       "label": "sendDM()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1969",
+      "source_location": "L2044",
       "id": "hackito_old_realhackito_senddm",
       "community": 1,
       "norm_label": "senddm()"
+    },
+    {
+      "label": "initSpeechRecognition()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2075",
+      "id": "hackito_old_realhackito_initspeechrecognition",
+      "community": 1,
+      "norm_label": "initspeechrecognition()"
+    },
+    {
+      "label": "toggleVoiceInput()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2135",
+      "id": "hackito_old_realhackito_togglevoiceinput",
+      "community": 1,
+      "norm_label": "togglevoiceinput()"
+    },
+    {
+      "label": "stopListening()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2156",
+      "id": "hackito_old_realhackito_stoplistening",
+      "community": 1,
+      "norm_label": "stoplistening()"
+    },
+    {
+      "label": "stopSpeech()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2194",
+      "id": "hackito_old_realhackito_stopspeech",
+      "community": 0,
+      "norm_label": "stopspeech()"
+    },
+    {
+      "label": "suggestTranslation()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2200",
+      "id": "hackito_old_realhackito_suggesttranslation",
+      "community": 1,
+      "norm_label": "suggesttranslation()"
+    },
+    {
+      "label": "startCountdowns()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2204",
+      "id": "hackito_old_realhackito_startcountdowns",
+      "community": 0,
+      "norm_label": "startcountdowns()"
+    },
+    {
+      "label": "openPublicProfile()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2228",
+      "id": "hackito_old_realhackito_openpublicprofile",
+      "community": 0,
+      "norm_label": "openpublicprofile()"
+    },
+    {
+      "label": "startHeartbeat()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2296",
+      "id": "hackito_old_realhackito_startheartbeat",
+      "community": 6,
+      "norm_label": "startheartbeat()"
+    },
+    {
+      "label": "fetchOnlineUsers()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2308",
+      "id": "hackito_old_realhackito_fetchonlineusers",
+      "community": 6,
+      "norm_label": "fetchonlineusers()"
+    },
+    {
+      "label": "isOnline()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2316",
+      "id": "hackito_old_realhackito_isonline",
+      "community": 0,
+      "norm_label": "isonline()"
+    },
+    {
+      "label": "onlineDot()",
+      "file_type": "code",
+      "source_file": "realhackito.js",
+      "source_location": "L2320",
+      "id": "hackito_old_realhackito_onlinedot",
+      "community": 0,
+      "norm_label": "onlinedot()"
+    },
+    {
+      "label": "realhackito_original.js",
+      "file_type": "code",
+      "source_file": "realhackito_original.js",
+      "source_location": "L1",
+      "id": "realhackito_original_js",
+      "community": 39,
+      "norm_label": "realhackito_original.js"
     },
     {
       "label": "server.js",
@@ -909,8 +1008,125 @@
       "source_file": "server.js",
       "source_location": "L1",
       "id": "server_js",
-      "community": 17,
+      "community": 3,
       "norm_label": "server.js"
+    },
+    {
+      "label": "censorMessage()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L22",
+      "id": "hackito_old_server_censormessage",
+      "community": 3,
+      "norm_label": "censormessage()"
+    },
+    {
+      "label": "sendEmail()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L34",
+      "id": "hackito_old_server_sendemail",
+      "community": 3,
+      "norm_label": "sendemail()"
+    },
+    {
+      "label": "compactText()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L58",
+      "id": "hackito_old_server_compacttext",
+      "community": 3,
+      "norm_label": "compacttext()"
+    },
+    {
+      "label": "normalizeEmail()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L62",
+      "id": "hackito_old_server_normalizeemail",
+      "community": 3,
+      "norm_label": "normalizeemail()"
+    },
+    {
+      "label": "isValidEmail()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L66",
+      "id": "hackito_old_server_isvalidemail",
+      "community": 3,
+      "norm_label": "isvalidemail()"
+    },
+    {
+      "label": "escapeEmailHTML()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L70",
+      "id": "hackito_old_server_escapeemailhtml",
+      "community": 3,
+      "norm_label": "escapeemailhtml()"
+    },
+    {
+      "label": "normalizeHackathon()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L81",
+      "id": "hackito_old_server_normalizehackathon",
+      "community": 3,
+      "norm_label": "normalizehackathon()"
+    },
+    {
+      "label": "detectHackathonIntent()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L96",
+      "id": "hackito_old_server_detecthackathonintent",
+      "community": 3,
+      "norm_label": "detecthackathonintent()"
+    },
+    {
+      "label": "rankHackathonsForQuestion()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L118",
+      "id": "hackito_old_server_rankhackathonsforquestion",
+      "community": 3,
+      "norm_label": "rankhackathonsforquestion()"
+    },
+    {
+      "label": "authenticate()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L143",
+      "id": "hackito_old_server_authenticate",
+      "community": 3,
+      "norm_label": "authenticate()"
+    },
+    {
+      "label": "server_original.js",
+      "file_type": "code",
+      "source_file": "server_original.js",
+      "source_location": "L1",
+      "id": "server_original_js",
+      "community": 40,
+      "norm_label": "server_original.js"
+    },
+    {
+      "label": "test_bot.js",
+      "file_type": "code",
+      "source_file": "test_bot.js",
+      "source_location": "L1",
+      "id": "test_bot_js",
+      "community": 22,
+      "norm_label": "test_bot.js"
+    },
+    {
+      "label": "testBot()",
+      "file_type": "code",
+      "source_file": "test_bot.js",
+      "source_location": "L3",
+      "id": "hackito_old_test_bot_testbot",
+      "community": 22,
+      "norm_label": "testbot()"
     },
     {
       "label": "test_server_node.js",
@@ -918,8 +1134,62 @@
       "source_file": "test_server_node.js",
       "source_location": "L1",
       "id": "test_server_node_js",
-      "community": 27,
+      "community": 41,
       "norm_label": "test_server_node.js"
+    },
+    {
+      "label": "verify_fix1.js",
+      "file_type": "code",
+      "source_file": "verify_fix1.js",
+      "source_location": "L1",
+      "id": "verify_fix1_js",
+      "community": 23,
+      "norm_label": "verify_fix1.js"
+    },
+    {
+      "label": "runTests()",
+      "file_type": "code",
+      "source_file": "verify_fix1.js",
+      "source_location": "L1",
+      "id": "hackito_old_verify_fix1_runtests",
+      "community": 23,
+      "norm_label": "runtests()"
+    },
+    {
+      "label": "verify_refresh.js",
+      "file_type": "code",
+      "source_file": "verify_refresh.js",
+      "source_location": "L1",
+      "id": "verify_refresh_js",
+      "community": 24,
+      "norm_label": "verify_refresh.js"
+    },
+    {
+      "label": "runTests()",
+      "file_type": "code",
+      "source_file": "verify_refresh.js",
+      "source_location": "L3",
+      "id": "hackito_old_verify_refresh_runtests",
+      "community": 24,
+      "norm_label": "runtests()"
+    },
+    {
+      "label": "verify_schema.js",
+      "file_type": "code",
+      "source_file": "verify_schema.js",
+      "source_location": "L1",
+      "id": "verify_schema_js",
+      "community": 25,
+      "norm_label": "verify_schema.js"
+    },
+    {
+      "label": "verifySchema()",
+      "file_type": "code",
+      "source_file": "verify_schema.js",
+      "source_location": "L5",
+      "id": "hackito_old_verify_schema_verifyschema",
+      "community": 25,
+      "norm_label": "verifyschema()"
     },
     {
       "label": "ai.js",
@@ -927,7 +1197,7 @@
       "source_file": "config/ai.js",
       "source_location": "L1",
       "id": "config_ai_js",
-      "community": 28,
+      "community": 42,
       "norm_label": "ai.js"
     },
     {
@@ -936,7 +1206,7 @@
       "source_file": "config/db.js",
       "source_location": "L1",
       "id": "config_db_js",
-      "community": 29,
+      "community": 43,
       "norm_label": "db.js"
     },
     {
@@ -945,8 +1215,17 @@
       "source_file": "config/env.js",
       "source_location": "L1",
       "id": "config_env_js",
-      "community": 30,
+      "community": 44,
       "norm_label": "env.js"
+    },
+    {
+      "label": "mailer.js",
+      "file_type": "code",
+      "source_file": "config/mailer.js",
+      "source_location": "L1",
+      "id": "config_mailer_js",
+      "community": 45,
+      "norm_label": "mailer.js"
     },
     {
       "label": "resend.js",
@@ -954,7 +1233,7 @@
       "source_file": "config/resend.js",
       "source_location": "L1",
       "id": "config_resend_js",
-      "community": 31,
+      "community": 46,
       "norm_label": "resend.js"
     },
     {
@@ -963,7 +1242,7 @@
       "source_file": "controllers/ai.controller.js",
       "source_location": "L1",
       "id": "controllers_ai_controller_js",
-      "community": 32,
+      "community": 47,
       "norm_label": "ai.controller.js"
     },
     {
@@ -972,7 +1251,7 @@
       "source_file": "controllers/auth.controller.js",
       "source_location": "L1",
       "id": "controllers_auth_controller_js",
-      "community": 33,
+      "community": 48,
       "norm_label": "auth.controller.js"
     },
     {
@@ -981,7 +1260,7 @@
       "source_file": "controllers/hackathons.controller.js",
       "source_location": "L1",
       "id": "controllers_hackathons_controller_js",
-      "community": 34,
+      "community": 49,
       "norm_label": "hackathons.controller.js"
     },
     {
@@ -990,7 +1269,7 @@
       "source_file": "controllers/messaging.controller.js",
       "source_location": "L1",
       "id": "controllers_messaging_controller_js",
-      "community": 19,
+      "community": 26,
       "norm_label": "messaging.controller.js"
     },
     {
@@ -999,7 +1278,7 @@
       "source_file": "controllers/messaging.controller.js",
       "source_location": "L27",
       "id": "controllers_messaging_controller_streammessages",
-      "community": 19,
+      "community": 26,
       "norm_label": "streammessages()"
     },
     {
@@ -1008,7 +1287,7 @@
       "source_file": "controllers/teams.controller.js",
       "source_location": "L1",
       "id": "controllers_teams_controller_js",
-      "community": 35,
+      "community": 50,
       "norm_label": "teams.controller.js"
     },
     {
@@ -1017,7 +1296,7 @@
       "source_file": "controllers/users.controller.js",
       "source_location": "L1",
       "id": "controllers_users_controller_js",
-      "community": 36,
+      "community": 51,
       "norm_label": "users.controller.js"
     },
     {
@@ -1026,7 +1305,7 @@
       "source_file": "jobs/alerts.job.js",
       "source_location": "L1",
       "id": "jobs_alerts_job_js",
-      "community": 20,
+      "community": 27,
       "norm_label": "alerts.job.js"
     },
     {
@@ -1035,7 +1314,7 @@
       "source_file": "jobs/alerts.job.js",
       "source_location": "L5",
       "id": "jobs_alerts_job_initalertjobs",
-      "community": 20,
+      "community": 27,
       "norm_label": "initalertjobs()"
     },
     {
@@ -1044,7 +1323,7 @@
       "source_file": "middleware/auth.js",
       "source_location": "L1",
       "id": "middleware_auth_js",
-      "community": 21,
+      "community": 28,
       "norm_label": "auth.js"
     },
     {
@@ -1053,7 +1332,7 @@
       "source_file": "middleware/auth.js",
       "source_location": "L9",
       "id": "middleware_auth_authenticate",
-      "community": 21,
+      "community": 28,
       "norm_label": "authenticate()"
     },
     {
@@ -1062,7 +1341,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L1",
       "id": "middleware_sanitize_js",
-      "community": 12,
+      "community": 14,
       "norm_label": "sanitize.js"
     },
     {
@@ -1071,7 +1350,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L11",
       "id": "middleware_sanitize_sanitizebody",
-      "community": 12,
+      "community": 14,
       "norm_label": "sanitizebody()"
     },
     {
@@ -1080,7 +1359,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L18",
       "id": "middleware_sanitize_sanitizeobject",
-      "community": 12,
+      "community": 14,
       "norm_label": "sanitizeobject()"
     },
     {
@@ -1089,7 +1368,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L41",
       "id": "middleware_sanitize_sanitizerichtext",
-      "community": 12,
+      "community": 14,
       "norm_label": "sanitizerichtext()"
     },
     {
@@ -1098,7 +1377,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L1",
       "id": "middleware_security_js",
-      "community": 14,
+      "community": 18,
       "norm_label": "security.js"
     },
     {
@@ -1107,7 +1386,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L60",
       "id": "middleware_security_botprotection",
-      "community": 14,
+      "community": 18,
       "norm_label": "botprotection()"
     },
     {
@@ -1116,7 +1395,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L78",
       "id": "middleware_security_aipromptsanitycheck",
-      "community": 14,
+      "community": 18,
       "norm_label": "aipromptsanitycheck()"
     },
     {
@@ -1125,7 +1404,7 @@
       "source_file": "middleware/validate.js",
       "source_location": "L1",
       "id": "middleware_validate_js",
-      "community": 22,
+      "community": 29,
       "norm_label": "validate.js"
     },
     {
@@ -1134,7 +1413,7 @@
       "source_file": "middleware/validate.js",
       "source_location": "L7",
       "id": "middleware_validate_validate",
-      "community": 22,
+      "community": 29,
       "norm_label": "validate()"
     },
     {
@@ -1143,7 +1422,7 @@
       "source_file": "routes/ai.routes.js",
       "source_location": "L1",
       "id": "routes_ai_routes_js",
-      "community": 37,
+      "community": 52,
       "norm_label": "ai.routes.js"
     },
     {
@@ -1152,8 +1431,26 @@
       "source_file": "routes/auth.routes.js",
       "source_location": "L1",
       "id": "routes_auth_routes_js",
-      "community": 38,
+      "community": 53,
       "norm_label": "auth.routes.js"
+    },
+    {
+      "label": "chat.routes.js",
+      "file_type": "code",
+      "source_file": "routes/chat.routes.js",
+      "source_location": "L1",
+      "id": "routes_chat_routes_js",
+      "community": 30,
+      "norm_label": "chat.routes.js"
+    },
+    {
+      "label": "includes()",
+      "file_type": "code",
+      "source_file": "routes/chat.routes.js",
+      "source_location": "L16",
+      "id": "routes_chat_routes_includes",
+      "community": 30,
+      "norm_label": "includes()"
     },
     {
       "label": "hackathons.routes.js",
@@ -1161,7 +1458,7 @@
       "source_file": "routes/hackathons.routes.js",
       "source_location": "L1",
       "id": "routes_hackathons_routes_js",
-      "community": 39,
+      "community": 54,
       "norm_label": "hackathons.routes.js"
     },
     {
@@ -1170,7 +1467,7 @@
       "source_file": "routes/messaging.routes.js",
       "source_location": "L1",
       "id": "routes_messaging_routes_js",
-      "community": 40,
+      "community": 55,
       "norm_label": "messaging.routes.js"
     },
     {
@@ -1179,7 +1476,7 @@
       "source_file": "routes/teams.routes.js",
       "source_location": "L1",
       "id": "routes_teams_routes_js",
-      "community": 41,
+      "community": 56,
       "norm_label": "teams.routes.js"
     },
     {
@@ -1188,7 +1485,7 @@
       "source_file": "routes/users.routes.js",
       "source_location": "L1",
       "id": "routes_users_routes_js",
-      "community": 42,
+      "community": 57,
       "norm_label": "users.routes.js"
     },
     {
@@ -1197,7 +1494,7 @@
       "source_file": "schemas/ai.schema.js",
       "source_location": "L1",
       "id": "schemas_ai_schema_js",
-      "community": 43,
+      "community": 58,
       "norm_label": "ai.schema.js"
     },
     {
@@ -1206,7 +1503,7 @@
       "source_file": "schemas/auth.schema.js",
       "source_location": "L1",
       "id": "schemas_auth_schema_js",
-      "community": 44,
+      "community": 59,
       "norm_label": "auth.schema.js"
     },
     {
@@ -1215,7 +1512,7 @@
       "source_file": "schemas/hackathon.schema.js",
       "source_location": "L1",
       "id": "schemas_hackathon_schema_js",
-      "community": 45,
+      "community": 60,
       "norm_label": "hackathon.schema.js"
     },
     {
@@ -1224,7 +1521,7 @@
       "source_file": "schemas/profile.schema.js",
       "source_location": "L1",
       "id": "schemas_profile_schema_js",
-      "community": 46,
+      "community": 61,
       "norm_label": "profile.schema.js"
     },
     {
@@ -1233,7 +1530,7 @@
       "source_file": "schemas/team.schema.js",
       "source_location": "L1",
       "id": "schemas_team_schema_js",
-      "community": 47,
+      "community": 62,
       "norm_label": "team.schema.js"
     },
     {
@@ -1242,7 +1539,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L1",
       "id": "services_ai_service_js",
-      "community": 15,
+      "community": 19,
       "norm_label": "ai.service.js"
     },
     {
@@ -1251,7 +1548,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L4",
       "id": "services_ai_service_generateideas",
-      "community": 15,
+      "community": 19,
       "norm_label": "generateideas()"
     },
     {
@@ -1260,7 +1557,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L44",
       "id": "services_ai_service_analyzedifficulty",
-      "community": 15,
+      "community": 19,
       "norm_label": "analyzedifficulty()"
     },
     {
@@ -1273,10 +1570,19 @@
       "norm_label": "auth.service.js"
     },
     {
+      "label": "resolveStoredPasswordHash()",
+      "file_type": "code",
+      "source_file": "services/auth.service.js",
+      "source_location": "L8",
+      "id": "services_auth_service_resolvestoredpasswordhash",
+      "community": 4,
+      "norm_label": "resolvestoredpasswordhash()"
+    },
+    {
       "label": "generateTokens()",
       "file_type": "code",
       "source_file": "services/auth.service.js",
-      "source_location": "L10",
+      "source_location": "L14",
       "id": "services_auth_service_generatetokens",
       "community": 4,
       "norm_label": "generatetokens()"
@@ -1285,7 +1591,7 @@
       "label": "storeRefreshToken()",
       "file_type": "code",
       "source_file": "services/auth.service.js",
-      "source_location": "L29",
+      "source_location": "L33",
       "id": "services_auth_service_storerefreshtoken",
       "community": 4,
       "norm_label": "storerefreshtoken()"
@@ -1294,7 +1600,7 @@
       "label": "register()",
       "file_type": "code",
       "source_file": "services/auth.service.js",
-      "source_location": "L49",
+      "source_location": "L53",
       "id": "services_auth_service_register",
       "community": 4,
       "norm_label": "register()"
@@ -1303,7 +1609,7 @@
       "label": "login()",
       "file_type": "code",
       "source_file": "services/auth.service.js",
-      "source_location": "L67",
+      "source_location": "L85",
       "id": "services_auth_service_login",
       "community": 4,
       "norm_label": "login()"
@@ -1312,7 +1618,7 @@
       "label": "refresh()",
       "file_type": "code",
       "source_file": "services/auth.service.js",
-      "source_location": "L80",
+      "source_location": "L103",
       "id": "services_auth_service_refresh",
       "community": 4,
       "norm_label": "refresh()"
@@ -1321,10 +1627,37 @@
       "label": "logout()",
       "file_type": "code",
       "source_file": "services/auth.service.js",
-      "source_location": "L120",
+      "source_location": "L143",
       "id": "services_auth_service_logout",
       "community": 4,
       "norm_label": "logout()"
+    },
+    {
+      "label": "sendOTP()",
+      "file_type": "code",
+      "source_file": "services/auth.service.js",
+      "source_location": "L149",
+      "id": "services_auth_service_sendotp",
+      "community": 4,
+      "norm_label": "sendotp()"
+    },
+    {
+      "label": "verifyOTP()",
+      "file_type": "code",
+      "source_file": "services/auth.service.js",
+      "source_location": "L179",
+      "id": "services_auth_service_verifyotp",
+      "community": 4,
+      "norm_label": "verifyotp()"
+    },
+    {
+      "label": "sendWelcomeEmail()",
+      "file_type": "code",
+      "source_file": "services/auth.service.js",
+      "source_location": "L195",
+      "id": "services_auth_service_sendwelcomeemail",
+      "community": 4,
+      "norm_label": "sendwelcomeemail()"
     },
     {
       "label": "hackathons.service.js",
@@ -1332,79 +1665,79 @@
       "source_file": "services/hackathons.service.js",
       "source_location": "L1",
       "id": "services_hackathons_service_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "hackathons.service.js"
     },
     {
       "label": "getAll()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L4",
+      "source_location": "L19",
       "id": "services_hackathons_service_getall",
-      "community": 3,
+      "community": 5,
       "norm_label": "getall()"
     },
     {
       "label": "getById()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L10",
+      "source_location": "L29",
       "id": "services_hackathons_service_getbyid",
-      "community": 3,
+      "community": 5,
       "norm_label": "getbyid()"
     },
     {
       "label": "create()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L16",
+      "source_location": "L35",
       "id": "services_hackathons_service_create",
-      "community": 3,
+      "community": 5,
       "norm_label": "create()"
     },
     {
       "label": "update()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L22",
+      "source_location": "L41",
       "id": "services_hackathons_service_update",
-      "community": 3,
+      "community": 5,
       "norm_label": "update()"
     },
     {
       "label": "deleteHackathon()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L28",
+      "source_location": "L47",
       "id": "services_hackathons_service_deletehackathon",
-      "community": 3,
+      "community": 5,
       "norm_label": "deletehackathon()"
     },
     {
       "label": "getSaved()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L34",
+      "source_location": "L53",
       "id": "services_hackathons_service_getsaved",
-      "community": 3,
+      "community": 5,
       "norm_label": "getsaved()"
     },
     {
       "label": "save()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L45",
+      "source_location": "L64",
       "id": "services_hackathons_service_save",
-      "community": 3,
+      "community": 5,
       "norm_label": "save()"
     },
     {
       "label": "unsave()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L51",
+      "source_location": "L70",
       "id": "services_hackathons_service_unsave",
-      "community": 3,
+      "community": 5,
       "norm_label": "unsave()"
     },
     {
@@ -1458,7 +1791,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L1",
       "id": "services_realtime_service_js",
-      "community": 13,
+      "community": 15,
       "norm_label": "realtime.service.js"
     },
     {
@@ -1467,7 +1800,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L3",
       "id": "services_realtime_service_addclient",
-      "community": 13,
+      "community": 15,
       "norm_label": "addclient()"
     },
     {
@@ -1476,7 +1809,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L8",
       "id": "services_realtime_service_removeclient",
-      "community": 13,
+      "community": 15,
       "norm_label": "removeclient()"
     },
     {
@@ -1485,7 +1818,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L14",
       "id": "services_realtime_service_broadcasttokey",
-      "community": 13,
+      "community": 15,
       "norm_label": "broadcasttokey()"
     },
     {
@@ -1494,7 +1827,7 @@
       "source_file": "services/teams.service.js",
       "source_location": "L1",
       "id": "services_teams_service_js",
-      "community": 5,
+      "community": 7,
       "norm_label": "teams.service.js"
     },
     {
@@ -1503,52 +1836,52 @@
       "source_file": "services/teams.service.js",
       "source_location": "L4",
       "id": "services_teams_service_getteams",
-      "community": 5,
+      "community": 7,
       "norm_label": "getteams()"
     },
     {
       "label": "createTeam()",
       "file_type": "code",
       "source_file": "services/teams.service.js",
-      "source_location": "L17",
+      "source_location": "L19",
       "id": "services_teams_service_createteam",
-      "community": 5,
+      "community": 7,
       "norm_label": "createteam()"
     },
     {
       "label": "joinTeam()",
       "file_type": "code",
       "source_file": "services/teams.service.js",
-      "source_location": "L29",
+      "source_location": "L56",
       "id": "services_teams_service_jointeam",
-      "community": 5,
+      "community": 7,
       "norm_label": "jointeam()"
     },
     {
       "label": "getRequests()",
       "file_type": "code",
       "source_file": "services/teams.service.js",
-      "source_location": "L43",
+      "source_location": "L70",
       "id": "services_teams_service_getrequests",
-      "community": 5,
+      "community": 7,
       "norm_label": "getrequests()"
     },
     {
       "label": "sendRequest()",
       "file_type": "code",
       "source_file": "services/teams.service.js",
-      "source_location": "L49",
+      "source_location": "L76",
       "id": "services_teams_service_sendrequest",
-      "community": 5,
+      "community": 7,
       "norm_label": "sendrequest()"
     },
     {
       "label": "handleRequest()",
       "file_type": "code",
       "source_file": "services/teams.service.js",
-      "source_location": "L55",
+      "source_location": "L82",
       "id": "services_teams_service_handlerequest",
-      "community": 5,
+      "community": 7,
       "norm_label": "handlerequest()"
     },
     {
@@ -1620,7 +1953,7 @@
       "source_file": "utils/asyncHandler.js",
       "source_location": "L1",
       "id": "utils_asynchandler_js",
-      "community": 23,
+      "community": 31,
       "norm_label": "asynchandler.js"
     },
     {
@@ -1629,7 +1962,7 @@
       "source_file": "utils/asyncHandler.js",
       "source_location": "L1",
       "id": "utils_asynchandler_asynchandler",
-      "community": 23,
+      "community": 31,
       "norm_label": "asynchandler()"
     },
     {
@@ -1638,7 +1971,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L1",
       "id": "utils_errorhandler_js",
-      "community": 16,
+      "community": 20,
       "norm_label": "errorhandler.js"
     },
     {
@@ -1647,7 +1980,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L1",
       "id": "utils_errorhandler_apierror",
-      "community": 16,
+      "community": 20,
       "norm_label": "apierror"
     },
     {
@@ -1656,7 +1989,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L2",
       "id": "utils_errorhandler_apierror_constructor",
-      "community": 16,
+      "community": 20,
       "norm_label": ".constructor()"
     },
     {
@@ -1665,7 +1998,7 @@
       "source_file": "utils/helpers.js",
       "source_location": "L1",
       "id": "utils_helpers_js",
-      "community": 24,
+      "community": 32,
       "norm_label": "helpers.js"
     },
     {
@@ -1674,7 +2007,7 @@
       "source_file": "utils/helpers.js",
       "source_location": "L1",
       "id": "utils_helpers_formatresponse",
-      "community": 24,
+      "community": 32,
       "norm_label": "formatresponse()"
     },
     {
@@ -1683,7 +2016,7 @@
       "source_file": "validators/ai.validator.js",
       "source_location": "L1",
       "id": "validators_ai_validator_js",
-      "community": 25,
+      "community": 33,
       "norm_label": "ai.validator.js"
     },
     {
@@ -1692,7 +2025,7 @@
       "source_file": "validators/ai.validator.js",
       "source_location": "L5",
       "id": "validators_ai_validator_aisecuritycheck",
-      "community": 25,
+      "community": 33,
       "norm_label": "aisecuritycheck()"
     },
     {
@@ -1701,8 +2034,224 @@
       "source_file": "validators/profanity.validator.js",
       "source_location": "L1",
       "id": "validators_profanity_validator_js",
-      "community": 48,
+      "community": 63,
       "norm_label": "profanity.validator.js"
+    },
+    {
+      "label": "eslint.config.mjs",
+      "file_type": "code",
+      "source_file": "web/eslint.config.mjs",
+      "source_location": "L1",
+      "id": "web_eslint_config_mjs",
+      "community": 64,
+      "norm_label": "eslint.config.mjs"
+    },
+    {
+      "label": "next-env.d.ts",
+      "file_type": "code",
+      "source_file": "web/next-env.d.ts",
+      "source_location": "L1",
+      "id": "web_next_env_d_ts",
+      "community": 65,
+      "norm_label": "next-env.d.ts"
+    },
+    {
+      "label": "next.config.ts",
+      "file_type": "code",
+      "source_file": "web/next.config.ts",
+      "source_location": "L1",
+      "id": "web_next_config_ts",
+      "community": 66,
+      "norm_label": "next.config.ts"
+    },
+    {
+      "label": "postcss.config.mjs",
+      "file_type": "code",
+      "source_file": "web/postcss.config.mjs",
+      "source_location": "L1",
+      "id": "web_postcss_config_mjs",
+      "community": 67,
+      "norm_label": "postcss.config.mjs"
+    },
+    {
+      "label": "middleware.ts",
+      "file_type": "code",
+      "source_file": "web/src/middleware.ts",
+      "source_location": "L1",
+      "id": "web_src_middleware_ts",
+      "community": 16,
+      "norm_label": "middleware.ts"
+    },
+    {
+      "label": "middleware()",
+      "file_type": "code",
+      "source_file": "web/src/middleware.ts",
+      "source_location": "L4",
+      "id": "src_middleware_middleware",
+      "community": 16,
+      "norm_label": "middleware()"
+    },
+    {
+      "label": "layout.tsx",
+      "file_type": "code",
+      "source_file": "web/src/app/layout.tsx",
+      "source_location": "L1",
+      "id": "web_src_app_layout_tsx",
+      "community": 34,
+      "norm_label": "layout.tsx"
+    },
+    {
+      "label": "RootLayout()",
+      "file_type": "code",
+      "source_file": "web/src/app/layout.tsx",
+      "source_location": "L20",
+      "id": "app_layout_rootlayout",
+      "community": 34,
+      "norm_label": "rootlayout()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "web/src/app/page.tsx",
+      "source_location": "L1",
+      "id": "web_src_app_page_tsx",
+      "community": 68,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "web/src/app/api/chat/route.ts",
+      "source_location": "L1",
+      "id": "web_src_app_api_chat_route_ts",
+      "community": 17,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "web/src/app/api/chat/route.ts",
+      "source_location": "L6",
+      "id": "chat_route_post",
+      "community": 17,
+      "norm_label": "post()"
+    },
+    {
+      "label": "chat-interface.tsx",
+      "file_type": "code",
+      "source_file": "web/src/components/chat-interface.tsx",
+      "source_location": "L1",
+      "id": "web_src_components_chat_interface_tsx",
+      "community": 11,
+      "norm_label": "chat-interface.tsx"
+    },
+    {
+      "label": "button.tsx",
+      "file_type": "code",
+      "source_file": "web/src/components/ui/button.tsx",
+      "source_location": "L1",
+      "id": "web_src_components_ui_button_tsx",
+      "community": 11,
+      "norm_label": "button.tsx"
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "web/src/components/ui/button.tsx",
+      "source_location": "L52",
+      "id": "ui_button_cn",
+      "community": 11,
+      "norm_label": "cn()"
+    },
+    {
+      "label": "utils.ts",
+      "file_type": "code",
+      "source_file": "web/src/lib/utils.ts",
+      "source_location": "L1",
+      "id": "web_src_lib_utils_ts",
+      "community": 11,
+      "norm_label": "utils.ts"
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "web/src/lib/utils.ts",
+      "source_location": "L4",
+      "id": "lib_utils_cn",
+      "community": 11,
+      "norm_label": "cn()"
+    },
+    {
+      "label": "client.ts",
+      "file_type": "code",
+      "source_file": "web/src/utils/supabase/client.ts",
+      "source_location": "L1",
+      "id": "web_src_utils_supabase_client_ts",
+      "community": 35,
+      "norm_label": "client.ts"
+    },
+    {
+      "label": "createClient()",
+      "file_type": "code",
+      "source_file": "web/src/utils/supabase/client.ts",
+      "source_location": "L3",
+      "id": "supabase_client_createclient",
+      "community": 35,
+      "norm_label": "createclient()"
+    },
+    {
+      "label": "middleware.ts",
+      "file_type": "code",
+      "source_file": "web/src/utils/supabase/middleware.ts",
+      "source_location": "L1",
+      "id": "web_src_utils_supabase_middleware_ts",
+      "community": 16,
+      "norm_label": "middleware.ts"
+    },
+    {
+      "label": "updateSession()",
+      "file_type": "code",
+      "source_file": "web/src/utils/supabase/middleware.ts",
+      "source_location": "L4",
+      "id": "supabase_middleware_updatesession",
+      "community": 16,
+      "norm_label": "updatesession()"
+    },
+    {
+      "label": "server.ts",
+      "file_type": "code",
+      "source_file": "web/src/utils/supabase/server.ts",
+      "source_location": "L1",
+      "id": "web_src_utils_supabase_server_ts",
+      "community": 17,
+      "norm_label": "server.ts"
+    },
+    {
+      "label": "createClient()",
+      "file_type": "code",
+      "source_file": "web/src/utils/supabase/server.ts",
+      "source_location": "L4",
+      "id": "supabase_server_createclient",
+      "community": 17,
+      "norm_label": "createclient()"
+    },
+    {
+      "label": "AGENTS.md",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "id": "agents_md",
+      "community": 36,
+      "norm_label": "agents.md"
+    },
+    {
+      "label": "graphify",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "id": "hackito_old_agents_graphify",
+      "community": 36,
+      "norm_label": "graphify"
     },
     {
       "label": "CLAUDE.md",
@@ -1710,7 +2259,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "claude_md",
-      "community": 26,
+      "community": 37,
       "norm_label": "claude.md"
     },
     {
@@ -1719,8 +2268,233 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "hackito_old_claude_graphify",
-      "community": 26,
+      "community": 37,
       "norm_label": "graphify"
+    },
+    {
+      "label": "enterprise_audit_report.md",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L1",
+      "id": "enterprise_audit_report_md",
+      "community": 2,
+      "norm_label": "enterprise_audit_report.md"
+    },
+    {
+      "label": "Enterprise Production Audit: HackAlert Codebase",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L1",
+      "id": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "community": 2,
+      "norm_label": "enterprise production audit: hackalert codebase"
+    },
+    {
+      "label": "1. Architectural Flaws",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L3",
+      "id": "hackito_old_enterprise_audit_report_1_architectural_flaws",
+      "community": 2,
+      "norm_label": "1. architectural flaws"
+    },
+    {
+      "label": "Monolithic Frontend Structure",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L6",
+      "id": "hackito_old_enterprise_audit_report_monolithic_frontend_structure",
+      "community": 2,
+      "norm_label": "monolithic frontend structure"
+    },
+    {
+      "label": "Backend Vendor Lock-in & Missing Abstraction",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L14",
+      "id": "hackito_old_enterprise_audit_report_backend_vendor_lock_in_missing_abstraction",
+      "community": 2,
+      "norm_label": "backend vendor lock-in & missing abstraction"
+    },
+    {
+      "label": "2. Security Vulnerabilities",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L22",
+      "id": "hackito_old_enterprise_audit_report_2_security_vulnerabilities",
+      "community": 2,
+      "norm_label": "2. security vulnerabilities"
+    },
+    {
+      "label": "[CRITICAL] Client-Side Secret Leakage (JWT in LocalStorage)",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L25",
+      "id": "hackito_old_enterprise_audit_report_critical_client_side_secret_leakage_jwt_in_localstorage",
+      "community": 2,
+      "norm_label": "[critical] client-side secret leakage (jwt in localstorage)"
+    },
+    {
+      "label": "[CRITICAL] Massive XSS via Unsafe DOM Manipulation",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L33",
+      "id": "hackito_old_enterprise_audit_report_critical_massive_xss_via_unsafe_dom_manipulation",
+      "community": 2,
+      "norm_label": "[critical] massive xss via unsafe dom manipulation"
+    },
+    {
+      "label": "[HIGH] Complete Lack of CSRF Protection",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L41",
+      "id": "hackito_old_enterprise_audit_report_high_complete_lack_of_csrf_protection",
+      "community": 2,
+      "norm_label": "[high] complete lack of csrf protection"
+    },
+    {
+      "label": "[HIGH] Prompt Injection Vulnerability",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L49",
+      "id": "hackito_old_enterprise_audit_report_high_prompt_injection_vulnerability",
+      "community": 2,
+      "norm_label": "[high] prompt injection vulnerability"
+    },
+    {
+      "label": "3. Performance Bottlenecks",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L57",
+      "id": "hackito_old_enterprise_audit_report_3_performance_bottlenecks",
+      "community": 2,
+      "norm_label": "3. performance bottlenecks"
+    },
+    {
+      "label": "[HIGH] O(N) Scaling Issue & Memory Leak in Chat",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L60",
+      "id": "hackito_old_enterprise_audit_report_high_o_n_scaling_issue_memory_leak_in_chat",
+      "community": 2,
+      "norm_label": "[high] o(n) scaling issue & memory leak in chat"
+    },
+    {
+      "label": "[MEDIUM] Background Polling / DOM Thrashing",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L68",
+      "id": "hackito_old_enterprise_audit_report_medium_background_polling_dom_thrashing",
+      "community": 2,
+      "norm_label": "[medium] background polling / dom thrashing"
+    },
+    {
+      "label": "4. Production Deployment Risks",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L75",
+      "id": "hackito_old_enterprise_audit_report_4_production_deployment_risks",
+      "community": 2,
+      "norm_label": "4. production deployment risks"
+    },
+    {
+      "label": "Missing Transaction Safety (Orphaned Data)",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L78",
+      "id": "hackito_old_enterprise_audit_report_missing_transaction_safety_orphaned_data",
+      "community": 2,
+      "norm_label": "missing transaction safety (orphaned data)"
+    },
+    {
+      "label": "Broad CORS Configuration",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L85",
+      "id": "hackito_old_enterprise_audit_report_broad_cors_configuration",
+      "community": 2,
+      "norm_label": "broad cors configuration"
+    },
+    {
+      "label": "5. Code Quality Issues",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L92",
+      "id": "hackito_old_enterprise_audit_report_5_code_quality_issues",
+      "community": 2,
+      "norm_label": "5. code quality issues"
+    },
+    {
+      "label": "6. Frontend UX Engineering Quality",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L96",
+      "id": "hackito_old_enterprise_audit_report_6_frontend_ux_engineering_quality",
+      "community": 2,
+      "norm_label": "6. frontend ux engineering quality"
+    },
+    {
+      "label": "7. Backend Robustness",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L102",
+      "id": "hackito_old_enterprise_audit_report_7_backend_robustness",
+      "community": 2,
+      "norm_label": "7. backend robustness"
+    },
+    {
+      "label": "8. AI/Automation Integration Quality",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L107",
+      "id": "hackito_old_enterprise_audit_report_8_ai_automation_integration_quality",
+      "community": 2,
+      "norm_label": "8. ai/automation integration quality"
+    },
+    {
+      "label": "\ud83d\udcca Final Scores",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L114",
+      "id": "hackito_old_enterprise_audit_report_final_scores",
+      "community": 2,
+      "norm_label": "\ud83d\udcca final scores"
+    },
+    {
+      "label": "\ud83d\uddfa\ufe0f Prioritized Fix Roadmap",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L122",
+      "id": "hackito_old_enterprise_audit_report_prioritized_fix_roadmap",
+      "community": 2,
+      "norm_label": "\ud83d\uddfa\ufe0f prioritized fix roadmap"
+    },
+    {
+      "label": "Phase 1: Critical Security Hotfixes (Do This Today)",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L124",
+      "id": "hackito_old_enterprise_audit_report_phase_1_critical_security_hotfixes_do_this_today",
+      "community": 2,
+      "norm_label": "phase 1: critical security hotfixes (do this today)"
+    },
+    {
+      "label": "Phase 2: High-Impact Stability & Scaling (Do This Week)",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L129",
+      "id": "hackito_old_enterprise_audit_report_phase_2_high_impact_stability_scaling_do_this_week",
+      "community": 2,
+      "norm_label": "phase 2: high-impact stability & scaling (do this week)"
+    },
+    {
+      "label": "Phase 3: Architectural Overhaul (Next 30 Days)",
+      "file_type": "document",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L134",
+      "id": "hackito_old_enterprise_audit_report_phase_3_architectural_overhaul_next_30_days",
+      "community": 2,
+      "norm_label": "phase 3: architectural overhaul (next 30 days)"
     },
     {
       "label": "security_architecture_upgrade.md",
@@ -1728,7 +2502,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L1",
       "id": "security_architecture_upgrade_md",
-      "community": 8,
+      "community": 9,
       "norm_label": "security_architecture_upgrade.md"
     },
     {
@@ -1737,7 +2511,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L1",
       "id": "hackito_old_security_architecture_upgrade_security_architecture_upgrade_secure_session_management",
-      "community": 8,
+      "community": 9,
       "norm_label": "security architecture upgrade: secure session management"
     },
     {
@@ -1746,7 +2520,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L5",
       "id": "hackito_old_security_architecture_upgrade_1_vulnerability_mitigation",
-      "community": 8,
+      "community": 9,
       "norm_label": "1. vulnerability mitigation"
     },
     {
@@ -1755,7 +2529,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L11",
       "id": "hackito_old_security_architecture_upgrade_2_token_strategy",
-      "community": 8,
+      "community": 9,
       "norm_label": "2. token strategy"
     },
     {
@@ -1764,7 +2538,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L15",
       "id": "hackito_old_security_architecture_upgrade_3_backend_implementation_details",
-      "community": 8,
+      "community": 9,
       "norm_label": "3. backend implementation details"
     },
     {
@@ -1773,7 +2547,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L20",
       "id": "hackito_old_security_architecture_upgrade_4_frontend_compatibility",
-      "community": 8,
+      "community": 9,
       "norm_label": "4. frontend compatibility"
     },
     {
@@ -1782,7 +2556,7 @@
       "source_file": "security_report.md",
       "source_location": "L1",
       "id": "security_report_md",
-      "community": 11,
+      "community": 12,
       "norm_label": "security_report.md"
     },
     {
@@ -1791,7 +2565,7 @@
       "source_file": "security_report.md",
       "source_location": "L1",
       "id": "hackito_old_security_report_api_security_refactor_report_hack_alert",
-      "community": 11,
+      "community": 12,
       "norm_label": "api security refactor report: hack/alert"
     },
     {
@@ -1800,7 +2574,7 @@
       "source_file": "security_report.md",
       "source_location": "L3",
       "id": "hackito_old_security_report_1_attacks_now_prevented",
-      "community": 11,
+      "community": 12,
       "norm_label": "1. attacks now prevented"
     },
     {
@@ -1809,7 +2583,7 @@
       "source_file": "security_report.md",
       "source_location": "L18",
       "id": "hackito_old_security_report_2_remaining_risks",
-      "community": 11,
+      "community": 12,
       "norm_label": "2. remaining risks"
     },
     {
@@ -1818,26 +2592,89 @@
       "source_file": "security_report.md",
       "source_location": "L26",
       "id": "hackito_old_security_report_3_production_readiness",
-      "community": 11,
+      "community": 12,
       "norm_label": "3. production readiness"
     },
     {
-      "label": "censorMessage()",
-      "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L21",
-      "community": 17,
-      "norm_label": "censormessage()",
-      "id": "hackito_old_server_censormessage"
+      "label": "AGENTS.md",
+      "file_type": "document",
+      "source_file": "web/AGENTS.md",
+      "source_location": "L1",
+      "id": "web_agents_md",
+      "community": 38,
+      "norm_label": "agents.md"
     },
     {
-      "label": "authenticate()",
+      "label": "This is NOT the Next.js you know",
+      "file_type": "document",
+      "source_file": "web/AGENTS.md",
+      "source_location": "L2",
+      "id": "web_agents_this_is_not_the_next_js_you_know",
+      "community": 38,
+      "norm_label": "this is not the next.js you know"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "web/CLAUDE.md",
+      "source_location": "L1",
+      "id": "web_claude_md",
+      "community": 69,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "web/README.md",
+      "source_location": "L1",
+      "id": "web_readme_md",
+      "community": 13,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "Getting Started",
+      "file_type": "document",
+      "source_file": "web/README.md",
+      "source_location": "L3",
+      "id": "web_readme_getting_started",
+      "community": 13,
+      "norm_label": "getting started"
+    },
+    {
+      "label": "code:bash (npm run dev)",
+      "file_type": "document",
+      "source_file": "web/README.md",
+      "source_location": "L7",
+      "id": "web_readme_codeblock_1",
+      "community": 13,
+      "norm_label": "code:bash (npm run dev)"
+    },
+    {
+      "label": "Learn More",
+      "file_type": "document",
+      "source_file": "web/README.md",
+      "source_location": "L23",
+      "id": "web_readme_learn_more",
+      "community": 13,
+      "norm_label": "learn more"
+    },
+    {
+      "label": "Deploy on Vercel",
+      "file_type": "document",
+      "source_file": "web/README.md",
+      "source_location": "L32",
+      "id": "web_readme_deploy_on_vercel",
+      "community": 13,
+      "norm_label": "deploy on vercel"
+    },
+    {
+      "label": "bindCoreButtonHandlers()",
       "file_type": "code",
-      "source_file": "server.js",
-      "source_location": "L31",
-      "community": 17,
-      "norm_label": "authenticate()",
-      "id": "hackito_old_server_authenticate"
+      "source_file": "realhackito.js",
+      "source_location": "L120",
+      "community": 0,
+      "norm_label": "bindcorebuttonhandlers()",
+      "id": "hackito_old_realhackito_bindcorebuttonhandlers"
     }
   ],
   "links": [
@@ -2010,56 +2847,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
-      "source_location": "L120",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "realhackito_js",
-      "target": "hackito_old_realhackito_bindcorebuttonhandlers"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L153",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "realhackito_js",
-      "target": "hackito_old_realhackito_startheartbeat"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L157",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "realhackito_js",
-      "target": "hackito_old_realhackito_fetchonlineusers"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L173",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "realhackito_js",
-      "target": "hackito_old_realhackito_isonline"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L178",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "realhackito_js",
-      "target": "hackito_old_realhackito_onlinedot"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
       "source_location": "L57",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -2180,6 +2967,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L2173",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_speaktext"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L313",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -2205,6 +3002,26 @@
       "confidence_score": 1.0,
       "source": "realhackito_js",
       "target": "hackito_old_realhackito_signupuser"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L488",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_verifyotp"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L546",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_resendotp"
     },
     {
       "relation": "contains",
@@ -2730,6 +3547,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L1564",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_showuserresults"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L1411",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -2867,6 +3694,126 @@
       "target": "hackito_old_realhackito_senddm"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2075",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_initspeechrecognition"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2135",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_togglevoiceinput"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2156",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_stoplistening"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2194",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_stopspeech"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2200",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_suggesttranslation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2204",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_startcountdowns"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2228",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_openpublicprofile"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L153",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_startheartbeat"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L157",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_fetchonlineusers"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L173",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_isonline"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L178",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_onlinedot"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "realhackito_js",
+      "target": "hackito_old_realhackito_bindcorebuttonhandlers"
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -2930,6 +3877,17 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_appendmessage",
+      "target": "hackito_old_realhackito_escapehtml"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L340",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
       "target": "hackito_old_realhackito_escapehtml"
     },
     {
@@ -3008,17 +3966,6 @@
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_createhackathoncard",
       "target": "hackito_old_realhackito_safejsstring"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L159",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hackito_old_realhackito_fetchonlineusers",
-      "target": "hackito_old_realhackito_authheaders"
     },
     {
       "relation": "calls",
@@ -3135,6 +4082,28 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L1504",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_showusersearch",
+      "target": "hackito_old_realhackito_authheaders"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L1520",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_searchusers",
+      "target": "hackito_old_realhackito_authheaders"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L1415",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3234,6 +4203,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L159",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_fetchonlineusers",
+      "target": "hackito_old_realhackito_authheaders"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L112",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3250,39 +4230,6 @@
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_openmodal",
       "target": "hackito_old_realhackito_getcountdown"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L154",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hackito_old_realhackito_startheartbeat",
-      "target": "hackito_old_realhackito_fetchonlineusers"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L179",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hackito_old_realhackito_onlinedot",
-      "target": "hackito_old_realhackito_isonline"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L1896",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hackito_old_realhackito_opendmchat",
-      "target": "hackito_old_realhackito_isonline"
     },
     {
       "relation": "calls",
@@ -3443,6 +4390,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L370",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
+      "target": "hackito_old_realhackito_goto"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L338",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3454,10 +4412,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
-      "source_location": "L371",
+      "source_location": "L535",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "hackito_old_realhackito_signupuser",
+      "source": "hackito_old_realhackito_verifyotp",
       "target": "hackito_old_realhackito_goto"
     },
     {
@@ -3480,6 +4438,28 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_gotocalendar",
+      "target": "hackito_old_realhackito_goto"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2287",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_openpublicprofile",
+      "target": "hackito_old_realhackito_goto"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L371",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_signupuser",
       "target": "hackito_old_realhackito_goto"
     },
     {
@@ -3542,11 +4522,33 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L365",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_sendchat",
+      "target": "hackito_old_realhackito_speaktext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L316",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_quicksend",
       "target": "hackito_old_realhackito_sendchat"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2175",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_speaktext",
+      "target": "hackito_old_realhackito_stopspeech"
     },
     {
       "relation": "calls",
@@ -3568,6 +4570,28 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_signupuser",
+      "target": "hackito_old_realhackito_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L491",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_verifyotp",
+      "target": "hackito_old_realhackito_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L557",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_resendotp",
       "target": "hackito_old_realhackito_showtoast"
     },
     {
@@ -3938,6 +4962,61 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L2077",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_initspeechrecognition",
+      "target": "hackito_old_realhackito_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2145",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_togglevoiceinput",
+      "target": "hackito_old_realhackito_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2168",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_stoplistening",
+      "target": "hackito_old_realhackito_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2201",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_suggesttranslation",
+      "target": "hackito_old_realhackito_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2231",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_openpublicprofile",
+      "target": "hackito_old_realhackito_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L1096",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -4015,6 +5094,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L1522",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_searchusers",
+      "target": "hackito_old_realhackito_showuserresults"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L1496",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -4070,11 +5160,77 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
+      "source_location": "L1896",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_opendmchat",
+      "target": "hackito_old_realhackito_isonline"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
       "source_location": "L1907",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_opendmchat",
       "target": "hackito_old_realhackito_loaddmmessages"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2139",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_togglevoiceinput",
+      "target": "hackito_old_realhackito_initspeechrecognition"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L2136",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_togglevoiceinput",
+      "target": "hackito_old_realhackito_stoplistening"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "realhackito.js",
+      "source_location": "L2304",
+      "weight": 1.0,
+      "source": "hackito_old_realhackito_startheartbeat",
+      "target": "services_users_service_ping"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L154",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_startheartbeat",
+      "target": "hackito_old_realhackito_fetchonlineusers"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L179",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_onlinedot",
+      "target": "hackito_old_realhackito_isonline"
     },
     {
       "relation": "contains",
@@ -4090,11 +5246,153 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_sendemail"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L58",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_compacttext"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_normalizeemail"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_isvalidemail"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L70",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_escapeemailhtml"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_normalizehackathon"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L96",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_detecthackathonintent"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L118",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_rankhackathonsforquestion"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
       "source_location": "L31",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "server_js",
       "target": "hackito_old_server_authenticate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L84",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_server_normalizehackathon",
+      "target": "hackito_old_server_compacttext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_server_rankhackathonsforquestion",
+      "target": "hackito_old_server_compacttext"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_bot.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_bot_js",
+      "target": "hackito_old_test_bot_testbot"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_fix1.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_fix1_js",
+      "target": "hackito_old_verify_fix1_runtests"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_refresh.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_refresh_js",
+      "target": "hackito_old_verify_refresh_runtests"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_schema.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_schema_js",
+      "target": "hackito_old_verify_schema_verifyschema"
     },
     {
       "relation": "contains",
@@ -4200,6 +5498,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "routes/chat.routes.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_chat_routes_js",
+      "target": "routes_chat_routes_includes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "services/ai.service.js",
       "source_location": "L4",
       "weight": 1.0,
@@ -4216,6 +5524,16 @@
       "confidence_score": 1.0,
       "source": "services_ai_service_js",
       "target": "services_ai_service_analyzedifficulty"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/auth.service.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_auth_service_js",
+      "target": "services_auth_service_resolvestoredpasswordhash"
     },
     {
       "relation": "contains",
@@ -4276,6 +5594,47 @@
       "confidence_score": 1.0,
       "source": "services_auth_service_js",
       "target": "services_auth_service_logout"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/auth.service.js",
+      "source_location": "L149",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_auth_service_js",
+      "target": "services_auth_service_sendotp"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/auth.service.js",
+      "source_location": "L179",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_auth_service_js",
+      "target": "services_auth_service_verifyotp"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/auth.service.js",
+      "source_location": "L195",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_auth_service_js",
+      "target": "services_auth_service_sendwelcomeemail"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/auth.service.js",
+      "source_location": "L89",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_auth_service_login",
+      "target": "services_auth_service_resolvestoredpasswordhash"
     },
     {
       "relation": "calls",
@@ -4342,6 +5701,17 @@
       "confidence_score": 1.0,
       "source": "services_auth_service_refresh",
       "target": "services_auth_service_storerefreshtoken"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/auth.service.js",
+      "source_location": "L80",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_auth_service_register",
+      "target": "services_auth_service_sendwelcomeemail"
     },
     {
       "relation": "contains",
@@ -4664,6 +6034,184 @@
       "target": "validators_ai_validator_aisecuritycheck"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/middleware.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_middleware_ts",
+      "target": "web_src_utils_supabase_middleware_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/middleware.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_middleware_ts",
+      "target": "supabase_middleware_updatesession"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/middleware.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_middleware_ts",
+      "target": "src_middleware_middleware"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "web/src/middleware.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_middleware_middleware",
+      "target": "supabase_middleware_updatesession"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/app/layout.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_app_layout_tsx",
+      "target": "app_layout_rootlayout"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/app/api/chat/route.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_app_api_chat_route_ts",
+      "target": "web_src_utils_supabase_server_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/app/api/chat/route.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_app_api_chat_route_ts",
+      "target": "supabase_server_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/app/api/chat/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_app_api_chat_route_ts",
+      "target": "chat_route_post"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/chat-interface.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_components_chat_interface_tsx",
+      "target": "web_src_components_ui_button_tsx"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/ui/button.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_components_ui_button_tsx",
+      "target": "web_src_lib_utils_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/ui/button.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_components_ui_button_tsx",
+      "target": "lib_utils_cn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/ui/button.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_components_ui_button_tsx",
+      "target": "ui_button_cn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/lib/utils.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_lib_utils_ts",
+      "target": "lib_utils_cn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/utils/supabase/client.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_utils_supabase_client_ts",
+      "target": "supabase_client_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/utils/supabase/middleware.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_utils_supabase_middleware_ts",
+      "target": "supabase_middleware_updatesession"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/utils/supabase/server.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_src_utils_supabase_server_ts",
+      "target": "supabase_server_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "agents_md",
+      "target": "hackito_old_agents_graphify"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
@@ -4672,6 +6220,246 @@
       "confidence_score": 1.0,
       "source": "claude_md",
       "target": "hackito_old_claude_graphify"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "enterprise_audit_report_md",
+      "target": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_1_architectural_flaws"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_2_security_vulnerabilities"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L57",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_3_performance_bottlenecks"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L75",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_4_production_deployment_risks"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L92",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_5_code_quality_issues"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L96",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_6_frontend_ux_engineering_quality"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_7_backend_robustness"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L107",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_8_ai_automation_integration_quality"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L114",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_final_scores"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L122",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_enterprise_production_audit_hackalert_codebase",
+      "target": "hackito_old_enterprise_audit_report_prioritized_fix_roadmap"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_1_architectural_flaws",
+      "target": "hackito_old_enterprise_audit_report_monolithic_frontend_structure"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_1_architectural_flaws",
+      "target": "hackito_old_enterprise_audit_report_backend_vendor_lock_in_missing_abstraction"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_2_security_vulnerabilities",
+      "target": "hackito_old_enterprise_audit_report_critical_client_side_secret_leakage_jwt_in_localstorage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_2_security_vulnerabilities",
+      "target": "hackito_old_enterprise_audit_report_critical_massive_xss_via_unsafe_dom_manipulation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_2_security_vulnerabilities",
+      "target": "hackito_old_enterprise_audit_report_high_complete_lack_of_csrf_protection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_2_security_vulnerabilities",
+      "target": "hackito_old_enterprise_audit_report_high_prompt_injection_vulnerability"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L60",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_3_performance_bottlenecks",
+      "target": "hackito_old_enterprise_audit_report_high_o_n_scaling_issue_memory_leak_in_chat"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L68",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_3_performance_bottlenecks",
+      "target": "hackito_old_enterprise_audit_report_medium_background_polling_dom_thrashing"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_4_production_deployment_risks",
+      "target": "hackito_old_enterprise_audit_report_missing_transaction_safety_orphaned_data"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L85",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_4_production_deployment_risks",
+      "target": "hackito_old_enterprise_audit_report_broad_cors_configuration"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L124",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_prioritized_fix_roadmap",
+      "target": "hackito_old_enterprise_audit_report_phase_1_critical_security_hotfixes_do_this_today"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L129",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_prioritized_fix_roadmap",
+      "target": "hackito_old_enterprise_audit_report_phase_2_high_impact_stability_scaling_do_this_week"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "enterprise_audit_report.md",
+      "source_location": "L134",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_enterprise_audit_report_prioritized_fix_roadmap",
+      "target": "hackito_old_enterprise_audit_report_phase_3_architectural_overhaul_next_30_days"
     },
     {
       "relation": "contains",
@@ -4762,8 +6550,58 @@
       "confidence_score": 1.0,
       "source": "hackito_old_security_report_api_security_refactor_report_hack_alert",
       "target": "hackito_old_security_report_3_production_readiness"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/AGENTS.md",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_agents_md",
+      "target": "web_agents_this_is_not_the_next_js_you_know"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/README.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_readme_md",
+      "target": "web_readme_getting_started"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/README.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_readme_md",
+      "target": "web_readme_learn_more"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/README.md",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_readme_md",
+      "target": "web_readme_deploy_on_vercel"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/README.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_readme_getting_started",
+      "target": "web_readme_codeblock_1"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "01df5e446c5072f3435825eb64a50136eeb9596a"
+  "built_at_commit": "2b74927d4d3a7e260d17db62508d9a211b4c7faf"
 }

@@ -1,4 +1,8 @@
 {
+  "D:\\hackito_old\\init_schema.sql": {
+    "mtime": 1779298508.8046272,
+    "hash": "0d403dcb708d4d0e7474d2c1c06f6f87"
+  },
   "D:\\hackito_old\\main.js": {
     "mtime": 1778333418.9866931,
     "hash": "482d3fa76a6826bf09fa6ed1e34552a0"
@@ -8,16 +12,40 @@
     "hash": "b9d99b468778fb9ba5f45adc1640bfba"
   },
   "D:\\hackito_old\\realhackito.js": {
-    "mtime": 1778502667.2032504,
-    "hash": "eb007db44733d26c0eaf89d1f5ff2e27"
+    "mtime": 1779330451.2173975,
+    "hash": "2ec9f457358375191a307def8ad97856"
+  },
+  "D:\\hackito_old\\realhackito_original.js": {
+    "mtime": 1778565059.283455,
+    "hash": "321e873fb352bbab097a439f03614118"
   },
   "D:\\hackito_old\\server.js": {
-    "mtime": 1778502297.8423142,
-    "hash": "b8738ff9809327d5e95949e0be11798b"
+    "mtime": 1779335542.5986814,
+    "hash": "76136fbbe0606fbb6473c2d635902f33"
+  },
+  "D:\\hackito_old\\server_original.js": {
+    "mtime": 1778566073.2922785,
+    "hash": "7230c0d367d81f5559eab5c14348c61c"
+  },
+  "D:\\hackito_old\\test_bot.js": {
+    "mtime": 1779330236.312049,
+    "hash": "5ba4a9ed9da03f2e3e94005fbe94f7e7"
   },
   "D:\\hackito_old\\test_server_node.js": {
     "mtime": 1778499159.0030992,
     "hash": "0995cbb666f6abeb8c8e6e88f8030383"
+  },
+  "D:\\hackito_old\\verify_fix1.js": {
+    "mtime": 1778548910.3433836,
+    "hash": "98ad4a45d4688ba5a7689915ededb039"
+  },
+  "D:\\hackito_old\\verify_refresh.js": {
+    "mtime": 1778566083.0175123,
+    "hash": "597407b70ca7c0742cb7248f42ddbb15"
+  },
+  "D:\\hackito_old\\verify_schema.js": {
+    "mtime": 1778564731.3999956,
+    "hash": "903f1ca0f4abda9106277c0acd05ef9d"
   },
   "D:\\hackito_old\\config\\ai.js": {
     "mtime": 1778493666.101179,
@@ -31,6 +59,10 @@
     "mtime": 1778499158.9680169,
     "hash": "50654d98bb2aed522086890ad0e8c92c"
   },
+  "D:\\hackito_old\\config\\mailer.js": {
+    "mtime": 1779277014.690728,
+    "hash": "b57db96a957addc0f3f477993d1bce5e"
+  },
   "D:\\hackito_old\\config\\resend.js": {
     "mtime": 1778493666.10524,
     "hash": "5630832f87ff3a3000dd07329b015e9c"
@@ -40,16 +72,16 @@
     "hash": "406c6a7ea93f79b6be08c58f6aacfec1"
   },
   "D:\\hackito_old\\controllers\\auth.controller.js": {
-    "mtime": 1778499158.9705393,
-    "hash": "71c5791849f2e5f04381e6c5a29eee28"
+    "mtime": 1779274712.4157522,
+    "hash": "83d4e228b3d96c74820abdb8df7f210f"
   },
   "D:\\hackito_old\\controllers\\hackathons.controller.js": {
     "mtime": 1778493666.1097453,
     "hash": "ed7712d00328c179e07ce5ff96aad6d0"
   },
   "D:\\hackito_old\\controllers\\messaging.controller.js": {
-    "mtime": 1778493666.111756,
-    "hash": "263d4b8a85da130b7213b69a9f023858"
+    "mtime": 1778566088.2021174,
+    "hash": "64f83114334ddbeda6c8b5583c1a10b2"
   },
   "D:\\hackito_old\\controllers\\teams.controller.js": {
     "mtime": 1778493666.1127553,
@@ -76,32 +108,36 @@
     "hash": "1103f33e9f0cd51803b273e0ec323003"
   },
   "D:\\hackito_old\\middleware\\validate.js": {
-    "mtime": 1778493666.1190252,
-    "hash": "9152bc1be4e42248b753c2be060e7536"
+    "mtime": 1778505005.9785123,
+    "hash": "3cbe49476b781df90a32514ab6ad341e"
   },
   "D:\\hackito_old\\routes\\ai.routes.js": {
     "mtime": 1778499158.9856515,
     "hash": "913c93b320a699d79e0f6b2f3f732a42"
   },
   "D:\\hackito_old\\routes\\auth.routes.js": {
-    "mtime": 1778499158.9886718,
-    "hash": "4d11f7b717f7a662685735db6cd7e9db"
+    "mtime": 1778503501.137764,
+    "hash": "7221319d429a8a98146215527117f58c"
+  },
+  "D:\\hackito_old\\routes\\chat.routes.js": {
+    "mtime": 1778506848.9884214,
+    "hash": "b2e759be0640cdaf62261ed4d3bba21e"
   },
   "D:\\hackito_old\\routes\\hackathons.routes.js": {
     "mtime": 1778499158.9894173,
     "hash": "186fca2b1de27627e8f99112b4a41e6f"
   },
   "D:\\hackito_old\\routes\\messaging.routes.js": {
-    "mtime": 1778499158.991558,
-    "hash": "b3659b9685436d6196c19569d5231076"
+    "mtime": 1778549122.8099065,
+    "hash": "1271926cc5067599439ef69ce7642c83"
   },
   "D:\\hackito_old\\routes\\teams.routes.js": {
-    "mtime": 1778499158.994789,
-    "hash": "5fdb8c02842aa338ddcf6f10022f45a1"
+    "mtime": 1778506863.2010398,
+    "hash": "80948485b0e6ae1295339427d522b7a4"
   },
   "D:\\hackito_old\\routes\\users.routes.js": {
-    "mtime": 1778499158.996486,
-    "hash": "1073d253a4b52f8eb64ca79aa143582e"
+    "mtime": 1778506856.5466614,
+    "hash": "6235b1aea33efaf9436dd2633bb59e4e"
   },
   "D:\\hackito_old\\schemas\\ai.schema.js": {
     "mtime": 1778493666.1353576,
@@ -110,6 +146,10 @@
   "D:\\hackito_old\\schemas\\auth.schema.js": {
     "mtime": 1778493666.135864,
     "hash": "3b0aa74cd1be052028a4bac1681ddb20"
+  },
+  "D:\\hackito_old\\schemas\\email_otps.sql": {
+    "mtime": 1778957603.7430131,
+    "hash": "20b73619e5a020b5f8526a5777da461b"
   },
   "D:\\hackito_old\\schemas\\hackathon.schema.js": {
     "mtime": 1778493666.136877,
@@ -132,12 +172,12 @@
     "hash": "1f8c9aac200822d18c16ddf4c1ec769a"
   },
   "D:\\hackito_old\\services\\auth.service.js": {
-    "mtime": 1778499159.0020862,
-    "hash": "6f0d220793e414840eaebdf8cd1759cf"
+    "mtime": 1779275023.5561583,
+    "hash": "8d4c880ea83e2ad6464406f3d31ff8ab"
   },
   "D:\\hackito_old\\services\\hackathons.service.js": {
-    "mtime": 1778493666.14536,
-    "hash": "7583580e25454ae664d6595de4aa16e6"
+    "mtime": 1778506836.1588435,
+    "hash": "8e5ff6a6efacdd0f790bf89f52573710"
   },
   "D:\\hackito_old\\services\\messaging.service.js": {
     "mtime": 1778493666.146369,
@@ -148,8 +188,8 @@
     "hash": "ee68312ed13b2c934d159bd9f56776e9"
   },
   "D:\\hackito_old\\services\\teams.service.js": {
-    "mtime": 1778493666.1484468,
-    "hash": "96b0172e93a1d2078667ffdcdfa9e832"
+    "mtime": 1778667892.9987612,
+    "hash": "6efb74e3cd37d7a17b466680756b6332"
   },
   "D:\\hackito_old\\services\\users.service.js": {
     "mtime": 1778493666.1484468,
@@ -175,13 +215,81 @@
     "mtime": 1778493666.154505,
     "hash": "2cc52b2398bf85f510532f4734b8cdc6"
   },
+  "D:\\hackito_old\\web\\eslint.config.mjs": {
+    "mtime": 1779298395.8812716,
+    "hash": "dfa1f5f6a7037bf39dc510f30b180002"
+  },
+  "D:\\hackito_old\\web\\next-env.d.ts": {
+    "mtime": 1779298396.4601958,
+    "hash": "2a74d3909800ca5467fa83b0ab4a4890"
+  },
+  "D:\\hackito_old\\web\\next.config.ts": {
+    "mtime": 1779298396.517542,
+    "hash": "9b77af189a21a7a64e4bd7a426f64176"
+  },
+  "D:\\hackito_old\\web\\postcss.config.mjs": {
+    "mtime": 1779298396.0516489,
+    "hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "D:\\hackito_old\\web\\src\\middleware.ts": {
+    "mtime": 1779298873.9962528,
+    "hash": "df320520c73ab12cb1a47e2e8f14938c"
+  },
+  "D:\\hackito_old\\web\\src\\app\\layout.tsx": {
+    "mtime": 1779298396.6913364,
+    "hash": "94c34ef68b3949a75807a0211ec2273c"
+  },
+  "D:\\hackito_old\\web\\src\\app\\page.tsx": {
+    "mtime": 1779298499.572854,
+    "hash": "1e489b26bb597dc97f8d44954dd042da"
+  },
+  "D:\\hackito_old\\web\\src\\app\\api\\chat\\route.ts": {
+    "mtime": 1779298896.3114064,
+    "hash": "944433ad6d88f5765c1a1b5bc0f80634"
+  },
+  "D:\\hackito_old\\web\\src\\components\\chat-interface.tsx": {
+    "mtime": 1779298913.938048,
+    "hash": "6acf3e52bd55fd06425092ab71cb4d6a"
+  },
+  "D:\\hackito_old\\web\\src\\components\\ui\\button.tsx": {
+    "mtime": 1779298797.0157285,
+    "hash": "705bf3552a39e0c722665ccbecb30654"
+  },
+  "D:\\hackito_old\\web\\src\\lib\\utils.ts": {
+    "mtime": 1779298797.925439,
+    "hash": "5a6fd53fdcf2be529e9cc0b718fde352"
+  },
+  "D:\\hackito_old\\web\\src\\utils\\supabase\\client.ts": {
+    "mtime": 1779298862.3970575,
+    "hash": "4cb5739c1e33353d8f9d66c1737df2d1"
+  },
+  "D:\\hackito_old\\web\\src\\utils\\supabase\\middleware.ts": {
+    "mtime": 1779298873.6442082,
+    "hash": "916aaa4fbd92f4fa9cec1a72dab3d1b8"
+  },
+  "D:\\hackito_old\\web\\src\\utils\\supabase\\server.ts": {
+    "mtime": 1779298863.334598,
+    "hash": "b54db6f37093474763ba05f5f2e29b7d"
+  },
+  "D:\\hackito_old\\AGENTS.md": {
+    "mtime": 1778939607.1240623,
+    "hash": "2ed67c68f28bc1ef95ac24167431d7e8"
+  },
   "D:\\hackito_old\\CLAUDE.md": {
     "mtime": 1778079194.438924,
     "hash": "2ed67c68f28bc1ef95ac24167431d7e8"
   },
+  "D:\\hackito_old\\enterprise_audit_report.md": {
+    "mtime": 1778566099.5420156,
+    "hash": "492400e07a48635cb5a16297b84c94b6"
+  },
+  "D:\\hackito_old\\innerHTML_lines.txt": {
+    "mtime": 1778554704.6124575,
+    "hash": "3a4a167c73ff142da3348ab413688ffa"
+  },
   "D:\\hackito_old\\realhackito.html": {
-    "mtime": 1778467384.843631,
-    "hash": "6a74bda719514bc79a6828dfb716ecb5"
+    "mtime": 1779297518.9072337,
+    "hash": "31b26f736ce85def7604c5e4027a67fd"
   },
   "D:\\hackito_old\\security_architecture_upgrade.md": {
     "mtime": 1778499158.998013,
@@ -190,5 +298,37 @@
   "D:\\hackito_old\\security_report.md": {
     "mtime": 1778493666.1405685,
     "hash": "3244061c1952e41353f0564b066a02ac"
+  },
+  "D:\\hackito_old\\web\\AGENTS.md": {
+    "mtime": 1779298661.750993,
+    "hash": "9e09241799026ac05be315a2f0b50055"
+  },
+  "D:\\hackito_old\\web\\CLAUDE.md": {
+    "mtime": 1779298661.7522697,
+    "hash": "5c27369b226fcf2be8a6cfe52224e767"
+  },
+  "D:\\hackito_old\\web\\README.md": {
+    "mtime": 1779298395.7390113,
+    "hash": "f15aaa42d5d299d091b1171097ea56ad"
+  },
+  "D:\\hackito_old\\web\\public\\file.svg": {
+    "mtime": 1779298396.0945039,
+    "hash": "d09f95206c3fa0bb9bd9fefabfd0ea71"
+  },
+  "D:\\hackito_old\\web\\public\\globe.svg": {
+    "mtime": 1779298396.152558,
+    "hash": "2aaafa6a49b6563925fe440891e32717"
+  },
+  "D:\\hackito_old\\web\\public\\next.svg": {
+    "mtime": 1779298396.218726,
+    "hash": "8e061864f388b47f33a1c3780831193e"
+  },
+  "D:\\hackito_old\\web\\public\\vercel.svg": {
+    "mtime": 1779298396.2946036,
+    "hash": "c0af2f507b369b085b35ef4bbe3bcf1e"
+  },
+  "D:\\hackito_old\\web\\public\\window.svg": {
+    "mtime": 1779298396.3655417,
+    "hash": "a2760511c65806022ad20adf74370ff3"
   }
 }

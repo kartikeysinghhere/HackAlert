@@ -297,7 +297,7 @@ app.post('/ask', async (req, res) => {
           type: "function",
           function: {
             name: "trigger_ui_action",
-            description: "ONLY call this when the user explicitly gives a UI command like 'take me to the dashboard', 'show me offline hackathons', etc. Do not call this for general questions.",
+            description: "ONLY call this when the user explicitly asks to be navigated to a page like 'take me to the dashboard'. Do NOT call this if they are just asking about hackathons or their details.",
             parameters: {
               type: "object",
               properties: {
@@ -316,7 +316,7 @@ app.post('/ask', async (req, res) => {
 Goals:
 - Help users discover hackathons, form teams, and answer cybersecurity/tech questions.
 - For conversational greetings (like "hello", "how are you"), ALWAYS reply warmly in plain text WITHOUT using any tools.
-- ONLY call trigger_ui_action if the user issues a direct navigation/filter command.
+- ONLY call trigger_ui_action if the user issues a direct navigation command. Do NOT use it if they just ask about hackathons, their format, or details; answer them in text instead.
 - If you call a tool, do NOT output conversational text announcing it. Let the UI handle it.
 - Keep answers concise (under 50 words) unless asked for details.
 
