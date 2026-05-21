@@ -302,7 +302,7 @@ app.post('/ask', async (req, res) => {
               type: "object",
               properties: {
                 action: { type: "string", enum: ["navigate", "filter"], description: "navigate = go to a page, filter = filter by mode" },
-                payload: { type: "string", enum: ["dashboard", "teams", "projects", "profile", "saved", "online", "offline", "hybrid"], description: "Target page or filter value" }
+                payload: { type: "string", description: "Target page or filter value. Must be one of: dashboard, teams, projects, profile, saved, online, offline, hybrid" }
               },
               required: ["action", "payload"]
             }
