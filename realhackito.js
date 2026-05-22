@@ -495,6 +495,7 @@ async function loginUser() {
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ email, pass })
     });
     const data = await res.json();
@@ -581,6 +582,7 @@ async function verifyOTP() {
     const verifyRes = await fetch('/api/verify-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ email, otp })
     });
     const verifyData = await verifyRes.json();
@@ -594,6 +596,7 @@ async function verifyOTP() {
     const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(pendingSignupData)
     });
     const data = await res.json();
@@ -1725,7 +1728,7 @@ async function sendFriendRequest(to_email) {
 async function loadFriends() {
   try {
     // Load pending requests
-    const reqRes = await fetch('/api/friends/requests', { headers: authHeaders() });
+    const reqRes = await fetch('/api/friends/requests', { headers: authHeaders(), credentials: 'include' });
     const requests = await reqRes.json();
     const pendingDiv = document.getElementById('pending-requests');
 
@@ -1748,7 +1751,7 @@ async function loadFriends() {
     }
 
     // Load friends
-    const friendRes = await fetch('/api/friends', { headers: authHeaders() });
+    const friendRes = await fetch('/api/friends', { headers: authHeaders(), credentials: 'include' });
     const friends = await friendRes.json();
     const friendsDiv = document.getElementById('friends-list');
 
