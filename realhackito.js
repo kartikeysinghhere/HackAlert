@@ -499,7 +499,6 @@ async function loginUser() {
     });
     const data = await res.json();
     if (res.ok) {
-      localStorage.setItem('authToken', data.token); // YE LINE MISSING THI
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('userEmail', email);
       localStorage.setItem('userName', data.user?.name || '');
@@ -1266,6 +1265,7 @@ async function runMatchmaker() {
     const res = await fetch('/api/teams/match', {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ user_skills: skills })
     });
 
@@ -1468,6 +1468,7 @@ async function submitProject() {
     const res = await fetch(`/api/teams/${team_id}/project`, {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ title, description, github_link, demo_link, tech_stack })
     });
 
@@ -1570,6 +1571,7 @@ async function submitReview() {
     const res = await fetch('/api/reviews', {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ hackathon_name: currentReviewHackathon, rating: selectedRating, review })
     });
     const data = await res.json();
@@ -1619,7 +1621,7 @@ function showUserSearch() {
   openModal('user-search-modal');
   document.getElementById('user-search-results').innerHTML = '';
   document.getElementById('user-search-input').value = '';
-  fetch(`/api/users/search?q=a`, { headers: authHeaders() })
+  fetch(`/api/users/search?q=a`, { headers: authHeaders(), credentials: 'include' })
     .then(r => r.json())
     .then(users => showUserResults(users))
     .catch(() => { });
@@ -1635,7 +1637,7 @@ async function searchUsers(q) {
   if (!q.trim()) {
     // Show all users as suggestions
     try {
-      const res = await fetch(`/api/users/search?q=a`, { headers: authHeaders() });
+      const res = await fetch(`/api/users/search?q=a`, { headers: authHeaders(), credentials: 'include' });
       const users = await res.json();
       showUserResults(users);
     } catch (e) { }
@@ -1709,6 +1711,7 @@ async function sendFriendRequest(to_email) {
     const res = await fetch('/api/friends/request', {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ to_email })
     });
     const data = await res.json();
@@ -1786,6 +1789,7 @@ async function respondRequest(id, status) {
     const res = await fetch(`/api/friends/requests/${id}`, {
       method: 'PUT',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ status })
     });
     if (res.ok) {
@@ -1828,6 +1832,7 @@ async function generateIdeas() {
     const res = await fetch('/api/ai/ideas', {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ theme, problem, level, duration, skills })
     });
     const data = await res.json();
@@ -1911,6 +1916,7 @@ async function analyzeHackathon() {
     const res = await fetch('/api/ai/analyze', {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ name, details, skills })
     });
     const data = await res.json();
@@ -2168,6 +2174,7 @@ async function sendDM() {
     const res = await fetch(`/api/dm/${encodeURIComponent(currentDMPartner)}`, {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ message })
     });
 
@@ -2434,6 +2441,7 @@ async function submitBugReport() {
     const res = await fetch('/api/bug-reports', {
       method: 'POST',
       headers: authHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ title, description, severity, screenshot_url })
     });
     const data = await res.json();
@@ -2467,7 +2475,7 @@ async function startHeartbeat() {
 async function fetchOnlineUsers() {
   if (document.hidden) return;
   try {
-    const res = await fetch('/api/users/online', { headers: authHeaders() });
+    const res = await fetch('/api/users/online', { headers: authHeaders(), credentials: 'include' });
     onlineUsers = await res.json();
   } catch (e) { }
 }

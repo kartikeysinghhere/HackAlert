@@ -190,7 +190,8 @@ function authenticate(req, res, next) {
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
     ? 'https://hackalert-xwpd.onrender.com'
-    : 'http://localhost:3000'
+    : 'http://localhost:3000',
+  credentials: true
 }));
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
