@@ -30,6 +30,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error('CRITICAL: JWT_SECRET missing in environment');
 
 const app = express();
+const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3000;
 
 // Rate Limiters
@@ -38,6 +39,8 @@ const aiLimiter = rateLimit({
   max: 20,
   message: { error: 'Too many requests, slow down.' }
 });
+
+app.use(cookieParser());
 
 const emailLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -171,12 +174,13 @@ function rankHackathonsForQuestion(hackathons, intent, userProfile) {
 }
 
 function authenticate(req, res, next) {
-  const auth = req.headers['authorization'];
-  if (!auth || !auth.startsWith('Bearer ')) {
+  const token = req.cookies.authToken || (req.headers['authorization']?.startsWith('Bearer ') ? req.headers['authorization'].slice(7) : null);
+  
+  if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
   try {
-    req.user = jwt.verify(auth.slice(7), JWT_SECRET);
+    req.user = jwt.verify(token, JWT_SECRET);
     next();
   } catch {
     return res.status(401).json({ error: 'Invalid or expired token' });
@@ -196,6 +200,149 @@ app.use(express.static(__dirname));
 app.use('/ask', aiLimiter);
 app.use('/api/ai', aiLimiter);
 app.use('/api/send-otp', emailLimiter);
+
+// Password Reset Routes
+const bugLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3,
+  message: { error: 'Too many bug reports submitted. Please wait.' }
+});
+
+// Bug Report Routes
+app.post('/api/bug-reports', authenticate, bugLimiter, async (req, res) => {
+  const { title, description, severity, screenshot_url } = req.body;
+  if (!title || !description || !severity) return res.status(400).json({ error: 'Required fields missing' });
+
+  const validSeverities = ['low', 'medium', 'high', 'critical'];
+  if (!validSeverities.includes(severity)) return res.status(400).json({ error: 'Invalid severity' });
+
+  try {
+    const report = {
+      reporter_email: req.user.email,
+      title: sanitizeInput(title),
+      description: sanitizeInput(description),
+      severity,
+      screenshot_url: screenshot_url ? sanitizeInput(screenshot_url) : null,
+      user_agent: req.headers['user-agent'] || 'Unknown'
+    };
+
+    const { data, error } = await supabase.from('bug_reports').insert([report]).select().single();
+    if (error) return handleError(res, error);
+
+    res.status(201).json({ message: 'Bug report submitted successfully. Thank you!' });
+  } catch (err) {
+    handleError(res, err, 'Failed to submit bug report');
+  }
+});
+
+app.get('/api/bug-reports', authenticate, async (req, res) => {
+  // Simple admin check: Only the main developer or authorized emails can view reports
+  const adminEmails = [process.env.ADMIN_EMAIL].filter(Boolean);
+  if (!adminEmails.includes(req.user.email)) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  try {
+    const { data, error } = await supabase.from('bug_reports').select('*').order('created_at', { ascending: false });
+    if (error) return handleError(res, error);
+    res.json(data);
+  } catch (err) {
+    handleError(res, err, 'Failed to fetch bug reports');
+  }
+});
+
+app.post('/api/forgot-password', emailLimiter, async (req, res) => {
+  const { email } = req.body;
+  if (!email || !isValidEmail(email)) return res.status(400).json({ error: 'Valid email required' });
+
+  const normalizedEmail = normalizeEmail(email);
+  
+  try {
+    // 1. Check if user exists (quietly)
+    const { data: user } = await supabase.from('users').select('id, name').eq('email', normalizedEmail).single();
+    
+    if (user) {
+      // 2. Generate secure token
+      const token = crypto.randomBytes(32).toString('hex');
+      const hash = crypto.createHash('sha256').update(token).digest('hex');
+      const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString(); // 15 mins
+
+      // 3. Store hashed token (Invalidate old ones)
+      await supabase.from('password_reset_tokens').delete().eq('user_email', normalizedEmail);
+      const { error: dbError } = await supabase.from('password_reset_tokens').insert([{
+        user_email: normalizedEmail,
+        token_hash: hash,
+        expires_at: expiresAt
+      }]);
+
+      if (!dbError) {
+        // 4. Send email
+        const resetLink = `http://${req.get('host')}/realhackito.html?reset_token=${token}`;
+        await sendEmail({
+          to: normalizedEmail,
+          subject: 'Password Reset Request 🔐',
+          html: `
+            <div style="font-family: sans-serif; max-width: 500px; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+              <h2>Password Reset</h2>
+              <p>Hi ${user.name},</p>
+              <p>You requested to reset your password. Click the button below to proceed. This link expires in 15 minutes.</p>
+              <a href="${resetLink}" style="display: inline-block; padding: 12px 24px; background: #00f0ff; color: #050508; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0;">Reset Password</a>
+              <p style="color: #666; font-size: 12px;">If you didn't request this, you can safely ignore this email.</p>
+              <hr style="border: none; border-top: 1px solid #eee;">
+              <p style="font-size: 11px; color: #999;">Link: ${resetLink}</p>
+            </div>
+          `
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Forgot password error:', err);
+  }
+
+  // Always return the same message to prevent enumeration
+  res.json({ message: 'If an account exists with this email, a reset link has been sent.' });
+});
+
+app.post('/api/reset-password', async (req, res) => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword || newPassword.length < 8) {
+    return res.status(400).json({ error: 'Token and a password of at least 8 characters required' });
+  }
+
+  const hash = crypto.createHash('sha256').update(token).digest('hex');
+
+  try {
+    // 1. Find and validate token
+    const { data: resetEntry, error: findError } = await supabase
+      .from('password_reset_tokens')
+      .select('*')
+      .eq('token_hash', hash)
+      .gt('expires_at', new Date().toISOString())
+      .single();
+
+    if (findError || !resetEntry) {
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
+    }
+
+    // 2. Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // 3. Update user password
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ password: hashedPassword })
+      .eq('email', resetEntry.user_email);
+
+    if (updateError) throw updateError;
+
+    // 4. Delete the used token
+    await supabase.from('password_reset_tokens').delete().eq('token_hash', hash);
+
+    res.json({ message: 'Password has been successfully reset' });
+  } catch (err) {
+    handleError(res, err, 'Failed to reset password');
+  }
+});
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/realhackito.html');
@@ -666,7 +813,13 @@ app.post('/api/signup', async (req, res) => {
     console.error('Welcome email failed:', e.message);
   }
   const token = jwt.sign({ email, name, username }, JWT_SECRET, { expiresIn: '7d' });
-  res.status(201).json({ message: 'Signup successful', token });
+  res.cookie('authToken', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+  res.status(201).json({ message: 'Signup successful' });
 });
 
 app.post('/api/login', async (req, res) => {
@@ -677,7 +830,13 @@ app.post('/api/login', async (req, res) => {
   const match = await bcrypt.compare(pass, data.password);
   if (!match) return res.status(401).json({ error: 'Invalid email or password' });
   const token = jwt.sign({ email: data.email, name: data.name, username: data.username }, JWT_SECRET, { expiresIn: '7d' });
-  res.json({ message: 'Login successful', token, user: { name: data.name, email: data.email, username: data.username, gender: data.gender, bio: data.bio, skills: data.skills, mobile: data.mobile, college: data.college } });
+  res.cookie('authToken', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+  res.json({ message: 'Login successful', user: { name: data.name, email: data.email, username: data.username, gender: data.gender, bio: data.bio, skills: data.skills, mobile: data.mobile, college: data.college } });
 });
 
 app.get('/api/teams', async (req, res) => {
@@ -730,14 +889,21 @@ app.post('/api/teams/:id/members', authenticate, async (req, res) => {
   res.json({ message: 'Joined successfully' });
 });
 
-app.get('/api/teams/:id/messages', async (req, res) => {
-  const { data, error } = await supabase.from('team_messages').select('*').eq('team_id', req.params.id).order('sent_at', { ascending: true });
+app.get('/api/teams/:id/messages', authenticate, async (req, res) => {
+  const { id } = req.params;
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
+  const { data, error } = await supabase.from('team_messages').select('*').eq('team_id', id).order('sent_at', { ascending: true });
   if (error) return handleError(res, error);
   res.json(data);
 });
 
-app.get('/api/teams/:id/stream', (req, res) => {
+app.get('/api/teams/:id/stream', authenticate, async (req, res) => {
   const { id } = req.params;
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
@@ -748,32 +914,42 @@ app.get('/api/teams/:id/stream', (req, res) => {
 });
 
 app.post('/api/teams/:id/messages', authenticate, async (req, res) => {
+  const { id } = req.params;
   const { message } = req.body;
   const sender_email = req.user.email;
   const sender_name = req.user.name;
+
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', id).eq('user_email', sender_email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
   if (!message) return res.status(400).json({ error: 'Empty message' });
   
   const sanitizedMessage = sanitizeInput(message);
   
   if (bannedWords.some(w => sanitizedMessage.toLowerCase().includes(w))) return res.status(400).json({ error: 'Message contains inappropriate language' });
-  const newMessage = { team_id: req.params.id, sender_email, sender_name, message: sanitizedMessage };
+  const newMessage = { team_id: id, sender_email, sender_name, message: sanitizedMessage };
   const { data, error } = await supabase.from('team_messages').insert([newMessage]).select().single();
   if (error) return handleError(res, error);
-  if (teamClients[req.params.id]) teamClients[req.params.id].forEach(c => c.write(`data: ${JSON.stringify(data)}\n\n`));
+  if (teamClients[id]) teamClients[id].forEach(c => c.write(`data: ${JSON.stringify(data)}\n\n`));
   res.json({ message: 'Sent' });
 });
 
-app.get('/api/teams/:id/tasks', async (req, res) => {
-  const { data, error } = await supabase.from('team_tasks').select('*').eq('team_id', req.params.id).order('created_at', { ascending: true });
+app.get('/api/teams/:id/tasks', authenticate, async (req, res) => {
+  const { id } = req.params;
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
+  const { data, error } = await supabase.from('team_tasks').select('*').eq('team_id', id).order('created_at', { ascending: true });
   if (error) return handleError(res, error);
   res.json(data || []);
 });
 
 app.post('/api/teams/:id/tasks', authenticate, async (req, res) => {
+  const { id } = req.params;
   const { title, status } = req.body;
-  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.id).eq('user_email', req.user.email).single();
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', id).eq('user_email', req.user.email).single();
   if (!member) return res.status(403).json({ error: 'Not a team member' });
-  const { data, error } = await supabase.from('team_tasks').insert([{ team_id: req.params.id, title, status }]).select().single();
+  const { data, error } = await supabase.from('team_tasks').insert([{ team_id: id, title, status }]).select().single();
   if (error) return handleError(res, error);
   res.json(data);
 });
@@ -782,21 +958,27 @@ app.put('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) => 
   const { status } = req.body;
   const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
   if (!member) return res.status(403).json({ error: 'Not a team member' });
-  const { data, error } = await supabase.from('team_tasks').update({ status }).eq('id', req.params.task_id).select().single();
-  if (error) return handleError(res, error);
+  const { data, error } = await supabase.from('team_tasks').update({ status }).eq('id', req.params.task_id).eq('team_id', req.params.team_id).select().single();
+  if (error || !data) return res.status(404).json({ error: 'Task not found in this team' });
   res.json(data);
 });
 
 app.delete('/api/teams/:team_id/tasks/:task_id', authenticate, async (req, res) => {
   const { data: member } = await supabase.from('team_members').select('*').eq('team_id', req.params.team_id).eq('user_email', req.user.email).single();
   if (!member) return res.status(403).json({ error: 'Not a team member' });
+  const { data: task } = await supabase.from('team_tasks').select('id').eq('id', req.params.task_id).eq('team_id', req.params.team_id).single();
+  if (!task) return res.status(404).json({ error: 'Task not found in this team' });
   const { error } = await supabase.from('team_tasks').delete().eq('id', req.params.task_id);
   if (error) return handleError(res, error);
   res.json({ message: 'Deleted' });
 });
 
-app.get('/api/teams/:id/members', async (req, res) => {
-  const { data, error } = await supabase.from('team_members').select('*').eq('team_id', req.params.id);
+app.get('/api/teams/:id/members', authenticate, async (req, res) => {
+  const { id } = req.params;
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
+  const { data, error } = await supabase.from('team_members').select('*').eq('team_id', id);
   if (error) return handleError(res, error);
   res.json(data);
 });
@@ -843,8 +1025,12 @@ app.get('/api/projects', async (req, res) => {
   res.json(data || []);
 });
 
-app.get('/api/teams/:id/project', async (req, res) => {
-  const { data, error } = await supabase.from('team_projects').select('*').eq('team_id', req.params.id).single();
+app.get('/api/teams/:id/project', authenticate, async (req, res) => {
+  const { id } = req.params;
+  const { data: member } = await supabase.from('team_members').select('*').eq('team_id', id).eq('user_email', req.user.email).single();
+  if (!member) return res.status(403).json({ error: 'Not a team member' });
+
+  const { data, error } = await supabase.from('team_projects').select('*').eq('team_id', id).single();
   if (error && error.code !== 'PGRST116') return res.status(500).json({ error: error.message });
   res.json(data || null);
 });
@@ -1027,12 +1213,8 @@ app.put('/api/dm/:partner_email/seen', authenticate, async (req, res) => {
   res.json({ message: 'Marked seen' });
 });
 
-app.get('/api/dm/:partner_email/stream', (req, res) => {
-  const token = req.query.token;
-  if (!token) return res.status(401).end();
-  let user;
-  try { user = jwt.verify(token, JWT_SECRET); } catch { return res.status(401).end(); }
-  const email = user.email;
+app.get('/api/dm/:partner_email/stream', authenticate, (req, res) => {
+  const email = req.user.email;
   const partner = decodeURIComponent(req.params.partner_email);
   const dmKey = [email, partner].sort().join('::');
   res.setHeader('Content-Type', 'text/event-stream');

@@ -35,11 +35,19 @@ function safeJSString(str) {
   return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
 }
 
+function safeHTML(html) {
+  if (!html) return '';
+  if (typeof DOMPurify !== 'undefined') {
+    return DOMPurify.sanitize(html);
+  }
+  // Fallback if DOMPurify is not loaded
+  return escapeHTML(html);
+}
+
 function authHeaders() {
-  const token = localStorage.getItem('authToken');
   return {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    'Content-Type': 'application/json'
+    // authToken is now sent automatically via HttpOnly cookies
   };
 }
 
@@ -71,7 +79,11 @@ window.addEventListener('DOMContentLoaded', () => {
   // ADDED: handle invite link
   const params = new URLSearchParams(window.location.search);
   const joinTeamId = params.get('join_team');
-  if (joinTeamId) {
+  const resetToken = params.get('reset_token');
+
+  if (resetToken) {
+    goTo('reset-password');
+  } else if (joinTeamId) {
     if (!isLoggedIn) {
       // Store intent, redirect to login
       sessionStorage.setItem('pendingJoinTeam', joinTeamId);
@@ -133,7 +145,7 @@ function createHackathonCard(hack, isDimmed = false) {
   if (isDimmed) card.style.opacity = "0.35";
 
   const isSaved = savedList.some(s => s.name === hack.name);
-  card.innerHTML = `
+  card.innerHTML = safeHTML(`
     ${hack.banner ? `<img src="${escapeHTML(hack.banner)}" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:12px;">` : ''}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
       ${hack.logo
@@ -153,7 +165,7 @@ function createHackathonCard(hack, isDimmed = false) {
     <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
     <button onclick="copyLink(this, '${safeJSString(hack.website)}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
     <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
-  `;
+  `);
   return card;
 }
 
@@ -164,7 +176,7 @@ function renderHackathons(hackathons) {
 
   if (hackathons.length === 0) {
     const query = escapeHTML(document.getElementById('search-input')?.value || '');
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`;
+    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`);
     return;
   }
 
@@ -209,7 +221,7 @@ function renderHackathonsSorted(matched, rest) {
 
   if (matched.length === 0 && rest.length === 0) {
     const query = escapeHTML(document.getElementById('search-input')?.value || '');
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found for "<strong>${query}</strong>"</div>`;
+    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found for "<strong>${query}</strong>"</div>`);
     return;
   }
 
@@ -233,10 +245,17 @@ function filterCards(btn, type) {
 // ── Page navigation ──
 function goTo(pageId) {
   const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages', 'ai-tools', 'public-profile'];
+  const authPages = ['login', 'signup', 'forgot-password', 'reset-password'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   if (protectedPages.includes(pageId) && !isLoggedIn) {
     goTo('login');
+    return;
+  }
+
+  // Prevent logged in users from seeing auth pages
+  if (authPages.includes(pageId) && isLoggedIn) {
+    goTo('dashboard');
     return;
   }
 
@@ -250,6 +269,70 @@ function goTo(pageId) {
   if (pageId === 'messages') loadConversations();
   if (pageId === 'ai-tools') { }
   if (pageId === 'public-profile') { }
+}
+
+async function requestPasswordReset() {
+  const email = document.getElementById('forgot-email').value.trim();
+  if (!email || !isValidEmail(email)) {
+    showToast('⚠️', 'Invalid Email', 'Please enter a valid email address.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    showToast('📧', 'Request Sent', data.message);
+    if (res.ok) {
+      document.getElementById('forgot-email').value = '';
+    }
+  } catch (err) {
+    showToast('❌', 'Error', 'Failed to request password reset.');
+  }
+}
+
+async function handlePasswordReset() {
+  const pass = document.getElementById('reset-pass').value;
+  const confirm = document.getElementById('reset-pass-confirm').value;
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('reset_token');
+
+  if (!token) {
+    showToast('❌', 'Invalid Link', 'Reset token is missing.');
+    return;
+  }
+
+  if (pass.length < 8) {
+    showToast('⚠️', 'Weak Password', 'Password must be at least 8 characters.');
+    return;
+  }
+
+  if (pass !== confirm) {
+    showToast('⚠️', 'Mismatch', 'Passwords do not match.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, newPassword: pass })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast('✅', 'Success!', 'Password has been reset. Please log in.');
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+      goTo('login');
+    } else {
+      showToast('❌', 'Reset Failed', data.error);
+    }
+  } catch (err) {
+    showToast('❌', 'Error', 'Failed to reset password.');
+  }
 }
 
 // ── Append message bubble to chat ──
@@ -267,10 +350,10 @@ function appendMessage(role, text, isHTML = false, saveHistory = true) {
   } else {
     displayText = escapeHTML(censorMessage(text));
   }
-  msg.innerHTML = `
+  msg.innerHTML = safeHTML(`
     <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
     <div class="msg-bubble">${displayText}</div>
-  `;
+  `);
   area.appendChild(msg);
   area.scrollTop = area.scrollHeight;
 
@@ -290,14 +373,14 @@ function showTyping() {
   const typing = document.createElement('div');
   typing.className = 'msg bot';
   typing.id = 'typing-indicator';
-  typing.innerHTML = `
+  typing.innerHTML = safeHTML(`
     <div class="msg-avatar">🤖</div>
     <div class="msg-bubble">
       <div class="typing-dots">
         <span></span><span></span><span></span>
       </div>
     </div>
-  `;
+  `);
   area.appendChild(typing);
   area.scrollTop = area.scrollHeight;
 }
@@ -606,12 +689,12 @@ function loadProfile() {
   if (saved.length === 0) {
     list.innerHTML = '<p style="color:var(--muted)">No hackathons saved yet.</p>';
   } else {
-    list.innerHTML = saved.map(hack => `
+    list.innerHTML = safeHTML(saved.map(hack => `
       <div style="padding:8px 12px;margin-bottom:8px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
         <span>🔖 ${escapeHTML(hack.name)}</span>
         <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
       </div>
-    `).join('');
+    `).join(''));
   }
   // --- Interactive Roadmap ---
   const roadmapDiv = document.getElementById('roadmap-list');
@@ -623,7 +706,7 @@ function loadProfile() {
       saved.sort((a, b) => new Date(a.start) - new Date(b.start));
       const now = new Date();
 
-      roadmapDiv.innerHTML = saved.map(hack => {
+      roadmapDiv.innerHTML = safeHTML(saved.map(hack => {
         const hackDate = new Date(hack.start);
         const isUpcoming = hackDate > now;
         const dateString = hackDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
@@ -638,7 +721,7 @@ function loadProfile() {
             <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
           </div>
         `;
-      }).join('');
+      }).join(''));
     }
   }
 
@@ -800,12 +883,12 @@ function buildCountryList() {
 
   const list = document.getElementById('country-list');
   if (!list) return;
-  list.innerHTML = countries.map(c => `
+  list.innerHTML = safeHTML(countries.map(c => `
     <div onmousedown="selectCountry('${c}')"
       style="padding:8px 12px;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--muted);"
       onmouseover="this.style.color='var(--accent)'"
       onmouseout="this.style.color='var(--muted)'">${c}</div>
-  `).join('');
+  `).join(''));
 }
 
 function filterCountryList(q) {
@@ -831,7 +914,7 @@ function openModal(hack) {
   if (hack.virtual) mode = "🌐 Online";
   if (hack.hybrid) mode = "🔀 Hybrid";
 
-  document.getElementById('modal-content').innerHTML = `
+  document.getElementById('modal-content').innerHTML = safeHTML(`
     ${hack.banner ? `<img src="${escapeHTML(hack.banner)}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:20px;">` : ''}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
       ${hack.logo ? `<img src="${escapeHTML(hack.logo)}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
@@ -853,7 +936,7 @@ function openModal(hack) {
       <a href="${escapeHTML(hack.website)}" target="_blank" style="background:var(--accent);color:#050508;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;font-family:var(--mono);">Register Now →</a>
       <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">📲 WhatsApp</a>
     </div>
-  `;
+  `);
   document.getElementById('hack-modal').style.display = 'flex';
   document.getElementById('review-form').style.display = 'none';
   document.getElementById('write-review-btn').style.display = 'block';
@@ -879,7 +962,7 @@ async function loadTeams() {
     const currentUserEmail = localStorage.getItem('userEmail');
 
     if (!teams.length) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:20px;">No teams yet. Create one!</p>'; return; }
-    grid.innerHTML = teams.map(t => `
+    grid.innerHTML = safeHTML(teams.map(t => `
       <div class="feature-card">
         <h3 style="margin-bottom: 8px;">${escapeHTML(t.name)}</h3>
         <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">🏆 ${escapeHTML(t.hackathon || 'Open Hackathon')}</p>
@@ -894,7 +977,7 @@ async function loadTeams() {
           <button onclick="openTeamChat(${t.id},'${safeJSString(t.name)}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
         </div>
       </div>
-    `).join('');
+    `).join(''));
   } catch (err) {
     console.error('Error loading teams:', err);
     grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:20px;">⚠️ Failed to load teams. Please try again.</p>';
@@ -963,16 +1046,16 @@ async function openTeamChat(teamId, teamName) {
 
     const membersListDiv = document.getElementById('team-members-list');
     if (membersListDiv) {
-      membersListDiv.innerHTML = '👥 ' + members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join('');
+      membersListDiv.innerHTML = '👥 ' + safeHTML(members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join(''));
     }
 
     const teamActionsDiv = document.getElementById('team-chat-actions');
     if (teamActionsDiv) {
       teamActionsDiv.innerHTML = '';
       if (isMember && !isLeader) {
-        teamActionsDiv.innerHTML += `<button onclick="leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Leave Team</button>`;
+        teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Leave Team</button>`);
       }
-      teamActionsDiv.innerHTML += `<button onclick="copyInviteLink(${teamId})" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-left:8px;">🔗 Invite</button>`;
+      teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="copyInviteLink(${teamId})" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-left:8px;">🔗 Invite</button>`);
     }
   } catch (err) {
     console.error('Error loading team chat:', err);
@@ -1020,13 +1103,13 @@ function closeTeamChat() {
 
 function appendTeamMessage(m) {
   const area = document.getElementById('team-chat-area');
-  area.insertAdjacentHTML('beforeend', `
+  area.insertAdjacentHTML('beforeend', safeHTML(`
     <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px 14px;margin-bottom:8px;">
       <strong style="color:var(--accent);font-size:12px;">${escapeHTML(m.sender_name || m.sender_email)}</strong>
       <p style="font-size:14px;margin-top:4px;color:var(--text);">${escapeHTML(m.message)}</p>
       <p style="font-size:11px;color:var(--muted);margin-top:4px;">${new Date(m.sent_at || Date.now()).toLocaleTimeString()}</p>
     </div>
-  `);
+  `));
   area.scrollTop = area.scrollHeight;
 }
 
@@ -1131,7 +1214,7 @@ async function runMatchmaker() {
     const data = await res.json();
 
     if (!res.ok) {
-      resultsDiv.innerHTML = `<p style="color:#ef4444;font-size:13px;">❌ ${data.error}</p>`;
+      resultsDiv.innerHTML = safeHTML(`<p style="color:#ef4444;font-size:13px;">❌ ${escapeHTML(data.error)}</p>`);
       return;
     }
 
@@ -1140,7 +1223,7 @@ async function runMatchmaker() {
       return;
     }
 
-    resultsDiv.innerHTML = data.matches.map(m => `
+    resultsDiv.innerHTML = safeHTML(data.matches.map(m => `
       <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:12px;padding:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <strong style="color:var(--text);font-size:15px;">${escapeHTML(m.name)}</strong>
@@ -1155,7 +1238,7 @@ async function runMatchmaker() {
           Join Team →
         </button>
       </div>
-    `).join('');
+    `).join(''));
 
   } catch (err) {
     resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Could not reach server.</p>';
@@ -1235,7 +1318,7 @@ function renderCalendar() {
   }
 
   html += `</div>`;
-  document.getElementById('calendar-grid').innerHTML = html;
+  document.getElementById('calendar-grid').innerHTML = safeHTML(html);
 }
 
 function prevMonth() {
@@ -1265,7 +1348,7 @@ async function loadShowcase() {
 
     const currentUserEmail = localStorage.getItem('userEmail');
 
-    grid.innerHTML = projects.map(p => {
+    grid.innerHTML = safeHTML(projects.map(p => {
       const techTags = p.tech_stack
         ? p.tech_stack.split(',').map(t => `<span class="tech-tag">${escapeHTML(t.trim())}</span>`).join('')
         : '';
@@ -1297,7 +1380,7 @@ async function loadShowcase() {
           </div>
         </div>
       `;
-    }).join('');
+    }).join(''));
   } catch (err) {
     grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:40px;">⚠️ Failed to load projects.</p>';
   }
@@ -1322,7 +1405,10 @@ async function showSubmitProject() {
 
     // Show all teams where user might be member
     allTeams.forEach(t => {
-      select.innerHTML += `<option value="${t.id}">${escapeHTML(t.name)}</option>`;
+      const option = document.createElement('option');
+      option.value = t.id;
+      option.textContent = t.name;
+      select.appendChild(option);
     });
 
   } catch (e) {
@@ -1420,7 +1506,7 @@ async function loadReviews(hackathonName) {
     const avg = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
     const userEmail = localStorage.getItem('userEmail');
 
-    list.innerHTML = `
+    list.innerHTML = safeHTML(`
       <div style="margin-bottom:12px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;display:flex;align-items:center;gap:8px;">
         <span style="font-size:20px;font-weight:700;color:var(--accent);">${avg}</span>
         <span style="color:#f59e0b;font-size:16px;">${'⭐'.repeat(Math.round(avg))}</span>
@@ -1438,7 +1524,7 @@ async function loadReviews(hackathonName) {
           ${r.review ? `<p style="font-size:13px;color:var(--muted);margin:0;">${escapeHTML(r.review)}</p>` : ''}
         </div>
       `).join('')}
-    `;
+    `);
   } catch (e) {
     list.innerHTML = '<p style="color:#ef4444;font-size:13px;">Failed to load reviews.</p>';
   }
@@ -1536,7 +1622,7 @@ async function searchUsers(q) {
         return;
       }
 
-      resultsDiv.innerHTML = users.map(u => `
+      resultsDiv.innerHTML = safeHTML(users.map(u => `
         <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
           <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#050508;flex-shrink:0;">
             ${escapeHTML(u.name.charAt(0).toUpperCase())}
@@ -1554,7 +1640,7 @@ async function searchUsers(q) {
             + Add
           </button>
         </div>
-      `).join('');
+      `).join(''));
     } catch (e) {
       document.getElementById('user-search-results').innerHTML = '<p style="color:#ef4444;font-size:13px;">Error searching users.</p>';
     }
@@ -1564,7 +1650,7 @@ async function searchUsers(q) {
 function showUserResults(users) {
   const resultsDiv = document.getElementById('user-search-results');
   if (!users.length) { resultsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No users found.</p>'; return; }
-  resultsDiv.innerHTML = users.map(u => `
+  resultsDiv.innerHTML = safeHTML(users.map(u => `
     <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
       <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#050508;flex-shrink:0;">
         ${escapeHTML(u.name.charAt(0).toUpperCase())}
@@ -1583,7 +1669,7 @@ function showUserResults(users) {
         + Add
       </button>
     </div>
-  `).join('');
+  `).join(''));
 }
 
 async function sendFriendRequest(to_email) {
@@ -1609,7 +1695,7 @@ async function loadFriends() {
     const pendingDiv = document.getElementById('pending-requests');
 
     if (requests.length) {
-      pendingDiv.innerHTML = `
+      pendingDiv.innerHTML = safeHTML(`
         <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:10px;">📬 PENDING REQUESTS (${requests.length})</h4>
         ${requests.map(r => `
           <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);border-radius:10px;margin-bottom:8px;">
@@ -1621,7 +1707,7 @@ async function loadFriends() {
             <button onclick="respondRequest(${r.id}, 'declined')" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;">✕</button>
           </div>
         `).join('')}
-      `;
+      `);
     } else {
       pendingDiv.innerHTML = '';
     }
@@ -1636,29 +1722,28 @@ async function loadFriends() {
       return;
     }
 
-    friendsDiv.innerHTML = `
-      <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS (${friends.length})</h4>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
-        ${friends.map(f => `
-          <div style="padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
-            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;flex-shrink:0;">
-              ${escapeHTML(f.name.charAt(0).toUpperCase())}
-            </div>
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:4px;">
-                <strong onclick="openPublicProfile('${escapeHTML(f.username)}')" style="color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
-                <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
-${onlineDot(f.email, 8)}
-                <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
+    friendsDiv.innerHTML = safeHTML(`
+        <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS (${friends.length})</h4>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+          ${friends.map(f => `
+            <div style="padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;flex-shrink:0;">
+                ${escapeHTML(f.name.charAt(0).toUpperCase())}
               </div>
-              <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:4px;">
+                  <strong onclick="openPublicProfile('${escapeHTML(f.username)}')" style="color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
+                  <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
+                  ${onlineDot(f.email, 8)}
+                </div>
+                <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
+              </div>
+              <button onclick="openDMChat('${escapeHTML(f.email)}','${escapeHTML(f.name)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">💬</button>
+              <button onclick="removeFriend('${escapeHTML(f.email)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
             </div>
-            <button onclick="openDMChat('${escapeHTML(f.email)}','${escapeHTML(f.name)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">💬</button>
-            <button onclick="removeFriend('${escapeHTML(f.email)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
-          </div>
-        `).join('')}
-      </div>
-    `;
+          `).join('')}
+        </div>
+      `);
   } catch (e) {
     console.error('Error loading friends:', e);
   }
@@ -1701,11 +1786,11 @@ async function generateIdeas() {
   if (!theme) { showToast('⚠️', 'Missing', 'Enter a hackathon theme.'); return; }
 
   const output = document.getElementById('ideas-output');
-  output.innerHTML = `
+  output.innerHTML = safeHTML(`
     <div style="text-align:center;padding:40px;">
       <div style="font-size:32px;margin-bottom:12px;">🤖</div>
       <p style="color:var(--muted);font-family:var(--mono);font-size:13px;">Generating 5 unique project ideas...</p>
-    </div>`;
+    </div>`);
 
   try {
     const res = await fetch('/api/ai/ideas', {
@@ -1715,9 +1800,9 @@ async function generateIdeas() {
     });
     const data = await res.json();
 
-    if (!res.ok) { output.innerHTML = `<p style="color:#ef4444;">${data.error}</p>`; return; }
+    if (!res.ok) { output.innerHTML = safeHTML(`<p style="color:#ef4444;">${escapeHTML(data.error)}</p>`); return; }
 
-    output.innerHTML = `
+    output.innerHTML = safeHTML(`
       <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">✨ 5 Project Ideas for "${escapeHTML(theme)}"</h4>
       ${data.ideas.map((idea, i) => `
         <div class="idea-card">
@@ -1770,7 +1855,7 @@ async function generateIdeas() {
           </div>
         </div>
       `).join('')}
-    `;
+    `);
   } catch (err) {
     output.innerHTML = '<p style="color:#ef4444;">Failed to generate ideas. Try again.</p>';
   }
@@ -1784,11 +1869,11 @@ async function analyzeHackathon() {
   if (!details) { showToast('⚠️', 'Missing', 'Paste hackathon details first.'); return; }
 
   const output = document.getElementById('analyzer-output');
-  output.innerHTML = `
+  output.innerHTML = safeHTML(`
     <div style="text-align:center;padding:40px;">
       <div style="font-size:32px;margin-bottom:12px;">🔍</div>
       <p style="color:var(--muted);font-family:var(--mono);font-size:13px;">Analyzing hackathon difficulty...</p>
-    </div>`;
+    </div>`);
 
   try {
     const res = await fetch('/api/ai/analyze', {
@@ -1798,7 +1883,7 @@ async function analyzeHackathon() {
     });
     const data = await res.json();
 
-    if (!res.ok) { output.innerHTML = `<p style="color:#ef4444;">${data.error}</p>`; return; }
+    if (!res.ok) { output.innerHTML = safeHTML(`<p style="color:#ef4444;">${escapeHTML(data.error)}</p>`); return; }
 
     const a = data.analysis;
     const diffClass = {
@@ -1808,7 +1893,7 @@ async function analyzeHackathon() {
       'Expert': 'difficulty-expert'
     }[a.overall_difficulty] || 'difficulty-medium';
 
-    output.innerHTML = `
+    output.innerHTML = safeHTML(`
       <div class="idea-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
           <div>
@@ -1875,7 +1960,7 @@ async function analyzeHackathon() {
           <p style="font-size:13px;color:var(--text);line-height:1.6;">${escapeHTML(a.verdict)}</p>
         </div>
       </div>
-    `;
+    `);
   } catch (err) {
     output.innerHTML = '<p style="color:#ef4444;">Failed to analyze. Try again.</p>';
   }
@@ -1936,7 +2021,7 @@ async function loadConversations() {
       return;
     }
 
-    list.innerHTML = convos.map(c => `
+    list.innerHTML = safeHTML(convos.map(c => `
       <div class="conv-item ${currentDMPartner === c.partner_email ? 'active' : ''}"
         onclick="openDMChat('${escapeHTML(c.partner_email)}', '${escapeHTML(c.partner.name || c.partner_email)}')">
         <div style="display:flex;align-items:center;gap:10px;">
@@ -1953,7 +2038,7 @@ async function loadConversations() {
           </div>
         </div>
       </div>
-    `).join('');
+    `).join(''));
   } catch (e) {
     console.error('Error loading conversations:', e);
   }
@@ -1963,7 +2048,7 @@ async function openDMChat(partnerEmail, partnerName) {
   currentDMPartner = partnerEmail;
   await loadConversations();
 
-  document.getElementById('dm-chat-header').innerHTML = `
+  document.getElementById('dm-chat-header').innerHTML = safeHTML(`
   <div style="position:relative;flex-shrink:0;">
     <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;">
       ${escapeHTML(partnerName.charAt(0).toUpperCase())}
@@ -1974,7 +2059,7 @@ async function openDMChat(partnerEmail, partnerName) {
     <strong style="color:#fff;">${escapeHTML(partnerName)}</strong>
     <p style="color:${isOnline(partnerEmail) ? '#22c55e' : 'var(--muted)'};font-size:12px;font-family:var(--mono);">${isOnline(partnerEmail) ? '● Online' : '○ Offline'}</p>
   </div>
-`;
+`);
 
   const inputArea = document.getElementById('dm-input-area');
   inputArea.style.display = 'flex';
@@ -1982,8 +2067,7 @@ async function openDMChat(partnerEmail, partnerName) {
   await loadDMMessages(partnerEmail);
 
   if (dmEventSource) dmEventSource.close();
-  const token = localStorage.getItem('authToken');
-  dmEventSource = new EventSource(`/api/dm/${encodeURIComponent(partnerEmail)}/stream?token=${token}`);
+  dmEventSource = new EventSource(`/api/dm/${encodeURIComponent(partnerEmail)}/stream`);
   dmEventSource.onmessage = (e) => {
     const data = JSON.parse(e.data);
     if (data.type === 'seen') {
@@ -2029,13 +2113,13 @@ function appendDMMessage(m) {
   div.className = `dm-msg ${isSent ? 'sent' : 'received'}`;
   div.dataset.msgId = m.id;
 
-  div.innerHTML = `
+  div.innerHTML = safeHTML(`
     <div class="dm-bubble">${escapeHTML(m.message)}</div>
     <div class="dm-meta">
       ${time}
       ${isSent ? (m.seen ? eyeSeen() : `<span class="eye-unseen">${eyeUnseen()}</span>`) : ''}
     </div>
-  `;
+  `);
 
   area.appendChild(div);
   area.scrollTop = area.scrollHeight;
@@ -2256,7 +2340,7 @@ async function openPublicProfile(username) {
     if (!user.projects?.length) {
       projectsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No projects submitted yet.</p>';
     } else {
-      projectsDiv.innerHTML = user.projects.map(p => `
+      projectsDiv.innerHTML = safeHTML(user.projects.map(p => `
         <div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid var(--border);margin-bottom:8px;">
           <strong style="color:#fff;">${escapeHTML(p.title)}</strong>
           <p style="color:var(--muted);font-size:12px;margin:4px 0;">${escapeHTML(p.description || '')}</p>
@@ -2268,7 +2352,7 @@ async function openPublicProfile(username) {
             ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">▶ Demo</a>` : ''}
           </div>
         </div>
-      `).join('');
+      `).join(''));
     }
 
     // Teams
@@ -2276,17 +2360,60 @@ async function openPublicProfile(username) {
     if (!user.teams?.length) {
       teamsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">Not in any teams yet.</p>';
     } else {
-      teamsDiv.innerHTML = user.teams.map(t => `
+      teamsDiv.innerHTML = safeHTML(user.teams.map(t => `
         <div style="padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
           <strong style="color:#fff;font-size:13px;">${escapeHTML(t.teams?.name || 'Team')}</strong>
           <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">🏆 ${escapeHTML(t.teams?.hackathon || 'Open')}</span>
         </div>
-      `).join('');
+      `).join(''));
     }
 
     goTo('public-profile');
   } catch (err) {
     showToast('❌', 'Error', 'Could not load profile.');
+  }
+}
+
+function showBugReport() {
+  document.getElementById('bug-report-modal').style.display = 'flex';
+}
+
+function hideBugReport() {
+  document.getElementById('bug-report-modal').style.display = 'none';
+  // Clear fields
+  document.getElementById('bug-title').value = '';
+  document.getElementById('bug-desc').value = '';
+  document.getElementById('bug-severity').value = 'medium';
+  document.getElementById('bug-screenshot').value = '';
+}
+
+async function submitBugReport() {
+  const title = document.getElementById('bug-title').value.trim();
+  const description = document.getElementById('bug-desc').value.trim();
+  const severity = document.getElementById('bug-severity').value;
+  const screenshot_url = document.getElementById('bug-screenshot').value.trim();
+
+  if (!title || !description) {
+    showToast('⚠️', 'Missing Info', 'Please provide a title and description.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/bug-reports', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ title, description, severity, screenshot_url })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      showToast('✅', 'Submitted!', data.message);
+      hideBugReport();
+    } else {
+      showToast('❌', 'Error', data.error || 'Failed to submit report.');
+    }
+  } catch (err) {
+    showToast('❌', 'Error', 'Failed to connect to server.');
   }
 }
 

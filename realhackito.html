@@ -120,6 +120,8 @@
               style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🧠 AI Tools</button>
             <button class="nav-btn" onclick="showUserSearch();toggleNavMenu()"
               style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🔍 Find Friends</button>
+            <button class="nav-btn" onclick="showBugReport();toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:#f87171;">🐞 Report Bug</button>
             <div style="border-top:1px solid var(--border);margin:8px 0;"></div>
             <button class="nav-btn" onclick="logout();toggleNavMenu()"
               style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:#ef4444;">🚪 Logout</button>
@@ -128,6 +130,45 @@
       </div>
     </div>
   </nav>
+
+  <!-- BUG REPORT MODAL -->
+  <div id="bug-report-modal" class="modal">
+    <div class="modal-content" style="max-width:500px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2 style="margin:0;color:#fff;display:flex;align-items:center;gap:10px;">🐞 Report a Bug</h2>
+        <button class="close-btn" onclick="hideBugReport()">✕</button>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Found a glitch? Let us know and we'll squash it! 🛠️</p>
+      
+      <div class="input-group">
+        <label>Title</label>
+        <input type="text" id="bug-title" placeholder="Short summary of the issue" required>
+      </div>
+      
+      <div class="input-group">
+        <label>Description</label>
+        <textarea id="bug-desc" placeholder="What happened? How can we reproduce it?" style="min-height:120px;padding:12px;background:var(--surface);border:1px solid var(--border);color:#fff;width:100%;border-radius:10px;resize:vertical;" required></textarea>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+        <div class="input-group" style="margin-bottom:0;">
+          <label>Severity</label>
+          <select id="bug-severity" style="width:100%;background:var(--surface);border:1px solid var(--border);color:#fff;padding:10px;border-radius:10px;cursor:pointer;">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical 🔥</option>
+          </select>
+        </div>
+        <div class="input-group" style="margin-bottom:0;">
+          <label>Screenshot URL (Optional)</label>
+          <input type="url" id="bug-screenshot" placeholder="Link to image">
+        </div>
+      </div>
+
+      <button onclick="submitBugReport()" class="btn-primary" style="width:100%;font-weight:700;">Submit Report →</button>
+    </div>
+  </div>
   <!-- LANDING -->
   <div class="page active" id="page-landing">
     <div class="orb orb-1"></div>
@@ -291,7 +332,45 @@
         <input type="password" id="login-pass" placeholder="••••••••" required />
         <button type="submit" class="auth-submit">Log in →</button>
       </form>
-      <div class="auth-footer">Don't have an account? <a onclick="goTo('signup')">Sign up free</a></div>
+      <div class="auth-footer">
+        <a onclick="goTo('forgot-password')" style="color:var(--accent);display:block;margin-bottom:8px;">Forgot Password?</a>
+        Don't have an account? <a onclick="goTo('signup')">Sign up free</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div class="page" id="page-forgot-password">
+    <div class="orb auth-orb1"></div>
+    <div class="orb auth-orb2"></div>
+    <div class="auth-box">
+      <div class="auth-logo">Hack/Alert</div>
+      <h2 class="auth-title">Reset Password 🔒</h2>
+      <p class="auth-sub">Enter your email and we'll send you a link</p>
+      <form onsubmit="event.preventDefault(); requestPasswordReset();">
+        <label>Email address</label>
+        <input type="email" id="forgot-email" placeholder="you@example.com" required />
+        <button type="submit" class="auth-submit">Send Reset Link →</button>
+      </form>
+      <div class="auth-footer"><a onclick="goTo('login')">← Back to Login</a></div>
+    </div>
+  </div>
+
+  <!-- RESET PASSWORD -->
+  <div class="page" id="page-reset-password">
+    <div class="orb auth-orb1"></div>
+    <div class="orb auth-orb2"></div>
+    <div class="auth-box">
+      <div class="auth-logo">Hack/Alert</div>
+      <h2 class="auth-title">New Password 🔑</h2>
+      <p class="auth-sub">Please enter your new secure password</p>
+      <form onsubmit="event.preventDefault(); handlePasswordReset();">
+        <label>New Password</label>
+        <input type="password" id="reset-pass" placeholder="Min. 8 characters" required minlength="8" />
+        <label>Confirm Password</label>
+        <input type="password" id="reset-pass-confirm" placeholder="Repeat password" required minlength="8" />
+        <button type="submit" class="auth-submit">Reset Password →</button>
+      </form>
     </div>
   </div>
 
