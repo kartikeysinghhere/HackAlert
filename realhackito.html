@@ -169,6 +169,7 @@
       <button onclick="submitBugReport()" class="btn-primary" style="width:100%;font-weight:700;">Submit Report →</button>
     </div>
   </div>
+
   <!-- LANDING -->
   <div class="page active" id="page-landing">
     <div class="orb orb-1"></div>
@@ -594,12 +595,9 @@
       </div>
 
       <!-- User Search Modal -->
-      <div id="user-search-modal"
-        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-        <div
-          style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;max-height:80vh;overflow-y:auto;">
-          <button onclick="hideUserSearch()"
-            style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+      <div id="user-search-modal" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+          <button onclick="hideUserSearch()" class="close-btn">✕</button>
           <h3 style="margin-bottom:20px;color:#fff;">🔍 Find Friends</h3>
           <input id="user-search-input" type="text" placeholder="Search by username..."
             oninput="searchUsers(this.value)"
@@ -617,16 +615,13 @@
   </div>
 
   <!-- HACKATHON MODAL -->
-  <div id="hack-modal"
-    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-    <div
-      style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:560px;width:90%;position:relative;max-height:80vh;overflow-y:auto;">
-      <button onclick="closeModal()"
-        style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+  <div id="hack-modal" class="modal">
+    <div class="modal-content" style="max-width:560px;">
+      <button onclick="closeModal()" class="close-btn">✕</button>
       <div id="modal-content">
         <!-- Hackathon details will be loaded here -->
       </div>
-      <!-- REVIEWS SECTION — YE ADD KARO -->
+      <!-- REVIEWS SECTION -->
       <div id="reviews-section" style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;">
         <h4 style="color:#fff;margin-bottom:16px;">⭐ Reviews</h4>
         <div id="reviews-list" style="margin-bottom:16px;"></div>
@@ -669,14 +664,10 @@
       </div>
     </div>
 
-    <!-- CREATE TEAM MODAL -->
-    <!-- Add matchmaker modal (put after create-team-modal) -->
-    <div id="matchmaker-modal"
-      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-      <div
-        style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:540px;width:90%;position:relative;max-height:80vh;overflow-y:auto;">
-        <button onclick="hideMatchmaker()"
-          style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+    <!-- AI Team Matcher Modal -->
+    <div id="matchmaker-modal" class="modal">
+      <div class="modal-content" style="max-width:540px;">
+        <button onclick="hideMatchmaker()" class="close-btn">✕</button>
         <h3 style="margin-bottom:8px;color:var(--text);">🤖 AI Team Matcher</h3>
         <p style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:24px;">Enter your skills and
           AI will
@@ -689,12 +680,11 @@
         <div id="match-results" style="margin-top:24px;display:flex;flex-direction:column;gap:12px;"></div>
       </div>
     </div>
-    <div id="create-team-modal"
-      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-      <div
-        style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;">
-        <button onclick="hideCreateTeam()"
-          style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+
+    <!-- Create Team Modal -->
+    <div id="create-team-modal" class="modal">
+      <div class="modal-content" style="max-width:500px;">
+        <button onclick="hideCreateTeam()" class="close-btn">✕</button>
         <h3 style="margin-bottom:24px;color:var(--text);">Create New Team</h3>
         <div style="display:flex;flex-direction:column;gap:16px;">
           <input id="team-name" placeholder="Team Name *"
@@ -722,18 +712,15 @@
       style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:24px 40px;"></div>
 
     <!-- Team Chat Modal -->
-    <div id="team-chat-modal"
-      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-      <div
-        style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;width:90%;max-width:560px;height:70vh;display:flex;flex-direction:column;position:relative;">
+    <div id="team-chat-modal" class="modal">
+      <div class="modal-content" style="max-width:560px;height:75vh;display:flex;flex-direction:column;padding:0;overflow:hidden;">
         <div
           style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
           <h3 id="chat-team-name"></h3>
           <div id="team-chat-actions" style="display:flex;gap:8px;">
             <!-- Leave Team button will be inserted here by JS -->
           </div>
-          <button onclick="closeTeamChat()"
-            style="background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+          <button onclick="closeTeamChat()" class="close-btn" style="position:static;">✕</button>
         </div>
         <div id="team-members-list"
           style="padding: 8px 24px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -817,12 +804,9 @@
       style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;padding:24px 40px;"></div>
 
     <!-- Submit Project Modal -->
-    <div id="submit-project-modal"
-      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-      <div
-        style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:500px;width:90%;position:relative;max-height:85vh;overflow-y:auto;">
-        <button onclick="hideSubmitProject()"
-          style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">✕</button>
+    <div id="submit-project-modal" class="modal">
+      <div class="modal-content" style="max-width:500px;">
+        <button onclick="hideSubmitProject()" class="close-btn">✕</button>
         <h3 style="margin-bottom:24px;color:#fff;">🚀 Submit Your Project</h3>
         <div style="display:flex;flex-direction:column;gap:14px;">
           <select id="project-team-id"
@@ -1030,10 +1014,8 @@
   </div>
 
   <!-- LOGOUT MODAL -->
-  <div id="logout-modal"
-    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-    <div
-      style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:40px;max-width:380px;width:90%;text-align:center;">
+  <div id="logout-modal" class="modal">
+    <div class="modal-content" style="max-width:380px;text-align:center;">
       <div style="font-size:40px;margin-bottom:16px;">👋</div>
       <h3 style="color:#fff;margin-bottom:8px;">Logging out?</h3>
       <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">You'll need to login again to access your
@@ -1056,10 +1038,8 @@
   </div>
 
   <!-- OTP MODAL -->
-  <div id="otp-modal"
-    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
-    <div
-      style="background:var(--surface);border:1px solid var(--border-light);border-radius:24px;padding:48px;max-width:400px;width:90%;text-align:center;">
+  <div id="otp-modal" class="modal">
+    <div class="modal-content" style="max-width:400px;text-align:center;">
       <div style="font-size:40px;margin-bottom:16px;">📧</div>
       <h3 style="color:#fff;margin-bottom:8px;">Check your email</h3>
       <p id="otp-email-display" style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:28px;">
