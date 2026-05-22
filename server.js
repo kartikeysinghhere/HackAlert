@@ -252,6 +252,86 @@ app.get('/api/bug-reports', authenticate, async (req, res) => {
   }
 });
 
+// Teammates Routes (MVP)
+const teammateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  message: { error: 'Too many requests, slow down.' }
+});
+
+app.post('/api/teammates', authenticate, teammateLimiter, async (req, res) => {
+  const { hackathon_name, required_role, tech_stack, experience_level, team_size_remaining, mode, description } = req.body;
+  if (!hackathon_name || !required_role || !tech_stack || !experience_level || !team_size_remaining || !mode || !description) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    const listing = {
+      creator_email: req.user.email,
+      hackathon_name: sanitizeInput(hackathon_name),
+      required_role: sanitizeInput(required_role),
+      tech_stack: sanitizeInput(tech_stack),
+      experience_level: sanitizeInput(experience_level),
+      team_size_remaining: parseInt(team_size_remaining, 10),
+      mode: sanitizeInput(mode),
+      description: sanitizeInput(description),
+      active: true
+    };
+
+    const { data, error } = await supabase.from('teammate_listings').insert([listing]).select().single();
+    if (error) return handleError(res, error);
+    res.status(201).json(data);
+  } catch (err) {
+    handleError(res, err, 'Failed to create listing');
+  }
+});
+
+app.get('/api/teammates', async (req, res) => {
+  const { skill, hackathon } = req.query;
+  try {
+    let query = supabase.from('teammate_listings').select('*').eq('active', true).order('created_at', { ascending: false });
+    
+    if (skill) {
+      query = query.ilike('tech_stack', `%${sanitizeInput(skill)}%`);
+    }
+    if (hackathon) {
+      query = query.ilike('hackathon_name', `%${sanitizeInput(hackathon)}%`);
+    }
+
+    const { data, error } = await query;
+    if (error) return handleError(res, error);
+    res.json(data);
+  } catch (err) {
+    handleError(res, err, 'Failed to fetch listings');
+  }
+});
+
+app.delete('/api/teammates/:id', authenticate, async (req, res) => {
+  try {
+    const { error } = await supabase.from('teammate_listings')
+      .delete()
+      .eq('id', req.params.id)
+      .eq('creator_email', req.user.email);
+    if (error) return handleError(res, error);
+    res.json({ message: 'Listing deleted' });
+  } catch (err) {
+    handleError(res, err, 'Failed to delete listing');
+  }
+});
+
+app.patch('/api/teammates/:id', authenticate, async (req, res) => {
+  try {
+    const { error } = await supabase.from('teammate_listings')
+      .update({ active: false })
+      .eq('id', req.params.id)
+      .eq('creator_email', req.user.email);
+    if (error) return handleError(res, error);
+    res.json({ message: 'Listing marked as filled' });
+  } catch (err) {
+    handleError(res, err, 'Failed to update listing');
+  }
+});
+
 app.post('/api/forgot-password', emailLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email || !isValidEmail(email)) return res.status(400).json({ error: 'Valid email required' });

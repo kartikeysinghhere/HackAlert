@@ -272,6 +272,7 @@ function goTo(pageId) {
   if (pageId === 'dashboard' && allHackathons.length === 0) fetchHackathons();
   if (pageId === 'profile') loadProfile();
   if (pageId === 'teams') loadTeams();
+  if (pageId === 'find-teammates') fetchTeammates();
   if (pageId === 'calendar') renderCalendar();
   if (pageId === 'showcase') loadShowcase();
   if (pageId === 'messages') loadConversations();
@@ -2498,4 +2499,109 @@ function isOnline(email) {
 function onlineDot(email, size = 10) {
   const online = isOnline(email);
   return `<span style="width:${size}px;height:${size}px;border-radius:50%;background:${online ? '#22c55e' : '#64748b'};display:inline-block;flex-shrink:0;box-shadow:${online ? '0 0 6px #22c55e' : 'none'};" title="${online ? 'Online' : 'Offline'}"></span>`;
+}
+
+// === TEAMMATES MVP ===
+function showCreateTeammateModal() { document.getElementById('create-teammate-modal').style.display = 'flex'; }
+function hideCreateTeammateModal() { document.getElementById('create-teammate-modal').style.display = 'none'; }
+
+async function fetchTeammates() {
+  const skill = document.getElementById('tm-skill-search').value;
+  const hackathon = document.getElementById('tm-hackathon-search').value;
+  let url = '/api/teammates?';
+  if (skill) url += 'skill=' + encodeURIComponent(skill) + '&';
+  if (hackathon) url += 'hackathon=' + encodeURIComponent(hackathon);
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const grid = document.getElementById('teammate-listings-grid');
+    if (!res.ok) throw new Error(data.error);
+    
+    if (data.length === 0) {
+      grid.innerHTML = '<p style="color:var(--muted);">No listings found.</p>';
+      return;
+    }
+
+    grid.innerHTML = data.map(tm => `<div class="feature-card" style="position:relative;display:flex;flex-direction:column;gap:12px;">
+      ${tm.creator_email === localStorage.getItem('userEmail') ? `<div style="position:absolute;top:16px;right:16px;display:flex;gap:8px;">
+        <button onclick="markTeammateFilled('${tm.id}')" title="Mark as Filled" style="background:var(--accent);border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:#000;">✅ Filled</button>
+        <button onclick="deleteTeammateListing('${tm.id}')" title="Delete" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;">🗑️ Delete</button>
+      </div>` : ''}
+      <div style="font-family:var(--mono);font-size:11px;color:var(--accent);">${DOMPurify.sanitize(tm.hackathon_name)}</div>
+      <h3 style="color:#fff;margin:0;">${DOMPurify.sanitize(tm.required_role)}</h3>
+      <p style="color:var(--muted);font-size:13px;margin:0;">${DOMPurify.sanitize(tm.description)}</p>
+      
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">🛠 ${DOMPurify.sanitize(tm.tech_stack)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">⭐ ${DOMPurify.sanitize(tm.experience_level)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">👥 ${tm.team_size_remaining} spots</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">📍 ${DOMPurify.sanitize(tm.mode)}</span>
+      </div>
+      <div style="margin-top:12px;">
+        <a href="mailto:${DOMPurify.sanitize(tm.creator_email)}" style="display:block;text-align:center;background:rgba(0,240,255,0.1);color:var(--accent);border:1px solid rgba(0,240,255,0.3);padding:8px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;">✉️ Contact ${DOMPurify.sanitize(tm.creator_email)}</a>
+      </div>
+    </div>`).join('');
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function submitTeammateListing() {
+  const hackathon_name = document.getElementById('tm-hackathon').value;
+  const required_role = document.getElementById('tm-role').value;
+  const tech_stack = document.getElementById('tm-stack').value;
+  const experience_level = document.getElementById('tm-exp').value;
+  const team_size_remaining = document.getElementById('tm-size').value;
+  const mode = document.getElementById('tm-mode').value;
+  const description = document.getElementById('tm-desc').value;
+
+  if (!hackathon_name || !required_role || !tech_stack || !experience_level || !team_size_remaining || !mode || !description) {
+    return alert('All fields are required');
+  }
+
+  try {
+    const res = await fetch('/api/teammates', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hackathon_name, required_role, tech_stack, experience_level, team_size_remaining, mode, description })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    
+    hideCreateTeammateModal();
+    document.getElementById('tm-hackathon').value = '';
+    document.getElementById('tm-role').value = '';
+    document.getElementById('tm-stack').value = '';
+    document.getElementById('tm-exp').value = '';
+    document.getElementById('tm-size').value = '';
+    document.getElementById('tm-mode').value = '';
+    document.getElementById('tm-desc').value = '';
+    
+    fetchTeammates();
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+}
+
+async function deleteTeammateListing(id) {
+  if (!confirm('Are you sure you want to delete this listing?')) return;
+  try {
+    const res = await fetch('/api/teammates/' + id, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to delete');
+    fetchTeammates();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function markTeammateFilled(id) {
+  if (!confirm('Mark this role as filled? It will be removed from the public listings.')) return;
+  try {
+    const res = await fetch('/api/teammates/' + id, { method: 'PATCH' });
+    if (!res.ok) throw new Error('Failed to update');
+    fetchTeammates();
+  } catch (err) {
+    alert(err.message);
+  }
 }
