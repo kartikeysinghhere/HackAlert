@@ -75,8 +75,23 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchHackathons();
     document.getElementById('nav-auth').style.display = 'none';
     document.getElementById('nav-app').style.display = 'flex';
-    const btn = document.getElementById('get-started-btn');
-    if (btn) btn.style.display = 'none';
+    
+    // Update CTAs for authenticated users
+    const btn1 = document.getElementById('get-started-btn');
+    if (btn1) {
+      btn1.textContent = 'Explore Hackathons →';
+      btn1.setAttribute('onclick', "goTo('dashboard')");
+    }
+    const btn2 = document.getElementById('get-started-btn2');
+    if (btn2) {
+      btn2.textContent = 'Explore Hackathons →';
+      btn2.setAttribute('onclick', "goTo('dashboard')");
+    }
+    const ctaHeading = document.getElementById('bottom-cta-heading');
+    if (ctaHeading) {
+      ctaHeading.textContent = 'Ready for your next hackathon?';
+    }
+
     startHeartbeat();
     setInterval(fetchOnlineUsers, 15000);
     fetchOnlineUsers();
@@ -520,6 +535,22 @@ async function loginUser() {
       localStorage.setItem('userCollege', data.user?.college || '');
       document.getElementById('nav-auth').style.display = 'none';
       document.getElementById('nav-app').style.display = 'flex';
+      
+      const btn1 = document.getElementById('get-started-btn');
+      if (btn1) {
+        btn1.textContent = 'Explore Hackathons →';
+        btn1.setAttribute('onclick', "goTo('dashboard')");
+      }
+      const btn2 = document.getElementById('get-started-btn2');
+      if (btn2) {
+        btn2.textContent = 'Explore Hackathons →';
+        btn2.setAttribute('onclick', "goTo('dashboard')");
+      }
+      const ctaHeading = document.getElementById('bottom-cta-heading');
+      if (ctaHeading) {
+        ctaHeading.textContent = 'Ready for your next hackathon?';
+      }
+
       const pendingJoin = sessionStorage.getItem('pendingJoinTeam');
       if (pendingJoin) {
         sessionStorage.removeItem('pendingJoinTeam');
@@ -626,6 +657,22 @@ async function verifyOTP() {
       pendingSignupData = null;
       document.getElementById('nav-auth').style.display = 'none';
       document.getElementById('nav-app').style.display = 'flex';
+      
+      const btn1 = document.getElementById('get-started-btn');
+      if (btn1) {
+        btn1.textContent = 'Explore Hackathons →';
+        btn1.setAttribute('onclick', "goTo('dashboard')");
+      }
+      const btn2 = document.getElementById('get-started-btn2');
+      if (btn2) {
+        btn2.textContent = 'Explore Hackathons →';
+        btn2.setAttribute('onclick', "goTo('dashboard')");
+      }
+      const ctaHeading = document.getElementById('bottom-cta-heading');
+      if (ctaHeading) {
+        ctaHeading.textContent = 'Ready for your next hackathon?';
+      }
+
       goTo('dashboard');
       showToast('Success', 'Signup Successful!', `Welcome to Hack/Alert, ${signedUpName}!`);
     } else {
@@ -821,8 +868,22 @@ function confirmLogout() {
   localStorage.removeItem('userSkills');
   localStorage.removeItem('userMobile');
   localStorage.removeItem('userCollege');
-  const btn = document.getElementById('get-started-btn');
-  if (btn) btn.style.display = '';
+  
+  const btn1 = document.getElementById('get-started-btn');
+  if (btn1) {
+    btn1.textContent = "Get Started — It's Free →";
+    btn1.setAttribute('onclick', "goTo('signup')");
+  }
+  const btn2 = document.getElementById('get-started-btn2');
+  if (btn2) {
+    btn2.textContent = 'Create Free Account →';
+    btn2.setAttribute('onclick', "goTo('signup')");
+  }
+  const ctaHeading = document.getElementById('bottom-cta-heading');
+  if (ctaHeading) {
+    ctaHeading.textContent = 'Ready to win your first hackathon?';
+  }
+  
   goTo('landing');
 }
 
