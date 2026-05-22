@@ -45,10 +45,18 @@ function safeHTML(html) {
 }
 
 function authHeaders() {
-  return {
+  const headers = {
     'Content-Type': 'application/json'
-    // authToken is now sent automatically via HttpOnly cookies
   };
+  
+  // Fallback: send the old authToken if it exists, to seamlessly migrate users 
+  // who logged in before HttpOnly cookies were introduced.
+  const oldToken = localStorage.getItem('authToken');
+  if (oldToken) {
+    headers['Authorization'] = `Bearer ${oldToken}`;
+  }
+  
+  return headers;
 }
 
 function getCountdown(dateStr) {
