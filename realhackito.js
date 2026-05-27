@@ -1740,7 +1740,7 @@ async function searchUsers(q) {
         return;
       }
 
-      resultsDiv.innerHTML = safeHTML(users.map(u => `
+      resultsDiv.innerHTML = users.map(u => `
         <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
           <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#050508;flex-shrink:0;">
             ${escapeHTML(u.name.charAt(0).toUpperCase())}
@@ -1753,12 +1753,12 @@ async function searchUsers(q) {
             <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
             ${u.bio ? `<p style="color:var(--muted);font-size:12px;margin-top:2px;">${escapeHTML(u.bio)}</p>` : ''}
           </div>
-          <button onclick="sendFriendRequest('${escapeHTML(u.email)}')"
+          <button onclick="sendFriendRequest(this, '${escapeHTML(u.email)}')"
             style="background:var(--accent);color:#050508;border:none;padding:6px 14px;border-radius:8px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
             + Add
           </button>
         </div>
-      `).join(''));
+      `).join('');
     } catch (e) {
       document.getElementById('user-search-results').innerHTML = '<p style="color:#ef4444;font-size:13px;">Error searching users.</p>';
     }
@@ -1768,7 +1768,7 @@ async function searchUsers(q) {
 function showUserResults(users) {
   const resultsDiv = document.getElementById('user-search-results');
   if (!users.length) { resultsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No users found.</p>'; return; }
-  resultsDiv.innerHTML = safeHTML(users.map(u => `
+  resultsDiv.innerHTML = users.map(u => `
     <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
       <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#050508;flex-shrink:0;">
         ${escapeHTML(u.name.charAt(0).toUpperCase())}
@@ -1782,15 +1782,19 @@ function showUserResults(users) {
         <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
         ${u.bio ? `<p style="color:var(--muted);font-size:12px;margin-top:2px;">${escapeHTML(u.bio)}</p>` : ''}
       </div>
-      <button onclick="sendFriendRequest('${escapeHTML(u.email)}')"
+      <button onclick="sendFriendRequest(this, '${escapeHTML(u.email)}')"
         style="background:var(--accent);color:#050508;border:none;padding:6px 14px;border-radius:8px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
         + Add
       </button>
     </div>
-  `).join(''));
+  `).join('');
 }
 
-async function sendFriendRequest(to_email) {
+async function sendFriendRequest(btn, to_email) {
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = 'Sending...';
+  }
   try {
     const res = await fetch('/api/friends/request', {
       method: 'POST',
@@ -1799,10 +1803,26 @@ async function sendFriendRequest(to_email) {
       body: JSON.stringify({ to_email })
     });
     const data = await res.json();
-    if (res.ok) showToast('✅', 'Request Sent!', 'Friend request sent successfully.');
-    else showToast('❌', 'Error', data.error);
+    if (res.ok) {
+      showToast('✅', 'Request Sent!', 'Friend request sent successfully.');
+      if (btn) {
+        btn.innerText = 'Pending';
+        btn.style.background = '#64748b'; // Muted color
+        btn.style.color = '#fff';
+      }
+    } else {
+      showToast('❌', 'Error', data.error);
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = '+ Add';
+      }
+    }
   } catch (e) {
     showToast('❌', 'Error', 'Could not send request.');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = '+ Add';
+    }
   }
 }
 
@@ -1814,7 +1834,7 @@ async function loadFriends() {
     const pendingDiv = document.getElementById('pending-requests');
 
     if (requests.length) {
-      pendingDiv.innerHTML = safeHTML(`
+      pendingDiv.innerHTML = `
         <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:10px;">📬 PENDING REQUESTS (${requests.length})</h4>
         ${requests.map(r => `
           <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);border-radius:10px;margin-bottom:8px;">
@@ -1826,7 +1846,7 @@ async function loadFriends() {
             <button onclick="respondRequest(${r.id}, 'declined')" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;">✕</button>
           </div>
         `).join('')}
-      `);
+      `;
     } else {
       pendingDiv.innerHTML = '';
     }
@@ -1841,7 +1861,7 @@ async function loadFriends() {
       return;
     }
 
-    friendsDiv.innerHTML = safeHTML(`
+    friendsDiv.innerHTML = `
         <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS (${friends.length})</h4>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
           ${friends.map(f => `
@@ -1862,7 +1882,7 @@ async function loadFriends() {
             </div>
           `).join('')}
         </div>
-      `);
+      `;
   } catch (e) {
     console.error('Error loading friends:', e);
   }

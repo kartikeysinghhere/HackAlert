@@ -835,7 +835,7 @@
       "label": "loadFriends()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1809",
+      "source_location": "L1829",
       "id": "hackito_old_realhackito_loadfriends",
       "community": 1,
       "norm_label": "loadfriends()"
@@ -844,7 +844,7 @@
       "label": "respondRequest()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1871",
+      "source_location": "L1891",
       "id": "hackito_old_realhackito_respondrequest",
       "community": 1,
       "norm_label": "respondrequest()"
@@ -853,7 +853,7 @@
       "label": "removeFriend()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1888",
+      "source_location": "L1908",
       "id": "hackito_old_realhackito_removefriend",
       "community": 1,
       "norm_label": "removefriend()"
@@ -862,7 +862,7 @@
       "label": "generateIdeas()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1899",
+      "source_location": "L1919",
       "id": "hackito_old_realhackito_generateideas",
       "community": 2,
       "norm_label": "generateideas()"
@@ -871,7 +871,7 @@
       "label": "analyzeHackathon()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L1985",
+      "source_location": "L2005",
       "id": "hackito_old_realhackito_analyzehackathon",
       "community": 2,
       "norm_label": "analyzehackathon()"
@@ -880,7 +880,7 @@
       "label": "toggleNavMenu()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2091",
+      "source_location": "L2111",
       "id": "hackito_old_realhackito_togglenavmenu",
       "community": 0,
       "norm_label": "togglenavmenu()"
@@ -889,7 +889,7 @@
       "label": "eyeUnseen()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2109",
+      "source_location": "L2129",
       "id": "hackito_old_realhackito_eyeunseen",
       "community": 2,
       "norm_label": "eyeunseen()"
@@ -898,7 +898,7 @@
       "label": "eyeSeen()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2119",
+      "source_location": "L2139",
       "id": "hackito_old_realhackito_eyeseen",
       "community": 2,
       "norm_label": "eyeseen()"
@@ -907,7 +907,7 @@
       "label": "loadConversations()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2128",
+      "source_location": "L2148",
       "id": "hackito_old_realhackito_loadconversations",
       "community": 2,
       "norm_label": "loadconversations()"
@@ -916,7 +916,7 @@
       "label": "openDMChat()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2169",
+      "source_location": "L2189",
       "id": "hackito_old_realhackito_opendmchat",
       "community": 2,
       "norm_label": "opendmchat()"
@@ -925,7 +925,7 @@
       "label": "loadDMMessages()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2213",
+      "source_location": "L2233",
       "id": "hackito_old_realhackito_loaddmmessages",
       "community": 2,
       "norm_label": "loaddmmessages()"
@@ -934,7 +934,7 @@
       "label": "appendDMMessage()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2228",
+      "source_location": "L2248",
       "id": "hackito_old_realhackito_appenddmmessage",
       "community": 2,
       "norm_label": "appenddmmessage()"
@@ -943,7 +943,7 @@
       "label": "sendDM()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2250",
+      "source_location": "L2270",
       "id": "hackito_old_realhackito_senddm",
       "community": 1,
       "norm_label": "senddm()"
@@ -952,7 +952,7 @@
       "label": "initSpeechRecognition()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2282",
+      "source_location": "L2302",
       "id": "hackito_old_realhackito_initspeechrecognition",
       "community": 1,
       "norm_label": "initspeechrecognition()"
@@ -961,7 +961,7 @@
       "label": "toggleVoiceInput()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2342",
+      "source_location": "L2362",
       "id": "hackito_old_realhackito_togglevoiceinput",
       "community": 1,
       "norm_label": "togglevoiceinput()"
@@ -970,7 +970,7 @@
       "label": "stopListening()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2363",
+      "source_location": "L2383",
       "id": "hackito_old_realhackito_stoplistening",
       "community": 1,
       "norm_label": "stoplistening()"
@@ -979,7 +979,7 @@
       "label": "stopSpeech()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2401",
+      "source_location": "L2421",
       "id": "hackito_old_realhackito_stopspeech",
       "community": 0,
       "norm_label": "stopspeech()"
@@ -988,7 +988,7 @@
       "label": "suggestTranslation()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2407",
+      "source_location": "L2427",
       "id": "hackito_old_realhackito_suggesttranslation",
       "community": 1,
       "norm_label": "suggesttranslation()"
@@ -997,7 +997,7 @@
       "label": "startCountdowns()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2411",
+      "source_location": "L2431",
       "id": "hackito_old_realhackito_startcountdowns",
       "community": 0,
       "norm_label": "startcountdowns()"
@@ -1006,7 +1006,7 @@
       "label": "openPublicProfile()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2435",
+      "source_location": "L2455",
       "id": "hackito_old_realhackito_openpublicprofile",
       "community": 0,
       "norm_label": "openpublicprofile()"
@@ -1015,7 +1015,7 @@
       "label": "showBugReport()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2500",
+      "source_location": "L2520",
       "id": "hackito_old_realhackito_showbugreport",
       "community": 0,
       "norm_label": "showbugreport()"
@@ -1024,7 +1024,7 @@
       "label": "hideBugReport()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2504",
+      "source_location": "L2524",
       "id": "hackito_old_realhackito_hidebugreport",
       "community": 0,
       "norm_label": "hidebugreport()"
@@ -1033,7 +1033,7 @@
       "label": "submitBugReport()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2513",
+      "source_location": "L2533",
       "id": "hackito_old_realhackito_submitbugreport",
       "community": 0,
       "norm_label": "submitbugreport()"
@@ -1042,7 +1042,7 @@
       "label": "startHeartbeat()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2547",
+      "source_location": "L2567",
       "id": "hackito_old_realhackito_startheartbeat",
       "community": 7,
       "norm_label": "startheartbeat()"
@@ -1051,7 +1051,7 @@
       "label": "fetchOnlineUsers()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2559",
+      "source_location": "L2579",
       "id": "hackito_old_realhackito_fetchonlineusers",
       "community": 7,
       "norm_label": "fetchonlineusers()"
@@ -1060,7 +1060,7 @@
       "label": "isOnline()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2567",
+      "source_location": "L2587",
       "id": "hackito_old_realhackito_isonline",
       "community": 0,
       "norm_label": "isonline()"
@@ -1069,7 +1069,7 @@
       "label": "onlineDot()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2571",
+      "source_location": "L2591",
       "id": "hackito_old_realhackito_onlinedot",
       "community": 0,
       "norm_label": "onlinedot()"
@@ -1078,7 +1078,7 @@
       "label": "showCreateTeammateModal()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2577",
+      "source_location": "L2597",
       "id": "hackito_old_realhackito_showcreateteammatemodal",
       "community": 0,
       "norm_label": "showcreateteammatemodal()"
@@ -1087,7 +1087,7 @@
       "label": "hideCreateTeammateModal()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2578",
+      "source_location": "L2598",
       "id": "hackito_old_realhackito_hidecreateteammatemodal",
       "community": 0,
       "norm_label": "hidecreateteammatemodal()"
@@ -1096,7 +1096,7 @@
       "label": "fetchTeammates()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2580",
+      "source_location": "L2600",
       "id": "hackito_old_realhackito_fetchteammates",
       "community": 0,
       "norm_label": "fetchteammates()"
@@ -1105,7 +1105,7 @@
       "label": "submitTeammateListing()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2622",
+      "source_location": "L2642",
       "id": "hackito_old_realhackito_submitteammatelisting",
       "community": 0,
       "norm_label": "submitteammatelisting()"
@@ -1114,7 +1114,7 @@
       "label": "deleteTeammateListing()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2659",
+      "source_location": "L2679",
       "id": "hackito_old_realhackito_deleteteammatelisting",
       "community": 0,
       "norm_label": "deleteteammatelisting()"
@@ -1123,7 +1123,7 @@
       "label": "markTeammateFilled()",
       "file_type": "code",
       "source_file": "realhackito.js",
-      "source_location": "L2670",
+      "source_location": "L2690",
       "id": "hackito_old_realhackito_markteammatefilled",
       "community": 0,
       "norm_label": "markteammatefilled()"
@@ -3749,9 +3749,9 @@
       "source_file": "realhackito.js",
       "source_location": "L1694",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "realhackito_js",
-      "target": "hackito_old_realhackito_loadfindfriends",
-      "confidence_score": 1.0
+      "target": "hackito_old_realhackito_loadfindfriends"
     },
     {
       "relation": "contains",
@@ -4500,28 +4500,6 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "realhackito.js",
-      "source_location": "L1699",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hackito_old_realhackito_showuserresults",
-      "target": "hackito_old_realhackito_safehtml"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
-      "source_location": "L1745",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hackito_old_realhackito_loadfriends",
-      "target": "hackito_old_realhackito_safehtml"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "realhackito.js",
       "source_location": "L1837",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -4581,6 +4559,28 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hackito_old_realhackito_openpublicprofile",
+      "target": "hackito_old_realhackito_safehtml"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L1699",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_showuserresults",
+      "target": "hackito_old_realhackito_safehtml"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "realhackito.js",
+      "source_location": "L1745",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_realhackito_loadfriends",
       "target": "hackito_old_realhackito_safehtml"
     },
     {
@@ -4700,9 +4700,9 @@
       "source_file": "realhackito.js",
       "source_location": "L1697",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hackito_old_realhackito_loadfindfriends",
-      "target": "hackito_old_realhackito_authheaders",
-      "confidence_score": 1.0
+      "target": "hackito_old_realhackito_authheaders"
     },
     {
       "relation": "calls",
@@ -5019,9 +5019,9 @@
       "source_file": "realhackito.js",
       "source_location": "L291",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hackito_old_realhackito_goto",
-      "target": "hackito_old_realhackito_loadfindfriends",
-      "confidence_score": 1.0
+      "target": "hackito_old_realhackito_loadfindfriends"
     },
     {
       "relation": "calls",
@@ -7634,5 +7634,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "35dc6f10a0679def97177fca19b62d6895051f5c"
+  "built_at_commit": "057d1f14b9290d647b799f52cbcb148f2b639364"
 }
