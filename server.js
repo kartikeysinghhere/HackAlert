@@ -175,7 +175,7 @@ function rankHackathonsForQuestion(hackathons, intent, userProfile) {
 
 function authenticate(req, res, next) {
   const token = req.cookies.authToken || (req.headers['authorization']?.startsWith('Bearer ') ? req.headers['authorization'].slice(7) : null);
-  
+
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
@@ -290,7 +290,7 @@ app.get('/api/teammates', async (req, res) => {
   const { skill, hackathon } = req.query;
   try {
     let query = supabase.from('teammate_listings').select('*').eq('active', true).order('created_at', { ascending: false });
-    
+
     if (skill) {
       query = query.ilike('tech_stack', `%${sanitizeInput(skill)}%`);
     }
@@ -337,11 +337,11 @@ app.post('/api/forgot-password', emailLimiter, async (req, res) => {
   if (!email || !isValidEmail(email)) return res.status(400).json({ error: 'Valid email required' });
 
   const normalizedEmail = normalizeEmail(email);
-  
+
   try {
     // 1. Check if user exists (quietly)
     const { data: user } = await supabase.from('users').select('id, name').eq('email', normalizedEmail).single();
-    
+
     if (user) {
       // 2. Generate secure token
       const token = crypto.randomBytes(32).toString('hex');
@@ -608,7 +608,7 @@ async function syncHackathons() {
     // Optional: Sync to a 'hackathon_cache' table if you want persistence across restarts
     // await supabase.from('hackathon_cache').delete().neq('id', 0);
     // await supabase.from('hackathon_cache').insert(unique);
-    
+
     console.log(`✅ Cached ${unique.length} hackathons`);
   } catch (err) {
     console.error("Hackathon sync error:", err);
@@ -620,17 +620,32 @@ cron.schedule('0 */4 * * *', syncHackathons);
 syncHackathons();
 
 app.get('/api/hackathons', async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
-  const start = (page - 1) * limit;
-  const end = start + limit;
+  try {
+    const { data, error } = await supabase
+      .from('hackathons_cache')
+      .select('*')
+      .order('start_date', { ascending: true });
 
-  if (globalHackathons.length > 0) {
-    return res.json(globalHackathons.slice(start, end));
+    if (error) throw error;
+
+    const mapped = (data || []).map(h => ({
+      name: h.name,
+      start: h.start_date,
+      end: h.end_date,
+      city: h.city,
+      country: h.country,
+      website: h.website,
+      virtual: h.virtual,
+      hybrid: h.hybrid,
+      banner: h.banner,
+      logo: h.logo
+    }));
+
+    globalHackathons = mapped;
+    res.json(mapped);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch hackathons' });
   }
-  // Fallback if cache is empty
-  await syncHackathons();
-  res.json(globalHackathons.slice(start, end));
 });
 
 app.post('/ask', async (req, res) => {
@@ -848,14 +863,14 @@ app.post('/api/verify-otp', async (req, res) => {
 
 app.post('/api/signup', async (req, res) => {
   const { pass, gender } = req.body;
-  
+
   const name = sanitizeInput(req.body.name);
   const mobile = sanitizeInput(req.body.mobile);
   const college = sanitizeInput(req.body.college);
   const username = sanitizeInput(req.body.username);
   const bio = sanitizeInput(req.body.bio);
   const skills = sanitizeInput(req.body.skills);
-  
+
   const email = normalizeEmail(req.body.email);
   if (!name || !email || !pass || !username) return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
   if (!isValidEmail(email)) return res.status(400).json({ error: 'Invalid email' });
@@ -931,7 +946,7 @@ app.get('/api/teams', async (req, res) => {
     .select('*')
     .order('created_at', { ascending: false })
     .range(start, end);
-    
+
   if (error) return handleError(res, error);
   res.json(data);
 });
@@ -1004,9 +1019,9 @@ app.post('/api/teams/:id/messages', authenticate, async (req, res) => {
   if (!member) return res.status(403).json({ error: 'Not a team member' });
 
   if (!message) return res.status(400).json({ error: 'Empty message' });
-  
+
   const sanitizedMessage = sanitizeInput(message);
-  
+
   if (bannedWords.some(w => sanitizedMessage.toLowerCase().includes(w))) return res.status(400).json({ error: 'Message contains inappropriate language' });
   const newMessage = { team_id: id, sender_email, sender_name, message: sanitizedMessage };
   const { data, error } = await supabase.from('team_messages').insert([newMessage]).select().single();
@@ -1122,7 +1137,7 @@ app.post('/api/teams/:id/project', authenticate, async (req, res) => {
   const github_link = sanitizeInput(req.body.github_link);
   const demo_link = sanitizeInput(req.body.demo_link);
   const tech_stack = sanitizeInput(req.body.tech_stack);
-  
+
   const team_id = req.params.id;
   const submitted_by = req.user.email;
   if (!title) return res.status(400).json({ error: 'Title is required' });
