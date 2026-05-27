@@ -267,7 +267,7 @@ function filterCards(btn, type) {
 
 // ── Page navigation ──
 function goTo(pageId) {
-  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages', 'ai-tools', 'public-profile'];
+  const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages', 'ai-tools', 'public-profile', 'find-teammates', 'find-friends'];
   const authPages = ['login', 'signup', 'forgot-password', 'reset-password'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
@@ -288,6 +288,7 @@ function goTo(pageId) {
   if (pageId === 'profile') loadProfile();
   if (pageId === 'teams') loadTeams();
   if (pageId === 'find-teammates') fetchTeammates();
+  if (pageId === 'find-friends') loadFindFriends();
   if (pageId === 'calendar') renderCalendar();
   if (pageId === 'showcase') loadShowcase();
   if (pageId === 'messages') loadConversations();
@@ -1690,8 +1691,18 @@ function selectGender(val) {
 
 // ── FRIEND SYSTEM ──
 
+function loadFindFriends() {
+  document.getElementById('user-search-results').innerHTML = '';
+  document.getElementById('user-search-input').value = '';
+  fetch(`/api/users/search?q=a`, { headers: authHeaders(), credentials: 'include' })
+    .then(r => r.json())
+    .then(users => showUserResults(users))
+    .catch(() => { });
+}
+
 function showUserSearch() {
-  openModal('user-search-modal');
+  goTo('find-friends');
+  return;
   document.getElementById('user-search-results').innerHTML = '';
   document.getElementById('user-search-input').value = '';
   fetch(`/api/users/search?q=a`, { headers: authHeaders(), credentials: 'include' })
@@ -2589,18 +2600,18 @@ async function fetchTeammates() {
         <button onclick="markTeammateFilled('${tm.id}')" title="Mark as Filled" style="background:var(--accent);border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:#000;">✅ Filled</button>
         <button onclick="deleteTeammateListing('${tm.id}')" title="Delete" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;">🗑️ Delete</button>
       </div>` : ''}
-      <div style="font-family:var(--mono);font-size:11px;color:var(--accent);">${DOMPurify.sanitize(tm.hackathon_name)}</div>
-      <h3 style="color:#fff;margin:0;">${DOMPurify.sanitize(tm.required_role)}</h3>
-      <p style="color:var(--muted);font-size:13px;margin:0;">${DOMPurify.sanitize(tm.description)}</p>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--accent);">${safeHTML(tm.hackathon_name)}</div>
+      <h3 style="color:#fff;margin:0;">${safeHTML(tm.required_role)}</h3>
+      <p style="color:var(--muted);font-size:13px;margin:0;">${safeHTML(tm.description)}</p>
       
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">🛠 ${DOMPurify.sanitize(tm.tech_stack)}</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">⭐ ${DOMPurify.sanitize(tm.experience_level)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">🛠 ${safeHTML(tm.tech_stack)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">⭐ ${safeHTML(tm.experience_level)}</span>
         <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">👥 ${tm.team_size_remaining} spots</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">📍 ${DOMPurify.sanitize(tm.mode)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">📍 ${safeHTML(tm.mode)}</span>
       </div>
       <div style="margin-top:12px;">
-        <a href="mailto:${DOMPurify.sanitize(tm.creator_email)}" style="display:block;text-align:center;background:rgba(0,240,255,0.1);color:var(--accent);border:1px solid rgba(0,240,255,0.3);padding:8px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;">✉️ Contact ${DOMPurify.sanitize(tm.creator_email)}</a>
+        <a href="mailto:${safeHTML(tm.creator_email)}" style="display:block;text-align:center;background:rgba(0,240,255,0.1);color:var(--accent);border:1px solid rgba(0,240,255,0.3);padding:8px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;">✉️ Contact ${safeHTML(tm.creator_email)}</a>
       </div>
     </div>`).join('');
   } catch (err) {

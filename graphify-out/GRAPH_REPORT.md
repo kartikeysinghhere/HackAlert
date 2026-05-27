@@ -1,16 +1,16 @@
-# Graph Report - hackito_old  (2026-05-22)
+# Graph Report - hackito_old  (2026-05-27)
 
 ## Corpus Check
-- 78 files · ~52,415 words
+- 78 files · ~52,512 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 316 nodes · 453 edges · 73 communities (65 shown, 8 thin omitted)
+- 317 nodes · 456 edges · 73 communities (65 shown, 8 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f6ac9765`
+- Built from commit: `35dc6f10`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -38,8 +38,8 @@
 ## God Nodes (most connected - your core abstractions)
 1. `showToast()` - 33 edges
 2. `safeHTML()` - 25 edges
-3. `authHeaders()` - 24 edges
-4. `goTo()` - 18 edges
+3. `authHeaders()` - 25 edges
+4. `goTo()` - 19 edges
 5. `escapeHTML()` - 15 edges
 6. `openModal()` - 13 edges
 7. `closeModal()` - 11 edges
@@ -59,7 +59,7 @@
 
 ### Community 0 - "General UI Interaction"
 Cohesion: 0.06
-Nodes (46): closeModal(), confirmLogout(), copyLink(), deleteTeammateListing(), fallbackCopy(), fetchHackathons(), fetchTeammates(), getFallbackHackathons() (+38 more)
+Nodes (47): closeModal(), confirmLogout(), copyLink(), deleteTeammateListing(), fallbackCopy(), fetchHackathons(), fetchTeammates(), getFallbackHackathons() (+39 more)
 
 ### Community 1 - "Chat Messaging"
 Cohesion: 0.12
