@@ -1668,20 +1668,34 @@ body.light #back-top {
 
 @media (max-width: 600px) {
   .cal-grid {
-    gap: 2px;
+    gap: 1px;
   }
-
+  
   .cal-day {
-    min-height: 60px;
-    padding: 4px;
+    min-height: 50px;
+    padding: 3px;
   }
-
+  
+  .cal-day-num {
+    font-size: 10px;
+  }
+  
   .cal-event {
-    font-size: 9px;
+    font-size: 8px;
+    padding: 1px 3px;
   }
-
+  
   #calendar-grid {
-    padding: 0 16px 40px;
+    padding: 0 8px 40px;
+    overflow-x: hidden;
+  }
+  
+  .dash-header {
+    padding: 16px 12px;
+  }
+  
+  .dash-header h2 {
+    font-size: 20px;
   }
 }
 
