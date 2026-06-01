@@ -63,7 +63,7 @@
       "source_file": "react.js",
       "source_location": "L1",
       "id": "react_js",
-      "community": 22,
+      "community": 23,
       "norm_label": "react.js"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "react.js",
       "source_location": "L8",
       "id": "hackito_old_react_cn",
-      "community": 22,
+      "community": 23,
       "norm_label": "cn()"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_file": "realhackito_original.js",
       "source_location": "L1",
       "id": "realhackito_original_js",
-      "community": 40,
+      "community": 41,
       "norm_label": "realhackito_original.js"
     },
     {
@@ -1150,7 +1150,7 @@
       "label": "handleError()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L20",
+      "source_location": "L21",
       "id": "hackito_old_server_handleerror",
       "community": 4,
       "norm_label": "handleerror()"
@@ -1159,7 +1159,7 @@
       "label": "sanitizeInput()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L25",
+      "source_location": "L26",
       "id": "hackito_old_server_sanitizeinput",
       "community": 4,
       "norm_label": "sanitizeinput()"
@@ -1168,7 +1168,7 @@
       "label": "blockSuspiciousHeaders()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L78",
+      "source_location": "L79",
       "id": "hackito_old_server_blocksuspiciousheaders",
       "community": 4,
       "norm_label": "blocksuspiciousheaders()"
@@ -1177,7 +1177,7 @@
       "label": "censorMessage()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L102",
+      "source_location": "L103",
       "id": "hackito_old_server_censormessage",
       "community": 4,
       "norm_label": "censormessage()"
@@ -1186,7 +1186,7 @@
       "label": "sendEmail()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L114",
+      "source_location": "L115",
       "id": "hackito_old_server_sendemail",
       "community": 4,
       "norm_label": "sendemail()"
@@ -1195,7 +1195,7 @@
       "label": "compactText()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L138",
+      "source_location": "L139",
       "id": "hackito_old_server_compacttext",
       "community": 4,
       "norm_label": "compacttext()"
@@ -1204,7 +1204,7 @@
       "label": "normalizeEmail()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L142",
+      "source_location": "L143",
       "id": "hackito_old_server_normalizeemail",
       "community": 4,
       "norm_label": "normalizeemail()"
@@ -1213,7 +1213,7 @@
       "label": "isValidEmail()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L146",
+      "source_location": "L147",
       "id": "hackito_old_server_isvalidemail",
       "community": 4,
       "norm_label": "isvalidemail()"
@@ -1222,7 +1222,7 @@
       "label": "escapeEmailHTML()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L150",
+      "source_location": "L151",
       "id": "hackito_old_server_escapeemailhtml",
       "community": 4,
       "norm_label": "escapeemailhtml()"
@@ -1231,7 +1231,7 @@
       "label": "normalizeHackathon()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L161",
+      "source_location": "L162",
       "id": "hackito_old_server_normalizehackathon",
       "community": 4,
       "norm_label": "normalizehackathon()"
@@ -1240,7 +1240,7 @@
       "label": "detectHackathonIntent()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L176",
+      "source_location": "L177",
       "id": "hackito_old_server_detecthackathonintent",
       "community": 4,
       "norm_label": "detecthackathonintent()"
@@ -1249,7 +1249,7 @@
       "label": "rankHackathonsForQuestion()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L198",
+      "source_location": "L199",
       "id": "hackito_old_server_rankhackathonsforquestion",
       "community": 4,
       "norm_label": "rankhackathonsforquestion()"
@@ -1258,16 +1258,25 @@
       "label": "authenticate()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L223",
+      "source_location": "L224",
       "id": "hackito_old_server_authenticate",
       "community": 4,
       "norm_label": "authenticate()"
     },
     {
+      "label": "blockSensitiveFiles()",
+      "file_type": "code",
+      "source_file": "server.js",
+      "source_location": "L270",
+      "id": "hackito_old_server_blocksensitivefiles",
+      "community": 4,
+      "norm_label": "blocksensitivefiles()"
+    },
+    {
       "label": "syncHackathons()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L629",
+      "source_location": "L696",
       "id": "hackito_old_server_synchackathons",
       "community": 4,
       "norm_label": "synchackathons()"
@@ -1278,7 +1287,7 @@
       "source_file": "server_original.js",
       "source_location": "L1",
       "id": "server_original_js",
-      "community": 41,
+      "community": 42,
       "norm_label": "server_original.js"
     },
     {
@@ -1287,7 +1296,7 @@
       "source_file": "test_bot.js",
       "source_location": "L1",
       "id": "test_bot_js",
-      "community": 23,
+      "community": 24,
       "norm_label": "test_bot.js"
     },
     {
@@ -1296,7 +1305,7 @@
       "source_file": "test_bot.js",
       "source_location": "L3",
       "id": "hackito_old_test_bot_testbot",
-      "community": 23,
+      "community": 24,
       "norm_label": "testbot()"
     },
     {
@@ -1305,7 +1314,7 @@
       "source_file": "test_bug_report.js",
       "source_location": "L1",
       "id": "test_bug_report_js",
-      "community": 42,
+      "community": 43,
       "norm_label": "test_bug_report.js"
     },
     {
@@ -1314,7 +1323,7 @@
       "source_file": "test_full_flow.js",
       "source_location": "L1",
       "id": "test_full_flow_js",
-      "community": 43,
+      "community": 44,
       "norm_label": "test_full_flow.js"
     },
     {
@@ -1323,7 +1332,7 @@
       "source_file": "test_server_node.js",
       "source_location": "L1",
       "id": "test_server_node_js",
-      "community": 44,
+      "community": 45,
       "norm_label": "test_server_node.js"
     },
     {
@@ -1332,7 +1341,7 @@
       "source_file": "verify_fix1.js",
       "source_location": "L1",
       "id": "verify_fix1_js",
-      "community": 24,
+      "community": 25,
       "norm_label": "verify_fix1.js"
     },
     {
@@ -1341,7 +1350,7 @@
       "source_file": "verify_fix1.js",
       "source_location": "L1",
       "id": "hackito_old_verify_fix1_runtests",
-      "community": 24,
+      "community": 25,
       "norm_label": "runtests()"
     },
     {
@@ -1350,7 +1359,7 @@
       "source_file": "verify_refresh.js",
       "source_location": "L1",
       "id": "verify_refresh_js",
-      "community": 25,
+      "community": 26,
       "norm_label": "verify_refresh.js"
     },
     {
@@ -1359,7 +1368,7 @@
       "source_file": "verify_refresh.js",
       "source_location": "L3",
       "id": "hackito_old_verify_refresh_runtests",
-      "community": 25,
+      "community": 26,
       "norm_label": "runtests()"
     },
     {
@@ -1368,7 +1377,7 @@
       "source_file": "verify_schema.js",
       "source_location": "L1",
       "id": "verify_schema_js",
-      "community": 26,
+      "community": 27,
       "norm_label": "verify_schema.js"
     },
     {
@@ -1377,8 +1386,62 @@
       "source_file": "verify_schema.js",
       "source_location": "L5",
       "id": "hackito_old_verify_schema_verifyschema",
-      "community": 26,
+      "community": 27,
       "norm_label": "verifyschema()"
+    },
+    {
+      "label": "verify_security_rules.js",
+      "file_type": "code",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L1",
+      "id": "verify_security_rules_js",
+      "community": 10,
+      "norm_label": "verify_security_rules.js"
+    },
+    {
+      "label": "blockSuspiciousHeaders()",
+      "file_type": "code",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L52",
+      "id": "hackito_old_verify_security_rules_blocksuspiciousheaders",
+      "community": 10,
+      "norm_label": "blocksuspiciousheaders()"
+    },
+    {
+      "label": "makeRequest()",
+      "file_type": "code",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L108",
+      "id": "hackito_old_verify_security_rules_makerequest",
+      "community": 10,
+      "norm_label": "makerequest()"
+    },
+    {
+      "label": "testSuspiciousHeaders()",
+      "file_type": "code",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L141",
+      "id": "hackito_old_verify_security_rules_testsuspiciousheaders",
+      "community": 10,
+      "norm_label": "testsuspiciousheaders()"
+    },
+    {
+      "label": "testRequestSizeLimit()",
+      "file_type": "code",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L159",
+      "id": "hackito_old_verify_security_rules_testrequestsizelimit",
+      "community": 10,
+      "norm_label": "testrequestsizelimit()"
+    },
+    {
+      "label": "testRateLimiting()",
+      "file_type": "code",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L168",
+      "id": "hackito_old_verify_security_rules_testratelimiting",
+      "community": 10,
+      "norm_label": "testratelimiting()"
     },
     {
       "label": "ai.js",
@@ -1386,7 +1449,7 @@
       "source_file": "config/ai.js",
       "source_location": "L1",
       "id": "config_ai_js",
-      "community": 45,
+      "community": 46,
       "norm_label": "ai.js"
     },
     {
@@ -1395,7 +1458,7 @@
       "source_file": "config/db.js",
       "source_location": "L1",
       "id": "config_db_js",
-      "community": 46,
+      "community": 47,
       "norm_label": "db.js"
     },
     {
@@ -1404,7 +1467,7 @@
       "source_file": "config/env.js",
       "source_location": "L1",
       "id": "config_env_js",
-      "community": 47,
+      "community": 48,
       "norm_label": "env.js"
     },
     {
@@ -1413,7 +1476,7 @@
       "source_file": "config/mailer.js",
       "source_location": "L1",
       "id": "config_mailer_js",
-      "community": 48,
+      "community": 49,
       "norm_label": "mailer.js"
     },
     {
@@ -1422,7 +1485,7 @@
       "source_file": "config/resend.js",
       "source_location": "L1",
       "id": "config_resend_js",
-      "community": 49,
+      "community": 50,
       "norm_label": "resend.js"
     },
     {
@@ -1431,7 +1494,7 @@
       "source_file": "controllers/ai.controller.js",
       "source_location": "L1",
       "id": "controllers_ai_controller_js",
-      "community": 50,
+      "community": 51,
       "norm_label": "ai.controller.js"
     },
     {
@@ -1440,7 +1503,7 @@
       "source_file": "controllers/auth.controller.js",
       "source_location": "L1",
       "id": "controllers_auth_controller_js",
-      "community": 51,
+      "community": 52,
       "norm_label": "auth.controller.js"
     },
     {
@@ -1449,7 +1512,7 @@
       "source_file": "controllers/hackathons.controller.js",
       "source_location": "L1",
       "id": "controllers_hackathons_controller_js",
-      "community": 52,
+      "community": 53,
       "norm_label": "hackathons.controller.js"
     },
     {
@@ -1458,7 +1521,7 @@
       "source_file": "controllers/messaging.controller.js",
       "source_location": "L1",
       "id": "controllers_messaging_controller_js",
-      "community": 27,
+      "community": 28,
       "norm_label": "messaging.controller.js"
     },
     {
@@ -1467,7 +1530,7 @@
       "source_file": "controllers/messaging.controller.js",
       "source_location": "L27",
       "id": "controllers_messaging_controller_streammessages",
-      "community": 27,
+      "community": 28,
       "norm_label": "streammessages()"
     },
     {
@@ -1476,7 +1539,7 @@
       "source_file": "controllers/teams.controller.js",
       "source_location": "L1",
       "id": "controllers_teams_controller_js",
-      "community": 53,
+      "community": 54,
       "norm_label": "teams.controller.js"
     },
     {
@@ -1485,7 +1548,7 @@
       "source_file": "controllers/users.controller.js",
       "source_location": "L1",
       "id": "controllers_users_controller_js",
-      "community": 54,
+      "community": 55,
       "norm_label": "users.controller.js"
     },
     {
@@ -1494,7 +1557,7 @@
       "source_file": "jobs/alerts.job.js",
       "source_location": "L1",
       "id": "jobs_alerts_job_js",
-      "community": 28,
+      "community": 29,
       "norm_label": "alerts.job.js"
     },
     {
@@ -1503,7 +1566,7 @@
       "source_file": "jobs/alerts.job.js",
       "source_location": "L5",
       "id": "jobs_alerts_job_initalertjobs",
-      "community": 28,
+      "community": 29,
       "norm_label": "initalertjobs()"
     },
     {
@@ -1512,7 +1575,7 @@
       "source_file": "middleware/auth.js",
       "source_location": "L1",
       "id": "middleware_auth_js",
-      "community": 29,
+      "community": 30,
       "norm_label": "auth.js"
     },
     {
@@ -1521,7 +1584,7 @@
       "source_file": "middleware/auth.js",
       "source_location": "L9",
       "id": "middleware_auth_authenticate",
-      "community": 29,
+      "community": 30,
       "norm_label": "authenticate()"
     },
     {
@@ -1530,7 +1593,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L1",
       "id": "middleware_sanitize_js",
-      "community": 15,
+      "community": 16,
       "norm_label": "sanitize.js"
     },
     {
@@ -1539,7 +1602,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L11",
       "id": "middleware_sanitize_sanitizebody",
-      "community": 15,
+      "community": 16,
       "norm_label": "sanitizebody()"
     },
     {
@@ -1548,7 +1611,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L18",
       "id": "middleware_sanitize_sanitizeobject",
-      "community": 15,
+      "community": 16,
       "norm_label": "sanitizeobject()"
     },
     {
@@ -1557,7 +1620,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L41",
       "id": "middleware_sanitize_sanitizerichtext",
-      "community": 15,
+      "community": 16,
       "norm_label": "sanitizerichtext()"
     },
     {
@@ -1566,7 +1629,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L1",
       "id": "middleware_security_js",
-      "community": 19,
+      "community": 20,
       "norm_label": "security.js"
     },
     {
@@ -1575,7 +1638,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L60",
       "id": "middleware_security_botprotection",
-      "community": 19,
+      "community": 20,
       "norm_label": "botprotection()"
     },
     {
@@ -1584,7 +1647,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L78",
       "id": "middleware_security_aipromptsanitycheck",
-      "community": 19,
+      "community": 20,
       "norm_label": "aipromptsanitycheck()"
     },
     {
@@ -1593,7 +1656,7 @@
       "source_file": "middleware/validate.js",
       "source_location": "L1",
       "id": "middleware_validate_js",
-      "community": 30,
+      "community": 31,
       "norm_label": "validate.js"
     },
     {
@@ -1602,7 +1665,7 @@
       "source_file": "middleware/validate.js",
       "source_location": "L7",
       "id": "middleware_validate_validate",
-      "community": 30,
+      "community": 31,
       "norm_label": "validate()"
     },
     {
@@ -1611,7 +1674,7 @@
       "source_file": "routes/ai.routes.js",
       "source_location": "L1",
       "id": "routes_ai_routes_js",
-      "community": 55,
+      "community": 56,
       "norm_label": "ai.routes.js"
     },
     {
@@ -1620,7 +1683,7 @@
       "source_file": "routes/auth.routes.js",
       "source_location": "L1",
       "id": "routes_auth_routes_js",
-      "community": 56,
+      "community": 57,
       "norm_label": "auth.routes.js"
     },
     {
@@ -1629,7 +1692,7 @@
       "source_file": "routes/chat.routes.js",
       "source_location": "L1",
       "id": "routes_chat_routes_js",
-      "community": 31,
+      "community": 32,
       "norm_label": "chat.routes.js"
     },
     {
@@ -1638,7 +1701,7 @@
       "source_file": "routes/chat.routes.js",
       "source_location": "L16",
       "id": "routes_chat_routes_includes",
-      "community": 31,
+      "community": 32,
       "norm_label": "includes()"
     },
     {
@@ -1647,7 +1710,7 @@
       "source_file": "routes/hackathons.routes.js",
       "source_location": "L1",
       "id": "routes_hackathons_routes_js",
-      "community": 57,
+      "community": 58,
       "norm_label": "hackathons.routes.js"
     },
     {
@@ -1656,7 +1719,7 @@
       "source_file": "routes/messaging.routes.js",
       "source_location": "L1",
       "id": "routes_messaging_routes_js",
-      "community": 58,
+      "community": 59,
       "norm_label": "messaging.routes.js"
     },
     {
@@ -1665,7 +1728,7 @@
       "source_file": "routes/teams.routes.js",
       "source_location": "L1",
       "id": "routes_teams_routes_js",
-      "community": 59,
+      "community": 60,
       "norm_label": "teams.routes.js"
     },
     {
@@ -1674,7 +1737,7 @@
       "source_file": "routes/users.routes.js",
       "source_location": "L1",
       "id": "routes_users_routes_js",
-      "community": 60,
+      "community": 61,
       "norm_label": "users.routes.js"
     },
     {
@@ -1683,7 +1746,7 @@
       "source_file": "schemas/ai.schema.js",
       "source_location": "L1",
       "id": "schemas_ai_schema_js",
-      "community": 61,
+      "community": 62,
       "norm_label": "ai.schema.js"
     },
     {
@@ -1692,7 +1755,7 @@
       "source_file": "schemas/auth.schema.js",
       "source_location": "L1",
       "id": "schemas_auth_schema_js",
-      "community": 62,
+      "community": 63,
       "norm_label": "auth.schema.js"
     },
     {
@@ -1701,7 +1764,7 @@
       "source_file": "schemas/hackathon.schema.js",
       "source_location": "L1",
       "id": "schemas_hackathon_schema_js",
-      "community": 63,
+      "community": 64,
       "norm_label": "hackathon.schema.js"
     },
     {
@@ -1710,7 +1773,7 @@
       "source_file": "schemas/profile.schema.js",
       "source_location": "L1",
       "id": "schemas_profile_schema_js",
-      "community": 64,
+      "community": 65,
       "norm_label": "profile.schema.js"
     },
     {
@@ -1719,7 +1782,7 @@
       "source_file": "schemas/team.schema.js",
       "source_location": "L1",
       "id": "schemas_team_schema_js",
-      "community": 65,
+      "community": 66,
       "norm_label": "team.schema.js"
     },
     {
@@ -1728,7 +1791,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L1",
       "id": "services_ai_service_js",
-      "community": 20,
+      "community": 21,
       "norm_label": "ai.service.js"
     },
     {
@@ -1737,7 +1800,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L4",
       "id": "services_ai_service_generateideas",
-      "community": 20,
+      "community": 21,
       "norm_label": "generateideas()"
     },
     {
@@ -1746,7 +1809,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L44",
       "id": "services_ai_service_analyzedifficulty",
-      "community": 20,
+      "community": 21,
       "norm_label": "analyzedifficulty()"
     },
     {
@@ -1935,7 +1998,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L1",
       "id": "services_messaging_service_js",
-      "community": 11,
+      "community": 12,
       "norm_label": "messaging.service.js"
     },
     {
@@ -1944,7 +2007,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L5",
       "id": "services_messaging_service_getconversations",
-      "community": 11,
+      "community": 12,
       "norm_label": "getconversations()"
     },
     {
@@ -1953,7 +2016,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L44",
       "id": "services_messaging_service_getmessages",
-      "community": 11,
+      "community": 12,
       "norm_label": "getmessages()"
     },
     {
@@ -1962,7 +2025,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L63",
       "id": "services_messaging_service_sendmessage",
-      "community": 11,
+      "community": 12,
       "norm_label": "sendmessage()"
     },
     {
@@ -1971,7 +2034,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L87",
       "id": "services_messaging_service_markseen",
-      "community": 11,
+      "community": 12,
       "norm_label": "markseen()"
     },
     {
@@ -1980,7 +2043,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L1",
       "id": "services_realtime_service_js",
-      "community": 16,
+      "community": 17,
       "norm_label": "realtime.service.js"
     },
     {
@@ -1989,7 +2052,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L3",
       "id": "services_realtime_service_addclient",
-      "community": 16,
+      "community": 17,
       "norm_label": "addclient()"
     },
     {
@@ -1998,7 +2061,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L8",
       "id": "services_realtime_service_removeclient",
-      "community": 16,
+      "community": 17,
       "norm_label": "removeclient()"
     },
     {
@@ -2007,7 +2070,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L14",
       "id": "services_realtime_service_broadcasttokey",
-      "community": 16,
+      "community": 17,
       "norm_label": "broadcasttokey()"
     },
     {
@@ -2142,7 +2205,7 @@
       "source_file": "utils/asyncHandler.js",
       "source_location": "L1",
       "id": "utils_asynchandler_js",
-      "community": 32,
+      "community": 33,
       "norm_label": "asynchandler.js"
     },
     {
@@ -2151,7 +2214,7 @@
       "source_file": "utils/asyncHandler.js",
       "source_location": "L1",
       "id": "utils_asynchandler_asynchandler",
-      "community": 32,
+      "community": 33,
       "norm_label": "asynchandler()"
     },
     {
@@ -2160,7 +2223,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L1",
       "id": "utils_errorhandler_js",
-      "community": 21,
+      "community": 22,
       "norm_label": "errorhandler.js"
     },
     {
@@ -2169,7 +2232,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L1",
       "id": "utils_errorhandler_apierror",
-      "community": 21,
+      "community": 22,
       "norm_label": "apierror"
     },
     {
@@ -2178,7 +2241,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L2",
       "id": "utils_errorhandler_apierror_constructor",
-      "community": 21,
+      "community": 22,
       "norm_label": ".constructor()"
     },
     {
@@ -2187,7 +2250,7 @@
       "source_file": "utils/helpers.js",
       "source_location": "L1",
       "id": "utils_helpers_js",
-      "community": 33,
+      "community": 34,
       "norm_label": "helpers.js"
     },
     {
@@ -2196,7 +2259,7 @@
       "source_file": "utils/helpers.js",
       "source_location": "L1",
       "id": "utils_helpers_formatresponse",
-      "community": 33,
+      "community": 34,
       "norm_label": "formatresponse()"
     },
     {
@@ -2205,7 +2268,7 @@
       "source_file": "validators/ai.validator.js",
       "source_location": "L1",
       "id": "validators_ai_validator_js",
-      "community": 34,
+      "community": 35,
       "norm_label": "ai.validator.js"
     },
     {
@@ -2214,7 +2277,7 @@
       "source_file": "validators/ai.validator.js",
       "source_location": "L5",
       "id": "validators_ai_validator_aisecuritycheck",
-      "community": 34,
+      "community": 35,
       "norm_label": "aisecuritycheck()"
     },
     {
@@ -2223,7 +2286,7 @@
       "source_file": "validators/profanity.validator.js",
       "source_location": "L1",
       "id": "validators_profanity_validator_js",
-      "community": 66,
+      "community": 67,
       "norm_label": "profanity.validator.js"
     },
     {
@@ -2232,7 +2295,7 @@
       "source_file": "web/eslint.config.mjs",
       "source_location": "L1",
       "id": "web_eslint_config_mjs",
-      "community": 67,
+      "community": 68,
       "norm_label": "eslint.config.mjs"
     },
     {
@@ -2241,7 +2304,7 @@
       "source_file": "web/next-env.d.ts",
       "source_location": "L1",
       "id": "web_next_env_d_ts",
-      "community": 68,
+      "community": 69,
       "norm_label": "next-env.d.ts"
     },
     {
@@ -2250,7 +2313,7 @@
       "source_file": "web/next.config.ts",
       "source_location": "L1",
       "id": "web_next_config_ts",
-      "community": 69,
+      "community": 70,
       "norm_label": "next.config.ts"
     },
     {
@@ -2259,7 +2322,7 @@
       "source_file": "web/postcss.config.mjs",
       "source_location": "L1",
       "id": "web_postcss_config_mjs",
-      "community": 70,
+      "community": 71,
       "norm_label": "postcss.config.mjs"
     },
     {
@@ -2268,7 +2331,7 @@
       "source_file": "web/src/middleware.ts",
       "source_location": "L1",
       "id": "web_src_middleware_ts",
-      "community": 17,
+      "community": 18,
       "norm_label": "middleware.ts"
     },
     {
@@ -2277,7 +2340,7 @@
       "source_file": "web/src/middleware.ts",
       "source_location": "L4",
       "id": "src_middleware_middleware",
-      "community": 17,
+      "community": 18,
       "norm_label": "middleware()"
     },
     {
@@ -2286,7 +2349,7 @@
       "source_file": "web/src/app/layout.tsx",
       "source_location": "L1",
       "id": "web_src_app_layout_tsx",
-      "community": 35,
+      "community": 36,
       "norm_label": "layout.tsx"
     },
     {
@@ -2295,7 +2358,7 @@
       "source_file": "web/src/app/layout.tsx",
       "source_location": "L20",
       "id": "app_layout_rootlayout",
-      "community": 35,
+      "community": 36,
       "norm_label": "rootlayout()"
     },
     {
@@ -2304,7 +2367,7 @@
       "source_file": "web/src/app/page.tsx",
       "source_location": "L1",
       "id": "web_src_app_page_tsx",
-      "community": 71,
+      "community": 72,
       "norm_label": "page.tsx"
     },
     {
@@ -2313,7 +2376,7 @@
       "source_file": "web/src/app/api/chat/route.ts",
       "source_location": "L1",
       "id": "web_src_app_api_chat_route_ts",
-      "community": 18,
+      "community": 19,
       "norm_label": "route.ts"
     },
     {
@@ -2322,7 +2385,7 @@
       "source_file": "web/src/app/api/chat/route.ts",
       "source_location": "L6",
       "id": "chat_route_post",
-      "community": 18,
+      "community": 19,
       "norm_label": "post()"
     },
     {
@@ -2331,7 +2394,7 @@
       "source_file": "web/src/components/chat-interface.tsx",
       "source_location": "L1",
       "id": "web_src_components_chat_interface_tsx",
-      "community": 12,
+      "community": 13,
       "norm_label": "chat-interface.tsx"
     },
     {
@@ -2340,7 +2403,7 @@
       "source_file": "web/src/components/ui/button.tsx",
       "source_location": "L1",
       "id": "web_src_components_ui_button_tsx",
-      "community": 12,
+      "community": 13,
       "norm_label": "button.tsx"
     },
     {
@@ -2349,7 +2412,7 @@
       "source_file": "web/src/components/ui/button.tsx",
       "source_location": "L52",
       "id": "ui_button_cn",
-      "community": 12,
+      "community": 13,
       "norm_label": "cn()"
     },
     {
@@ -2358,7 +2421,7 @@
       "source_file": "web/src/lib/utils.ts",
       "source_location": "L1",
       "id": "web_src_lib_utils_ts",
-      "community": 12,
+      "community": 13,
       "norm_label": "utils.ts"
     },
     {
@@ -2367,7 +2430,7 @@
       "source_file": "web/src/lib/utils.ts",
       "source_location": "L4",
       "id": "lib_utils_cn",
-      "community": 12,
+      "community": 13,
       "norm_label": "cn()"
     },
     {
@@ -2376,7 +2439,7 @@
       "source_file": "web/src/utils/supabase/client.ts",
       "source_location": "L1",
       "id": "web_src_utils_supabase_client_ts",
-      "community": 36,
+      "community": 37,
       "norm_label": "client.ts"
     },
     {
@@ -2385,7 +2448,7 @@
       "source_file": "web/src/utils/supabase/client.ts",
       "source_location": "L3",
       "id": "supabase_client_createclient",
-      "community": 36,
+      "community": 37,
       "norm_label": "createclient()"
     },
     {
@@ -2394,7 +2457,7 @@
       "source_file": "web/src/utils/supabase/middleware.ts",
       "source_location": "L1",
       "id": "web_src_utils_supabase_middleware_ts",
-      "community": 17,
+      "community": 18,
       "norm_label": "middleware.ts"
     },
     {
@@ -2403,7 +2466,7 @@
       "source_file": "web/src/utils/supabase/middleware.ts",
       "source_location": "L4",
       "id": "supabase_middleware_updatesession",
-      "community": 17,
+      "community": 18,
       "norm_label": "updatesession()"
     },
     {
@@ -2412,7 +2475,7 @@
       "source_file": "web/src/utils/supabase/server.ts",
       "source_location": "L1",
       "id": "web_src_utils_supabase_server_ts",
-      "community": 18,
+      "community": 19,
       "norm_label": "server.ts"
     },
     {
@@ -2421,7 +2484,7 @@
       "source_file": "web/src/utils/supabase/server.ts",
       "source_location": "L4",
       "id": "supabase_server_createclient",
-      "community": 18,
+      "community": 19,
       "norm_label": "createclient()"
     },
     {
@@ -2430,7 +2493,7 @@
       "source_file": "AGENTS.md",
       "source_location": "L1",
       "id": "agents_md",
-      "community": 37,
+      "community": 38,
       "norm_label": "agents.md"
     },
     {
@@ -2439,7 +2502,7 @@
       "source_file": "AGENTS.md",
       "source_location": "L1",
       "id": "hackito_old_agents_graphify",
-      "community": 37,
+      "community": 38,
       "norm_label": "graphify"
     },
     {
@@ -2448,7 +2511,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "claude_md",
-      "community": 38,
+      "community": 39,
       "norm_label": "claude.md"
     },
     {
@@ -2457,7 +2520,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "hackito_old_claude_graphify",
-      "community": 38,
+      "community": 39,
       "norm_label": "graphify"
     },
     {
@@ -2691,7 +2754,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L1",
       "id": "security_architecture_upgrade_md",
-      "community": 10,
+      "community": 11,
       "norm_label": "security_architecture_upgrade.md"
     },
     {
@@ -2700,7 +2763,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L1",
       "id": "hackito_old_security_architecture_upgrade_security_architecture_upgrade_secure_session_management",
-      "community": 10,
+      "community": 11,
       "norm_label": "security architecture upgrade: secure session management"
     },
     {
@@ -2709,7 +2772,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L5",
       "id": "hackito_old_security_architecture_upgrade_1_vulnerability_mitigation",
-      "community": 10,
+      "community": 11,
       "norm_label": "1. vulnerability mitigation"
     },
     {
@@ -2718,7 +2781,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L11",
       "id": "hackito_old_security_architecture_upgrade_2_token_strategy",
-      "community": 10,
+      "community": 11,
       "norm_label": "2. token strategy"
     },
     {
@@ -2727,7 +2790,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L15",
       "id": "hackito_old_security_architecture_upgrade_3_backend_implementation_details",
-      "community": 10,
+      "community": 11,
       "norm_label": "3. backend implementation details"
     },
     {
@@ -2736,7 +2799,7 @@
       "source_file": "security_architecture_upgrade.md",
       "source_location": "L20",
       "id": "hackito_old_security_architecture_upgrade_4_frontend_compatibility",
-      "community": 10,
+      "community": 11,
       "norm_label": "4. frontend compatibility"
     },
     {
@@ -2745,7 +2808,7 @@
       "source_file": "security_report.md",
       "source_location": "L1",
       "id": "security_report_md",
-      "community": 13,
+      "community": 14,
       "norm_label": "security_report.md"
     },
     {
@@ -2754,7 +2817,7 @@
       "source_file": "security_report.md",
       "source_location": "L1",
       "id": "hackito_old_security_report_api_security_refactor_report_hack_alert",
-      "community": 13,
+      "community": 14,
       "norm_label": "api security refactor report: hack/alert"
     },
     {
@@ -2763,7 +2826,7 @@
       "source_file": "security_report.md",
       "source_location": "L3",
       "id": "hackito_old_security_report_1_attacks_now_prevented",
-      "community": 13,
+      "community": 14,
       "norm_label": "1. attacks now prevented"
     },
     {
@@ -2772,7 +2835,7 @@
       "source_file": "security_report.md",
       "source_location": "L18",
       "id": "hackito_old_security_report_2_remaining_risks",
-      "community": 13,
+      "community": 14,
       "norm_label": "2. remaining risks"
     },
     {
@@ -2781,7 +2844,7 @@
       "source_file": "security_report.md",
       "source_location": "L26",
       "id": "hackito_old_security_report_3_production_readiness",
-      "community": 13,
+      "community": 14,
       "norm_label": "3. production readiness"
     },
     {
@@ -2790,7 +2853,7 @@
       "source_file": "web/AGENTS.md",
       "source_location": "L1",
       "id": "web_agents_md",
-      "community": 39,
+      "community": 40,
       "norm_label": "agents.md"
     },
     {
@@ -2799,7 +2862,7 @@
       "source_file": "web/AGENTS.md",
       "source_location": "L2",
       "id": "web_agents_this_is_not_the_next_js_you_know",
-      "community": 39,
+      "community": 40,
       "norm_label": "this is not the next.js you know"
     },
     {
@@ -2808,7 +2871,7 @@
       "source_file": "web/CLAUDE.md",
       "source_location": "L1",
       "id": "web_claude_md",
-      "community": 72,
+      "community": 73,
       "norm_label": "claude.md"
     },
     {
@@ -2817,7 +2880,7 @@
       "source_file": "web/README.md",
       "source_location": "L1",
       "id": "web_readme_md",
-      "community": 14,
+      "community": 15,
       "norm_label": "readme.md"
     },
     {
@@ -2826,7 +2889,7 @@
       "source_file": "web/README.md",
       "source_location": "L3",
       "id": "web_readme_getting_started",
-      "community": 14,
+      "community": 15,
       "norm_label": "getting started"
     },
     {
@@ -2835,7 +2898,7 @@
       "source_file": "web/README.md",
       "source_location": "L7",
       "id": "web_readme_codeblock_1",
-      "community": 14,
+      "community": 15,
       "norm_label": "code:bash (npm run dev)"
     },
     {
@@ -2844,7 +2907,7 @@
       "source_file": "web/README.md",
       "source_location": "L23",
       "id": "web_readme_learn_more",
-      "community": 14,
+      "community": 15,
       "norm_label": "learn more"
     },
     {
@@ -2853,7 +2916,7 @@
       "source_file": "web/README.md",
       "source_location": "L32",
       "id": "web_readme_deploy_on_vercel",
-      "community": 14,
+      "community": 15,
       "norm_label": "deploy on vercel"
     },
     {
@@ -6268,9 +6331,9 @@
       "source_file": "server.js",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "server_js",
-      "target": "hackito_old_server_blocksuspiciousheaders",
-      "confidence_score": 1.0
+      "target": "hackito_old_server_blocksuspiciousheaders"
     },
     {
       "relation": "contains",
@@ -6376,6 +6439,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server.js",
+      "source_location": "L264",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "server_js",
+      "target": "hackito_old_server_blocksensitivefiles"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.js",
       "source_location": "L563",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6443,6 +6516,89 @@
       "confidence_score": 1.0,
       "source": "verify_schema_js",
       "target": "hackito_old_verify_schema_verifyschema"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_security_rules_js",
+      "target": "hackito_old_verify_security_rules_blocksuspiciousheaders"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_security_rules_js",
+      "target": "hackito_old_verify_security_rules_makerequest"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L141",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_security_rules_js",
+      "target": "hackito_old_verify_security_rules_testsuspiciousheaders"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L159",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_security_rules_js",
+      "target": "hackito_old_verify_security_rules_testrequestsizelimit"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L168",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "verify_security_rules_js",
+      "target": "hackito_old_verify_security_rules_testratelimiting"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L144",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_verify_security_rules_testsuspiciousheaders",
+      "target": "hackito_old_verify_security_rules_makerequest"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L163",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_verify_security_rules_testrequestsizelimit",
+      "target": "hackito_old_verify_security_rules_makerequest"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "verify_security_rules.js",
+      "source_location": "L174",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hackito_old_verify_security_rules_testratelimiting",
+      "target": "hackito_old_verify_security_rules_makerequest"
     },
     {
       "relation": "contains",
@@ -7653,5 +7809,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b1babb377b7662b49d12df8343e1f8ac4ef62e83"
+  "built_at_commit": "0b7da856a55a90b9d05cb0ca2daaa505273d5d01"
 }

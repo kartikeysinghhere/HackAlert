@@ -1,16 +1,16 @@
 # Graph Report - hackito_old  (2026-06-01)
 
 ## Corpus Check
-- 78 files · ~52,848 words
+- 79 files · ~54,020 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 318 nodes · 457 edges · 73 communities (65 shown, 8 thin omitted)
+- 325 nodes · 466 edges · 74 communities (66 shown, 8 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b1babb37`
+- Built from commit: `0b7da856`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -24,16 +24,17 @@
 - [[_COMMUNITY_Team Management|Team Management]]
 - [[_COMMUNITY_Server Messaging|Server Messaging]]
 - [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 11|Community 11]]
 - [[_COMMUNITY_Community 13|Community 13]]
 - [[_COMMUNITY_Community 14|Community 14]]
 - [[_COMMUNITY_Community 15|Community 15]]
-- [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 16|Community 16]]
 - [[_COMMUNITY_Community 18|Community 18]]
-- [[_COMMUNITY_Community 21|Community 21]]
-- [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 22|Community 22]]
 - [[_COMMUNITY_Community 38|Community 38]]
 - [[_COMMUNITY_Community 39|Community 39]]
+- [[_COMMUNITY_Community 40|Community 40]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `showToast()` - 33 edges
@@ -55,7 +56,7 @@
 - `middleware()` --calls--> `updateSession()`  [INFERRED]
   web/src/middleware.ts → web/src/utils/supabase/middleware.ts
 
-## Communities (73 total, 8 thin omitted)
+## Communities (74 total, 8 thin omitted)
 
 ### Community 0 - "General UI Interaction"
 Cohesion: 0.06
@@ -74,7 +75,7 @@ Cohesion: 0.08
 Nodes (24): 1. Architectural Flaws, 2. Security Vulnerabilities, 3. Performance Bottlenecks, 4. Production Deployment Risks, 5. Code Quality Issues, 6. Frontend UX Engineering Quality, 7. Backend Robustness, 8. AI/Automation Integration Quality (+16 more)
 
 ### Community 4 - "User Profile Management"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (5): requestPasswordReset(), compactText(), isValidEmail(), normalizeHackathon(), rankHackathonsForQuestion()
 
 ### Community 5 - "Team Creation"
@@ -90,14 +91,18 @@ Cohesion: 0.67
 Nodes (5): askQuestion(), displayMessage(), init(), toggleInputs(), updateSuggestionButtons()
 
 ### Community 10 - "Community 10"
+Cohesion: 0.53
+Nodes (4): makeRequest(), testRateLimiting(), testRequestSizeLimit(), testSuspiciousHeaders()
+
+### Community 11 - "Community 11"
 Cohesion: 0.33
 Nodes (5): 1. Vulnerability Mitigation, 2. Token Strategy, 3. Backend Implementation Details, 4. Frontend Compatibility, Security Architecture Upgrade: Secure Session Management
 
-### Community 13 - "Community 13"
+### Community 14 - "Community 14"
 Cohesion: 0.4
 Nodes (4): 1. Attacks Now Prevented, 2. Remaining Risks, 3. Production Readiness, API Security Refactor Report: Hack/Alert
 
-### Community 14 - "Community 14"
+### Community 15 - "Community 15"
 Cohesion: 0.4
 Nodes (4): code:bash (npm run dev), Deploy on Vercel, Getting Started, Learn More
 
@@ -110,7 +115,7 @@ Nodes (4): code:bash (npm run dev), Deploy on Vercel, Getting Started, Learn Mor
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `requestPasswordReset()` connect `User Profile Management` to `General UI Interaction`, `Chat Messaging`?**
-  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Why does `startHeartbeat()` connect `Team Management` to `General UI Interaction`?**
   _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `graphify`, `graphify`, `Monolithic Frontend Structure` to the rest of the system?**

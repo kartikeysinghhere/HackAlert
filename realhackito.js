@@ -1747,13 +1747,13 @@ async function searchUsers(q) {
           </div>
           <div style="flex:1;">
             <div style="display:flex;align-items:center;gap:6px;">
-              <strong onclick="openPublicProfile('${escapeHTML(u.username)}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
+              <strong onclick="openPublicProfile('${escapeHTML(safeJSString(u.username))}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
               <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
             </div>
             <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
             ${u.bio ? `<p style="color:var(--muted);font-size:12px;margin-top:2px;">${escapeHTML(u.bio)}</p>` : ''}
           </div>
-          <button onclick="sendFriendRequest(this, '${escapeHTML(u.email)}')"
+          <button onclick="sendFriendRequest(this, '${escapeHTML(safeJSString(u.email))}')"
             style="background:var(--accent);color:#050508;border:none;padding:6px 14px;border-radius:8px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
             + Add
           </button>
@@ -1775,14 +1775,14 @@ function showUserResults(users) {
       </div>
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <strong onclick="openPublicProfile('${escapeHTML(u.username)}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
+          <strong onclick="openPublicProfile('${escapeHTML(safeJSString(u.username))}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
           <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
           ${onlineDot(u.email, 8)}
         </div>
         <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
         ${u.bio ? `<p style="color:var(--muted);font-size:12px;margin-top:2px;">${escapeHTML(u.bio)}</p>` : ''}
       </div>
-      <button onclick="sendFriendRequest(this, '${escapeHTML(u.email)}')"
+      <button onclick="sendFriendRequest(this, '${escapeHTML(safeJSString(u.email))}')"
         style="background:var(--accent);color:#050508;border:none;padding:6px 14px;border-radius:8px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
         + Add
       </button>
@@ -1871,14 +1871,14 @@ async function loadFriends() {
               </div>
               <div style="flex:1;min-width:0;">
                 <div style="display:flex;align-items:center;gap:4px;">
-                  <strong onclick="openPublicProfile('${escapeHTML(f.username)}')" style="color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
+                  <strong onclick="openPublicProfile('${escapeHTML(safeJSString(f.username))}')" style="color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
                   <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
                   ${onlineDot(f.email, 8)}
                 </div>
                 <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
               </div>
-              <button onclick="openDMChat('${escapeHTML(f.email)}','${escapeHTML(f.name)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">💬</button>
-              <button onclick="removeFriend('${escapeHTML(f.email)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
+              <button onclick="openDMChat('${escapeHTML(safeJSString(f.email))}','${escapeHTML(safeJSString(f.name))}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">💬</button>
+              <button onclick="removeFriend('${escapeHTML(safeJSString(f.email))}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
             </div>
           `).join('')}
         </div>
@@ -2165,7 +2165,7 @@ async function loadConversations() {
 
     list.innerHTML = safeHTML(convos.map(c => `
       <div class="conv-item ${currentDMPartner === c.partner_email ? 'active' : ''}"
-        onclick="openDMChat('${escapeHTML(c.partner_email)}', '${escapeHTML(c.partner.name || c.partner_email)}')">
+        onclick="openDMChat('${escapeHTML(safeJSString(c.partner_email))}', '${escapeHTML(safeJSString(c.partner.name || c.partner_email))}')">
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;flex-shrink:0;">
             ${escapeHTML((c.partner.name || 'U').charAt(0).toUpperCase())}

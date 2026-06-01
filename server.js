@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const axios = require('axios');
 const crypto = require('crypto');
+const path = require('path');
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 
@@ -240,7 +241,25 @@ app.use(cors({
     : 'http://localhost:3000',
   credentials: true
 }));
-app.use(helmet({ contentSecurityPolicy: false }));
+const cspDirectives = {
+  defaultSrc: ["'self'"],
+  scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+  styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+  fontSrc: ["'self'", "https://fonts.gstatic.com"],
+  connectSrc: ["'self'", "https://www.google-analytics.com"],
+  imgSrc: ["'self'", "data:", "https://*"],
+  objectSrc: ["'none'"]
+};
+
+if (process.env.NODE_ENV === 'production') {
+  cspDirectives.upgradeInsecureRequests = [];
+}
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: cspDirectives
+  }
+}));
 
 // Block suspicious headers before other processing
 app.use(blockSuspiciousHeaders);
@@ -248,6 +267,54 @@ app.use(blockSuspiciousHeaders);
 // Limit request body size to 10kb
 app.use(express.json({ limit: '10kb' }));
 
+function blockSensitiveFiles(req, res, next) {
+  let url = req.url.split('?')[0] || '/';
+  url = url.replace(/\\/g, '/');
+
+  for (let i = 0; i < 3; i++) {
+    try {
+      const decoded = decodeURIComponent(url);
+      if (decoded === url) break;
+      url = decoded;
+    } catch (err) {
+      return res.status(400).json({ error: 'Invalid request path.' });
+    }
+  }
+
+  url = path.posix.normalize(url).toLowerCase();
+
+  const sensitiveFiles = ['server.js', 'package.json', 'package-lock.json', '.env', 'init_schema.sql'];
+  const sensitiveDirs = ['/node_modules', '/graphify-out', '/middleware', '/config', '/controllers', '/jobs', '/routes', '/schemas', '/services', '/utils', '/validators', '/.git', '/.vscode'];
+  const sensitiveExtensions = ['.md', '.sql', '.json', '.yml', '.yaml', '.log', '.txt'];
+
+  if (url.includes('/.') || url.startsWith('.')) {
+    return res.status(403).json({ error: 'Access denied: hidden file or directory.' });
+  }
+
+  if (url.startsWith('/api/') || url === '/ask') {
+    return next();
+  }
+
+  if (sensitiveDirs.some(dir => url.startsWith(dir) || url.includes(dir + '/'))) {
+    return res.status(403).json({ error: 'Access denied: sensitive directory.' });
+  }
+
+  if (sensitiveFiles.some(file => url.includes('/' + file) || url === '/' + file)) {
+    return res.status(403).json({ error: 'Access denied: sensitive file.' });
+  }
+
+  if (sensitiveExtensions.some(ext => url.endsWith(ext))) {
+    return res.status(403).json({ error: 'Access denied: file type restricted.' });
+  }
+
+  if (url.endsWith('.js') && url !== '/realhackito.js') {
+    return res.status(403).json({ error: 'Access denied: script access restricted.' });
+  }
+
+  next();
+}
+
+app.use(blockSensitiveFiles);
 app.use(express.static(__dirname));
 
 // Trust proxy setup for accurate client IP detection behind load balancers/proxies
@@ -450,7 +517,7 @@ app.post('/api/forgot-password', emailLimiter, async (req, res) => {
   res.json({ message: 'If an account exists with this email, a reset link has been sent.' });
 });
 
-app.post('/api/reset-password', async (req, res) => {
+app.post('/api/reset-password', authLimiter, async (req, res) => {
   const { token, newPassword } = req.body;
   if (!token || !newPassword || newPassword.length < 8) {
     return res.status(400).json({ error: 'Token and a password of at least 8 characters required' });
@@ -828,7 +895,7 @@ Upcoming Fallback: ${JSON.stringify(upcomingHackathons).substring(0, 1000)}
   }
 });
 
-app.post('/api/tts', async (req, res) => {
+app.post('/api/tts', aiLimiter, async (req, res) => {
   try {
     const { text } = req.body;
 
@@ -902,7 +969,7 @@ app.post('/api/send-otp', async (req, res) => {
   }
 });
 
-app.post('/api/verify-otp', async (req, res) => {
+app.post('/api/verify-otp', authLimiter, async (req, res) => {
   const email = normalizeEmail(req.body.email);
   const otp = String(req.body.otp || '').trim();
   if (!email || !otp) return res.status(400).json({ error: 'Email and OTP required' });
@@ -939,6 +1006,10 @@ app.post('/api/signup', async (req, res) => {
 
   const email = normalizeEmail(req.body.email);
   if (!name || !email || !pass || !username) return res.status(400).json({ error: 'Name, Email, Password and Username are required.' });
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+  if (!passwordRegex.test(pass)) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.' });
+  }
   if (!isValidEmail(email)) return res.status(400).json({ error: 'Invalid email' });
   const { data: verifiedOtp } = await supabase
     .from('email_otps')
