@@ -1,16 +1,16 @@
-# Graph Report - hackito_old  (2026-05-27)
+# Graph Report - hackito_old  (2026-06-01)
 
 ## Corpus Check
-- 78 files · ~52,589 words
+- 78 files · ~52,848 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 317 nodes · 456 edges · 73 communities (65 shown, 8 thin omitted)
+- 318 nodes · 457 edges · 73 communities (65 shown, 8 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `164bedc2`
+- Built from commit: `b1babb37`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -74,7 +74,7 @@ Cohesion: 0.08
 Nodes (24): 1. Architectural Flaws, 2. Security Vulnerabilities, 3. Performance Bottlenecks, 4. Production Deployment Risks, 5. Code Quality Issues, 6. Frontend UX Engineering Quality, 7. Backend Robustness, 8. AI/Automation Integration Quality (+16 more)
 
 ### Community 4 - "User Profile Management"
-Cohesion: 0.15
+Cohesion: 0.14
 Nodes (5): requestPasswordReset(), compactText(), isValidEmail(), normalizeHackathon(), rankHackathonsForQuestion()
 
 ### Community 5 - "Team Creation"
@@ -110,7 +110,7 @@ Nodes (4): code:bash (npm run dev), Deploy on Vercel, Getting Started, Learn Mor
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `requestPasswordReset()` connect `User Profile Management` to `General UI Interaction`, `Chat Messaging`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Why does `startHeartbeat()` connect `Team Management` to `General UI Interaction`?**
   _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `graphify`, `graphify`, `Monolithic Frontend Structure` to the rest of the system?**

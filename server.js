@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const { slowDown } = require('express-slow-down');
 const cors = require('cors');
 const Groq = require('groq-sdk');
 const { createClient } = require('@supabase/supabase-js');
@@ -33,20 +34,66 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3000;
 
-// Rate Limiters
-const aiLimiter = rateLimit({
+// Rate Limiters & Security
+const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20,
-  message: { error: 'Too many requests, slow down.' }
+  max: 100,
+  statusCode: 429,
+  message: { error: 'Too many requests. Please try again after 15 minutes.' }
 });
 
-app.use(cookieParser());
+const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  statusCode: 429,
+  message: { error: 'Too many AI requests. Please try again after 15 minutes.' }
+});
 
 const emailLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 5,
   message: { error: 'Too many OTP requests.' }
 });
+
+const otpLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3,
+  statusCode: 429,
+  message: { error: 'Too many OTP requests. Please try again after an hour.' }
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  statusCode: 429,
+  message: { error: 'Too many authentication attempts. Please try again after 15 minutes.' }
+});
+
+const speedLimiter = slowDown({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  delayAfter: 50, // Allow 50 requests per 15 minutes, then...
+  delayMs: (hits) => hits * 500 // Add 500ms delay per request above 50
+});
+
+function blockSuspiciousHeaders(req, res, next) {
+  const userAgent = req.headers['user-agent'] || '';
+  const suspiciousUserAgents = /sqlmap|nikto|acunetix|dirbuster|censys|zgrab|nmap|masscan|hydra|w3af|arachni/i;
+  
+  if (suspiciousUserAgents.test(userAgent)) {
+    return res.status(400).json({ error: 'Suspicious request blocked.' });
+  }
+
+  const suspiciousPattern = /<script>|union\s+select|select\s+.*\s+from|(\.\.\/|\.\.\\)/i;
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (typeof value === 'string' && suspiciousPattern.test(value)) {
+      return res.status(400).json({ error: 'Malicious payload detected in headers.' });
+    }
+  }
+
+  next();
+}
+
+app.use(cookieParser());
 
 const dmClients = {};
 const teamClients = {};
@@ -194,13 +241,32 @@ app.use(cors({
   credentials: true
 }));
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(express.json());
+
+// Block suspicious headers before other processing
+app.use(blockSuspiciousHeaders);
+
+// Limit request body size to 10kb
+app.use(express.json({ limit: '10kb' }));
+
 app.use(express.static(__dirname));
 
-// Apply Rate Limiters
+// Trust proxy setup for accurate client IP detection behind load balancers/proxies
+app.set('trust proxy', 1);
+
+// Global Speed Limiter (Throttling)
+app.use(speedLimiter);
+
+// Global Rate Limiter
+app.use(globalLimiter);
+
+// Specific Route Rate Limiters
 app.use('/ask', aiLimiter);
-app.use('/api/ai', aiLimiter);
-app.use('/api/send-otp', emailLimiter);
+app.use('/api/ai/ideas', aiLimiter);
+app.use('/api/ai/analyze', aiLimiter);
+app.use('/api/send-otp', otpLimiter);
+app.use('/api/login', authLimiter);
+app.use('/api/signup', authLimiter);
+app.use('/api/register', authLimiter);
 
 // Password Reset Routes
 const bugLimiter = rateLimit({
