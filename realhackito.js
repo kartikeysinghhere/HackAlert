@@ -118,6 +118,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // Clean URL
     window.history.replaceState({}, '', window.location.pathname);
+  } else {
+    // Restore current route on load
+    const hash = window.location.hash.startsWith('#/') ? window.location.hash.slice(2) : 'landing';
+    handleRoute(hash);
   }
 });
 
@@ -494,7 +498,7 @@ function applyAdvancedFilters() {
 }
 
 // ── Page navigation ──
-function goTo(pageId) {
+function handleRoute(pageId) {
   const protectedPages = ['dashboard', 'bot', 'profile', 'teams', 'calendar', 'showcase', 'messages', 'ai-tools', 'public-profile', 'find-teammates', 'find-friends'];
   const authPages = ['login', 'signup', 'forgot-password', 'reset-password'];
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
@@ -510,8 +514,19 @@ function goTo(pageId) {
     return;
   }
 
+  // Hide dropdown menu when navigating
+  const dropdown = document.getElementById('nav-dropdown');
+  if (dropdown) dropdown.style.display = 'none';
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + pageId).classList.add('active');
+  const targetPage = document.getElementById('page-' + pageId);
+  if (targetPage) {
+    targetPage.classList.add('active');
+  } else {
+    goTo('landing');
+    return;
+  }
+
   if (pageId === 'dashboard' && allHackathons.length === 0) fetchHackathons();
   if (pageId === 'profile') loadProfile();
   if (pageId === 'teams') loadTeams();
@@ -523,6 +538,20 @@ function goTo(pageId) {
   if (pageId === 'ai-tools') { }
   if (pageId === 'public-profile') { }
 }
+
+function goTo(pageId) {
+  const targetHash = '#/' + pageId;
+  if (window.location.hash !== targetHash) {
+    window.location.hash = '/' + pageId;
+  } else {
+    handleRoute(pageId);
+  }
+}
+
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.startsWith('#/') ? window.location.hash.slice(2) : 'landing';
+  handleRoute(hash);
+});
 
 async function requestPasswordReset() {
   const email = document.getElementById('forgot-email').value.trim();
