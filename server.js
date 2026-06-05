@@ -312,7 +312,7 @@ function blockSensitiveFiles(req, res, next) {
     return res.status(403).json({ error: 'Access denied: file type restricted.' });
   }
 
-  if (url.endsWith('.js') && url !== '/realhackito.js') {
+  if (url.endsWith('.js') && url !== '/realhackito.js' && !url.startsWith('/frontend/')) {
     return res.status(403).json({ error: 'Access denied: script access restricted.' });
   }
 

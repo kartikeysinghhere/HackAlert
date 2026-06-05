@@ -1233,21 +1233,8 @@
   <!-- FLOATING BOT -->
   <div id="floating-bot" onclick="goTo('bot')" title="Talk to HackBot">🤖</div>
 
-  <script src="realhackito.js"></script>
+  <script type="module" src="frontend/main.js"></script>
   <script>
-    // ── THEME TOGGLE ──
-    function toggleTheme() {
-      document.body.classList.toggle('light');
-      const btn = document.getElementById('theme-btn');
-      btn.textContent = document.body.classList.contains('light') ? '🌕' : '🌙';
-      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-    }
-    // load saved theme
-    if (localStorage.getItem('theme') === 'light') {
-      document.body.classList.add('light');
-      document.getElementById('theme-btn').textContent = '🌕';
-    }
-
     // ── ENTER KEY TO SEND ──
     document.getElementById('chat-input').addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
