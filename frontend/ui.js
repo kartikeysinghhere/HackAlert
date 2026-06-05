@@ -11,11 +11,52 @@ export function showToast(icon, title, msg) {
   setTimeout(() => { t.classList.remove('active'); }, 4000);
 }
 
+function trapFocus(modal) {
+  const focusableSelectors = 'button, [href], input, select, textarea, [tabindex="0"]';
+  
+  const handleKeydown = (e) => {
+    if (e.key !== 'Tab') return;
+
+    const focusableElements = Array.from(modal.querySelectorAll(focusableSelectors))
+      .filter(el => !el.disabled && el.tabIndex !== -1 && el.offsetParent !== null);
+    
+    if (focusableElements.length === 0) return;
+    
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
+  };
+
+  setTimeout(() => {
+    const focusableElements = Array.from(modal.querySelectorAll(focusableSelectors))
+      .filter(el => !el.disabled && el.tabIndex !== -1 && el.offsetParent !== null);
+    if (focusableElements.length > 0) {
+      focusableElements[0].focus();
+    }
+  }, 50);
+
+  modal._focusTrapListener = handleKeydown;
+  modal.addEventListener('keydown', handleKeydown);
+}
+
 export function openModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
+    modal._previouslyFocusedElement = document.activeElement;
     modal.style.display = 'flex';
     document.body.classList.add('modal-open');
+    trapFocus(modal);
   }
 }
 
@@ -23,6 +64,14 @@ export function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
     modal.style.display = 'none';
+    if (modal._focusTrapListener) {
+      modal.removeEventListener('keydown', modal._focusTrapListener);
+      delete modal._focusTrapListener;
+    }
+    if (modal._previouslyFocusedElement && typeof modal._previouslyFocusedElement.focus === 'function') {
+      modal._previouslyFocusedElement.focus();
+      delete modal._previouslyFocusedElement;
+    }
     const openModals = Array.from(document.querySelectorAll('.modal')).filter(m => m.style.display === 'flex');
     if (openModals.length === 0) {
       document.body.classList.remove('modal-open');

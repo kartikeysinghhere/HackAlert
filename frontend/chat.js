@@ -138,6 +138,13 @@ export async function speakText(text) {
 
     const audio = new Audio(audioUrl);
     audio.playbackRate = 1.15;
+    const cleanup = () => {
+      URL.revokeObjectURL(audioUrl);
+      audio.removeEventListener('ended', cleanup);
+      audio.removeEventListener('error', cleanup);
+    };
+    audio.addEventListener('ended', cleanup);
+    audio.addEventListener('error', cleanup);
     audio.play();
   } catch (err) {
     console.error('Voice error:', err);

@@ -1162,6 +1162,15 @@ app.post('/api/login', async (req, res) => {
   res.json({ message: 'Login successful', user: { name: data.name, email: data.email, username: data.username, gender: data.gender, bio: data.bio, skills: data.skills, mobile: data.mobile, college: data.college } });
 });
 
+app.post('/api/logout', (req, res) => {
+  res.clearCookie('authToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict'
+  });
+  res.json({ message: 'Logged out successfully' });
+});
+
 app.get('/api/teams', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 20;

@@ -124,10 +124,14 @@ export function restorePersistedFilters() {
   }
 }
 
+let isFetchingHackathons = false;
+
 export async function fetchHackathons() {
+  if (isFetchingHackathons) return;
   const grid = document.getElementById("hackathon-grid");
   if (!grid) return;
   
+  isFetchingHackathons = true;
   renderHackathonSkeletons();
 
   try {
@@ -147,6 +151,8 @@ export async function fetchHackathons() {
     renderErrorRecovery("hackathon-grid", "Failed to load hackathons. Please check your internet connection.", async () => {
       await fetchHackathons();
     });
+  } finally {
+    isFetchingHackathons = false;
   }
 }
 

@@ -18,8 +18,23 @@ export function handleRoute(pageId) {
     return;
   }
 
-  savePersistedState('active_route', pageId);
+  // Clean up Server-Sent Events (SSE) connections on route change
+  if (pageId !== 'messages' && state.activeDMStream) {
+    state.activeDMStream.close();
+    state.activeDMStream = null;
+  }
+  if (pageId !== 'teams' && state.chatEventSource) {
+    state.chatEventSource.close();
+    state.chatEventSource = null;
+  }
 
+  // Close any open modals on route change to prevent overlay persistence
+  document.querySelectorAll('.modal').forEach(m => {
+    m.style.display = 'none';
+  });
+  document.body.classList.remove('modal-open');
+
+  savePersistedState('active_route', pageId);
 
   // Hide dropdown menu when navigating
   const dropdown = document.getElementById('nav-dropdown');

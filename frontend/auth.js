@@ -205,8 +205,16 @@ export function hideLogoutModal() {
   closeModal('logout-modal');
 }
 
-export function confirmLogout() {
+export async function confirmLogout() {
   closeModal('logout-modal');
+  try {
+    await fetch('/api/logout', {
+      method: 'POST',
+      headers: authHeaders()
+    });
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
   document.getElementById('nav-auth').style.display = '';
   document.getElementById('nav-app').style.display = 'none';
   localStorage.removeItem('authToken');
