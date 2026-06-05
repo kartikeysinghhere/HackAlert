@@ -1,16 +1,16 @@
 # Graph Report - hackito_old  (2026-06-05)
 
 ## Corpus Check
-- 92 files · ~66,263 words
+- 92 files · ~67,589 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 467 nodes · 845 edges · 82 communities (74 shown, 8 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.8)
+- 475 nodes · 873 edges · 82 communities (74 shown, 8 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1755157e`
+- Built from commit: `452fe2cf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,8 +26,8 @@
 - [[_COMMUNITY_Team Chat Interaction|Team Chat Interaction]]
 - [[_COMMUNITY_Server Messaging|Server Messaging]]
 - [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 11|Community 11]]
-- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 14|Community 14]]
 - [[_COMMUNITY_Community 15|Community 15]]
 - [[_COMMUNITY_Community 16|Community 16]]
 - [[_COMMUNITY_Community 17|Community 17]]
@@ -61,22 +61,24 @@
   realhackito.js → services/users.service.js
 - `startHeartbeat()` --calls--> `ping()`  [INFERRED]
   frontend/profile.js → services/users.service.js
-- `middleware()` --calls--> `updateSession()`  [INFERRED]
-  web/src/middleware.ts → web/src/utils/supabase/middleware.ts
+- `restorePersistedFilters()` --calls--> `loadPersistedState()`  [INFERRED]
+  frontend/hackathons.js → frontend/state.js
+- `fetchHackathons()` --calls--> `renderErrorRecovery()`  [INFERRED]
+  frontend/hackathons.js → frontend/ui.js
 
 ## Communities (82 total, 8 thin omitted)
 
 ### Community 0 - "General UI Interaction"
 Cohesion: 0.05
-Nodes (93): authHeaders(), censorMessage(), escapeHTML(), safeHTML(), safeJSString(), confirmLogout(), handlePasswordReset(), hideLogoutModal() (+85 more)
+Nodes (91): authHeaders(), censorMessage(), escapeHTML(), safeHTML(), safeJSString(), confirmLogout(), handlePasswordReset(), hideLogoutModal() (+83 more)
 
 ### Community 1 - "Chat Messaging"
 Cohesion: 0.09
-Nodes (22): closeModal(), confirmLogout(), copyLink(), deleteTeammateListing(), fallbackCopy(), fetchTeammates(), hideBugReport(), hideCreateTeammateModal() (+14 more)
+Nodes (36): applyAdvancedFilters(), buildCountryList(), clearAllFilters(), copyLink(), createHackathonCard(), deleteReview(), fallbackCopy(), fetchHackathons() (+28 more)
 
 ### Community 2 - "Rendering Helpers"
-Cohesion: 0.11
-Nodes (26): closeTeamChat(), copyInviteLink(), createTeam(), deleteProject(), deleteTeam(), deleteTeammateListing(), fetchTeammates(), hideCreateTeam() (+18 more)
+Cohesion: 0.08
+Nodes (24): closeModal(), confirmLogout(), copyLink(), deleteTeammateListing(), fallbackCopy(), fetchTeammates(), hideBugReport(), hideCreateTeammateModal() (+16 more)
 
 ### Community 3 - "Data Fetching & Rendering"
 Cohesion: 0.13
@@ -87,40 +89,40 @@ Cohesion: 0.08
 Nodes (24): 1. Architectural Flaws, 2. Security Vulnerabilities, 3. Performance Bottlenecks, 4. Production Deployment Risks, 5. Code Quality Issues, 6. Frontend UX Engineering Quality, 7. Backend Robustness, 8. AI/Automation Integration Quality (+16 more)
 
 ### Community 5 - "Team Creation"
-Cohesion: 0.13
-Nodes (5): requestPasswordReset(), compactText(), isValidEmail(), normalizeHackathon(), rankHackathonsForQuestion()
+Cohesion: 0.12
+Nodes (21): deleteProject(), fetchHackathons(), getFallbackHackathons(), goTo(), goToCalendar(), handlePasswordReset(), handleRoute(), loadFindFriends() (+13 more)
 
 ### Community 6 - "Auth & Navigation"
-Cohesion: 0.17
-Nodes (16): deleteProject(), fetchHackathons(), getFallbackHackathons(), goTo(), goToCalendar(), handlePasswordReset(), handleRoute(), loadFindFriends() (+8 more)
+Cohesion: 0.13
+Nodes (5): requestPasswordReset(), compactText(), isValidEmail(), normalizeHackathon(), rankHackathonsForQuestion()
 
 ### Community 7 - "Team Management"
 Cohesion: 0.22
 Nodes (16): analyzeHackathon(), appendDMMessage(), appendTeamMessage(), createHackathonCard(), escapeHTML(), eyeSeen(), eyeUnseen(), generateIdeas() (+8 more)
 
 ### Community 8 - "Team Chat Interaction"
-Cohesion: 0.17
-Nodes (13): applyAdvancedFilters(), buildCountryList(), clearAllFilters(), filterByCountry(), filterCards(), loginUser(), renderHackathons(), requestNotificationPermission() (+5 more)
-
-### Community 9 - "Server Messaging"
 Cohesion: 0.33
 Nodes (7): generateTokens(), login(), refresh(), register(), resolveStoredPasswordHash(), sendWelcomeEmail(), storeRefreshToken()
 
-### Community 10 - "Community 10"
+### Community 9 - "Server Messaging"
 Cohesion: 0.2
 Nodes (4): startHeartbeat(), fetchOnlineUsers(), startHeartbeat(), ping()
 
-### Community 11 - "Community 11"
-Cohesion: 0.22
-Nodes (9): loadTeamMessages(), openModal(), openTeamChat(), showBugReport(), showCreateTeam(), showMatchmaker(), showSubmitProject(), showUserSearch() (+1 more)
+### Community 10 - "Community 10"
+Cohesion: 0.25
+Nodes (9): applyAdvancedFilters(), buildCountryList(), clearAllFilters(), filterByCountry(), filterCards(), renderHackathons(), selectCountry(), toggleBeginnerFilter() (+1 more)
 
-### Community 13 - "Community 13"
+### Community 12 - "Community 12"
 Cohesion: 0.29
 Nodes (8): appendMessage(), censorMessage(), quickSend(), removeTyping(), sendChat(), showTyping(), speakText(), stopSpeech()
 
-### Community 15 - "Community 15"
+### Community 14 - "Community 14"
 Cohesion: 0.67
 Nodes (5): askQuestion(), displayMessage(), init(), toggleInputs(), updateSuggestionButtons()
+
+### Community 15 - "Community 15"
+Cohesion: 0.33
+Nodes (6): loadProfile(), loginUser(), requestNotificationPermission(), toggleSave(), unsaveHackathon(), updateStats()
 
 ### Community 16 - "Community 16"
 Cohesion: 0.53
@@ -146,10 +148,10 @@ Nodes (4): code:bash (npm run dev), Deploy on Vercel, Getting Started, Learn Mor
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `startHeartbeat()` connect `Community 10` to `Chat Messaging`?**
-  _High betweenness centrality (0.181) - this node is a cross-community bridge._
-- **Why does `startHeartbeat()` connect `Community 10` to `General UI Interaction`?**
-  _High betweenness centrality (0.180) - this node is a cross-community bridge._
+- **Why does `startHeartbeat()` connect `Server Messaging` to `Rendering Helpers`?**
+  _High betweenness centrality (0.185) - this node is a cross-community bridge._
+- **Why does `startHeartbeat()` connect `Server Messaging` to `General UI Interaction`?**
+  _High betweenness centrality (0.185) - this node is a cross-community bridge._
 - **What connects `graphify`, `graphify`, `Monolithic Frontend Structure` to the rest of the system?**
   _31 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `General UI Interaction` be split into smaller, more focused modules?**
@@ -157,6 +159,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Chat Messaging` be split into smaller, more focused modules?**
   _Cohesion score 0.09 - nodes in this community are weakly interconnected._
 - **Should `Rendering Helpers` be split into smaller, more focused modules?**
-  _Cohesion score 0.11 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
 - **Should `Data Fetching & Rendering` be split into smaller, more focused modules?**
   _Cohesion score 0.13 - nodes in this community are weakly interconnected._

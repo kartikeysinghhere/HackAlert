@@ -1,11 +1,35 @@
 import { state } from './state.js';
 import { escapeHTML, safeHTML, safeJSString, authHeaders } from './api.js';
-import { showToast, openModal, closeModal } from './ui.js';
+import { showToast, openModal, closeModal, renderErrorRecovery } from './ui.js';
+
+function renderTeamSkeletons() {
+  const grid = document.getElementById('teams-grid');
+  if (!grid) return;
+  let html = '';
+  for (let i = 0; i < 4; i++) {
+    html += `
+      <div class="skeleton-card" aria-busy="true" aria-live="polite" style="opacity: 0.85;">
+        <div class="skeleton-bar title shimmer"></div>
+        <div class="skeleton-bar shimmer" style="width: 70%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 80%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 50%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 90%;"></div>
+        <div style="display: flex; gap: 8px; margin-top: auto;">
+          <div class="skeleton-bar shimmer" style="width: 90px; height: 32px; border-radius: 8px;"></div>
+          <div class="skeleton-bar shimmer" style="width: 70px; height: 32px; border-radius: 8px;"></div>
+        </div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+}
 
 export async function loadTeams() {
   const grid = document.getElementById('teams-grid');
   if (!grid) return;
-  grid.innerHTML = '<p style="color:#aaa;padding:20px;">Loading teams...</p>';
+  
+  renderTeamSkeletons();
+  
   try {
     const res = await fetch('/api/teams');
     if (!res.ok) throw new Error('Failed to load teams');
@@ -34,7 +58,9 @@ export async function loadTeams() {
     `).join(''));
   } catch (err) {
     console.error('Error loading teams:', err);
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:20px;">⚠️ Failed to load teams. Please try again.</p>';
+    renderErrorRecovery('teams-grid', 'Failed to load teams. Please check your network connection.', async () => {
+      await loadTeams();
+    });
   }
 }
 
@@ -245,13 +271,46 @@ export async function deleteTeam(teamId) {
   }
 }
 
+function renderShowcaseSkeletons() {
+  const grid = document.getElementById('showcase-grid');
+  if (!grid) return;
+  let html = '';
+  for (let i = 0; i < 4; i++) {
+    html += `
+      <div class="skeleton-card" aria-busy="true" aria-live="polite" style="opacity: 0.85;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; width: 100%;">
+          <div style="flex-grow: 1;">
+            <div class="skeleton-bar title shimmer" style="width: 60%; margin-bottom: 6px;"></div>
+            <div class="skeleton-bar shimmer" style="width: 40%;"></div>
+          </div>
+          <div class="skeleton-bar shimmer" style="width: 80px; height: 20px; border-radius: 6px;"></div>
+        </div>
+        <div class="skeleton-bar shimmer" style="width: 90%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 80%;"></div>
+        <div style="display: flex; gap: 6px; margin: 8px 0;">
+          <div class="skeleton-bar shimmer" style="width: 60px; height: 18px; border-radius: 4px;"></div>
+          <div class="skeleton-bar shimmer" style="width: 80px; height: 18px; border-radius: 4px;"></div>
+        </div>
+        <div class="skeleton-bar shimmer" style="width: 50%;"></div>
+        <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 12px;">
+          <div class="skeleton-bar shimmer" style="width: 80px; height: 32px; border-radius: 8px;"></div>
+          <div class="skeleton-bar shimmer" style="width: 80px; height: 32px; border-radius: 8px;"></div>
+        </div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+}
+
 export async function loadShowcase() {
   const grid = document.getElementById('showcase-grid');
   if (!grid) return;
-  grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:40px;">Loading projects...</p>';
+  
+  renderShowcaseSkeletons();
 
   try {
     const res = await fetch('/api/projects');
+    if (!res.ok) throw new Error('Failed to load projects');
     const projects = await res.json();
 
     if (!projects.length) {
@@ -295,7 +354,10 @@ export async function loadShowcase() {
       `;
     }).join(''));
   } catch (err) {
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:40px;">⚠️ Failed to load projects.</p>';
+    console.error('Error loading projects:', err);
+    renderErrorRecovery('showcase-grid', 'Failed to load projects. Please try again.', async () => {
+      await loadShowcase();
+    });
   }
 }
 
@@ -382,7 +444,34 @@ export function hideCreateTeammateModal() {
   if (el) el.style.display = 'none';
 }
 
+function renderTeammateSkeletons() {
+  const grid = document.getElementById('teammate-listings-grid');
+  if (!grid) return;
+  let html = '';
+  for (let i = 0; i < 4; i++) {
+    html += `
+      <div class="skeleton-card" aria-busy="true" aria-live="polite" style="opacity: 0.85; display: flex; flex-direction: column; gap: 12px;">
+        <div class="skeleton-bar shimmer" style="width: 30%; height: 12px;"></div>
+        <div class="skeleton-bar title shimmer" style="width: 70%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 90%;"></div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);">
+          <div class="skeleton-bar shimmer" style="width: 70px; height: 20px; border-radius: 6px;"></div>
+          <div class="skeleton-bar shimmer" style="width: 80px; height: 20px; border-radius: 6px;"></div>
+          <div class="skeleton-bar shimmer" style="width: 60px; height: 20px; border-radius: 6px;"></div>
+        </div>
+        <div class="skeleton-bar shimmer" style="width: 100%; height: 32px; border-radius: 8px; margin-top: 12px;"></div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+}
+
 export async function fetchTeammates() {
+  const grid = document.getElementById('teammate-listings-grid');
+  if (!grid) return;
+  
+  renderTeammateSkeletons();
+
   const skill = document.getElementById('tm-skill-search')?.value || '';
   const hackathon = document.getElementById('tm-hackathon-search')?.value || '';
   let url = '/api/teammates?';
@@ -391,10 +480,8 @@ export async function fetchTeammates() {
 
   try {
     const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to fetch teammate listings');
     const data = await res.json();
-    const grid = document.getElementById('teammate-listings-grid');
-    if (!grid) return;
-    if (!res.ok) throw new Error(data.error);
     
     if (data.length === 0) {
       grid.innerHTML = '<p style="color:var(--muted);">No listings found.</p>';
@@ -422,6 +509,9 @@ export async function fetchTeammates() {
     </div>`).join('');
   } catch (err) {
     console.error(err);
+    renderErrorRecovery('teammate-listings-grid', 'Failed to load teammate listings.', async () => {
+      await fetchTeammates();
+    });
   }
 }
 

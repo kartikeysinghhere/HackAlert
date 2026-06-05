@@ -1,4 +1,4 @@
-import { state } from './state.js';
+import { state, savePersistedState } from './state.js';
 import { fetchHackathons, renderCalendar } from './hackathons.js';
 import { loadProfile, loadFindFriends, loadConversations } from './profile.js';
 import { loadTeams, fetchTeammates, loadShowcase } from './teams.js';
@@ -17,6 +17,9 @@ export function handleRoute(pageId) {
     goTo('dashboard');
     return;
   }
+
+  savePersistedState('active_route', pageId);
+
 
   // Hide dropdown menu when navigating
   const dropdown = document.getElementById('nav-dropdown');

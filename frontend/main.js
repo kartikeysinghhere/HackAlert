@@ -1,4 +1,4 @@
-import { state } from './state.js';
+import { state, loadPersistedState } from './state.js';
 import { initTheme, toggleTheme } from './theme.js';
 import { goTo, handleRoute } from './router.js';
 import { censorMessage, escapeHTML, safeJSString, safeHTML, authHeaders } from './api.js';
@@ -185,7 +185,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     window.history.replaceState({}, '', window.location.pathname);
   } else {
-    const hash = window.location.hash.startsWith('#/') ? window.location.hash.slice(2) : 'landing';
+    const persistedRoute = loadPersistedState('active_route');
+    const hash = window.location.hash.startsWith('#/') ? window.location.hash.slice(2) : (persistedRoute || 'landing');
     handleRoute(hash);
   }
 });
+

@@ -200,10 +200,38 @@ export async function sendFriendRequest(btn, to_email) {
 }
 
 export async function loadFriends() {
+  const pendingDiv = document.getElementById('pending-requests');
+  const friendsDiv = document.getElementById('friends-list');
+
+  if (friendsDiv) {
+    friendsDiv.innerHTML = `
+      <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+        <div class="skeleton-card" aria-busy="true" aria-live="polite" style="min-height: 60px; padding: 10px; opacity: 0.85;">
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <div class="skeleton-circle shimmer" style="width: 28px; height: 28px;"></div>
+            <div style="flex: 1;">
+              <div class="skeleton-bar title shimmer" style="width: 70%; height: 10px;"></div>
+              <div class="skeleton-bar shimmer" style="width: 50%; height: 8px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton-card" aria-busy="true" aria-live="polite" style="min-height: 60px; padding: 10px; opacity: 0.7;">
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <div class="skeleton-circle shimmer" style="width: 28px; height: 28px;"></div>
+            <div style="flex: 1;">
+              <div class="skeleton-bar title shimmer" style="width: 60%; height: 10px;"></div>
+              <div class="skeleton-bar shimmer" style="width: 40%; height: 8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   try {
     const reqRes = await fetch('/api/friends/requests', { headers: authHeaders(), credentials: 'include' });
     const requests = await reqRes.json();
-    const pendingDiv = document.getElementById('pending-requests');
 
     if (pendingDiv) {
       if (requests.length) {
@@ -227,7 +255,6 @@ export async function loadFriends() {
 
     const friendRes = await fetch('/api/friends', { headers: authHeaders(), credentials: 'include' });
     const friends = await friendRes.json();
-    const friendsDiv = document.getElementById('friends-list');
 
     if (friendsDiv) {
       if (!friends.length) {
@@ -241,7 +268,7 @@ export async function loadFriends() {
             ${friends.map(f => `
               <div style="padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
                 <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#050508;flex-shrink:0;">
-                  ${escapeHTML(f.name.charAt(0).toUpperCase())}
+                   ${escapeHTML(f.name.charAt(0).toUpperCase())}
                 </div>
                 <div style="flex:1;min-width:0;">
                   <div style="display:flex;align-items:center;gap:4px;">
@@ -260,6 +287,9 @@ export async function loadFriends() {
     }
   } catch (e) {
     console.error('Error loading friends:', e);
+    if (friendsDiv) {
+      friendsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Failed to load friends.</p>';
+    }
   }
 }
 
@@ -376,10 +406,34 @@ export function eyeSeen() {
 }
 
 export async function loadConversations() {
+  const list = document.getElementById('conversations-list');
+  if (list) {
+    list.innerHTML = `
+      <div class="skeleton-card" aria-busy="true" aria-live="polite" style="min-height: 80px; padding: 12px; gap: 8px; margin-bottom: 8px; opacity: 0.8;">
+        <div style="display:flex; align-items:center; gap: 8px;">
+          <div class="skeleton-circle shimmer" style="width: 32px; height: 32px;"></div>
+          <div style="flex:1;">
+            <div class="skeleton-bar title shimmer" style="width: 60%; height: 12px;"></div>
+            <div class="skeleton-bar shimmer" style="width: 80%; height: 8px; margin-top: 6px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton-card" aria-busy="true" aria-live="polite" style="min-height: 80px; padding: 12px; gap: 8px; margin-bottom: 8px; opacity: 0.6;">
+        <div style="display:flex; align-items:center; gap: 8px;">
+          <div class="skeleton-circle shimmer" style="width: 32px; height: 32px;"></div>
+          <div style="flex:1;">
+            <div class="skeleton-bar title shimmer" style="width: 50%; height: 12px;"></div>
+            <div class="skeleton-bar shimmer" style="width: 70%; height: 8px; margin-top: 6px;"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   try {
     const res = await fetch('/api/dm/conversations', { headers: authHeaders() });
+    if (!res.ok) throw new Error('Failed to load conversations');
     const convos = await res.json();
-    const list = document.getElementById('conversations-list');
     if (!list) return;
 
     const totalUnread = convos.reduce((sum, c) => sum + c.unread, 0);
@@ -414,6 +468,9 @@ export async function loadConversations() {
     `).join(''));
   } catch (e) {
     console.error('Error loading conversations:', e);
+    if (list) {
+      list.innerHTML = '<p style="padding:20px;color:#ef4444;font-size:13px;">⚠️ Failed to load conversations.</p>';
+    }
   }
 }
 
@@ -467,10 +524,20 @@ export async function openDMChat(partnerEmail, partnerName) {
 export async function loadDMMessages(partnerEmail) {
   const area = document.getElementById('dm-chat-area');
   if (!area) return;
-  area.innerHTML = '<p style="color:var(--muted);text-align:center;font-size:13px;">Loading...</p>';
+  area.innerHTML = `
+    <div class="skeleton-card" aria-busy="true" aria-live="polite" style="min-height: 50px; padding: 8px; opacity: 0.7; margin-bottom: 8px; border-radius: 10px; max-width: 70%; margin-right: auto; gap: 4px;">
+      <div class="skeleton-bar shimmer" style="width: 90%; height: 10px;"></div>
+      <div class="skeleton-bar shimmer" style="width: 60%; height: 8px;"></div>
+    </div>
+    <div class="skeleton-card" aria-busy="true" aria-live="polite" style="min-height: 50px; padding: 8px; opacity: 0.7; margin-bottom: 8px; border-radius: 10px; max-width: 70%; margin-left: auto; align-items: flex-end; gap: 4px;">
+      <div class="skeleton-bar shimmer" style="width: 80%; height: 10px;"></div>
+      <div class="skeleton-bar shimmer" style="width: 50%; height: 8px;"></div>
+    </div>
+  `;
 
   try {
     const res = await fetch(`/api/dm/${encodeURIComponent(partnerEmail)}`, { headers: authHeaders() });
+    if (!res.ok) throw new Error('Failed to load messages');
     const messages = await res.json();
     area.innerHTML = '';
     messages.forEach(m => appendDMMessage(m));

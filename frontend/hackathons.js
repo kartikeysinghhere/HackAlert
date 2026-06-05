@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { escapeHTML, safeHTML, safeJSString, authHeaders } from './api.js';
-import { showToast, openModal, closeModal } from './ui.js';
+import { showToast, openModal, closeModal, renderErrorRecovery } from './ui.js';
+import { loadPersistedState, savePersistedState } from './state.js';
 
 let calendarDate = new Date();
 
@@ -13,24 +14,139 @@ export function getCountdown(dateStr) {
   return `${days}d ${hours}h left`;
 }
 
+function renderHackathonSkeletons() {
+  const grid = document.getElementById("hackathon-grid");
+  if (!grid) return;
+  
+  let html = '';
+  for (let i = 0; i < 6; i++) {
+    html += `
+      <div class="skeleton-card" aria-busy="true" aria-live="polite" style="opacity: 0.85;">
+        <div class="skeleton-bar title shimmer"></div>
+        <div class="skeleton-bar shimmer" style="width: 85%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 60%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 75%;"></div>
+        <div class="skeleton-bar shimmer" style="width: 50%;"></div>
+        <div style="display: flex; gap: 8px; margin-top: auto;">
+          <div class="skeleton-bar shimmer" style="width: 80px; height: 32px; border-radius: 8px;"></div>
+          <div class="skeleton-bar shimmer" style="width: 80px; height: 32px; border-radius: 8px;"></div>
+        </div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+}
+
+export function restorePersistedFilters() {
+  const persistedFilters = loadPersistedState('hackathon_filters');
+  if (persistedFilters) {
+    state.currentFilters = persistedFilters;
+  }
+  
+  const savedSearch = loadPersistedState('search_query');
+  const searchInput = document.getElementById('search-input');
+  if (searchInput && savedSearch !== null) {
+    searchInput.value = savedSearch;
+  }
+
+  // Update UI components
+  const dateSelect = document.getElementById('filter-date');
+  if (dateSelect) {
+    dateSelect.value = state.currentFilters.date;
+    if (state.currentFilters.date !== 'all') {
+      dateSelect.classList.add('active');
+      dateSelect.style.borderColor = 'var(--accent)';
+      dateSelect.style.color = 'var(--accent)';
+    }
+  }
+
+  const domainSelect = document.getElementById('filter-domain');
+  if (domainSelect) {
+    domainSelect.value = state.currentFilters.domain;
+    if (state.currentFilters.domain !== 'all') {
+      domainSelect.classList.add('active');
+      domainSelect.style.borderColor = 'var(--accent)';
+      domainSelect.style.color = 'var(--accent)';
+    }
+  }
+
+  const begBtn = document.getElementById('filter-beginner');
+  if (begBtn) {
+    if (state.currentFilters.beginner) {
+      begBtn.classList.add('active');
+      begBtn.style.borderColor = 'var(--accent)';
+      begBtn.style.color = 'var(--accent)';
+      begBtn.style.background = 'rgba(0, 255, 136, 0.06)';
+    } else {
+      begBtn.classList.remove('active');
+      begBtn.style.borderColor = 'var(--border)';
+      begBtn.style.color = 'var(--muted)';
+      begBtn.style.background = 'transparent';
+    }
+  }
+
+  const prizeBtn = document.getElementById('filter-prize');
+  if (prizeBtn) {
+    if (state.currentFilters.hasPrize) {
+      prizeBtn.classList.add('active');
+      prizeBtn.style.borderColor = 'var(--accent)';
+      prizeBtn.style.color = 'var(--accent)';
+      prizeBtn.style.background = 'rgba(0, 255, 136, 0.06)';
+    } else {
+      prizeBtn.classList.remove('active');
+      prizeBtn.style.borderColor = 'var(--border)';
+      prizeBtn.style.color = 'var(--muted)';
+      prizeBtn.style.background = 'transparent';
+    }
+  }
+
+  const mode = state.currentFilters.mode;
+  const modePills = document.querySelectorAll('.filter-bar:not(.secondary-filters) .filter-pill');
+  modePills.forEach(btn => {
+    const text = btn.textContent.toLowerCase();
+    let matches = false;
+    if (mode === 'all' && text.includes('all')) matches = true;
+    else if (mode === 'online' && text.includes('online')) matches = true;
+    else if (mode === 'offline' && text.includes('in-person')) matches = true;
+    else if (mode === 'hybrid' && text.includes('hybrid')) matches = true;
+    
+    if (matches) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  const clearBtn = document.getElementById('filter-clear');
+  const hasActiveFilters = state.currentFilters.mode !== 'all' || state.currentFilters.date !== 'all' || state.currentFilters.beginner || state.currentFilters.domain !== 'all' || state.currentFilters.hasPrize;
+  if (clearBtn) {
+    clearBtn.style.display = hasActiveFilters ? 'inline-block' : 'none';
+  }
+}
+
 export async function fetchHackathons() {
   const grid = document.getElementById("hackathon-grid");
   if (!grid) return;
-  grid.innerHTML = "<p style='grid-column:1/-1;text-align:center;color:#aaa;padding:40px 0;'>Loading live hackathons...</p>";
+  
+  renderHackathonSkeletons();
 
   try {
     const response = await fetch("/api/hackathons");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     state.allHackathons = await response.json();
     if (!state.allHackathons || state.allHackathons.length === 0) {
       state.allHackathons = getFallbackHackathons();
     }
     state.allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
-    renderHackathons(state.allHackathons);
+    restorePersistedFilters();
+    applyAdvancedFilters();
   } catch (error) {
     console.error("API Error:", error);
-    state.allHackathons = getFallbackHackathons();
-    state.allHackathons.sort((a, b) => new Date(a.start) - new Date(b.start));
-    renderHackathons(state.allHackathons);
+    renderErrorRecovery("hackathon-grid", "Failed to load hackathons. Please check your internet connection.", async () => {
+      await fetchHackathons();
+    });
   }
 }
 
@@ -104,6 +220,7 @@ export function renderHackathons(hackathons) {
 export function searchHackathons(query) {
   clearTimeout(state.searchTimeout);
   state.searchTimeout = setTimeout(() => {
+    savePersistedState('search_query', query);
     const q = query.toLowerCase().trim();
 
     if (!q) {
@@ -241,6 +358,7 @@ export function clearAllFilters() {
   const searchInput = document.getElementById('search-input');
   if (searchInput) searchInput.value = '';
 
+  savePersistedState('search_query', '');
   applyAdvancedFilters();
 }
 
@@ -278,6 +396,8 @@ export function applyAdvancedFilters() {
   if (clearBtn) {
     clearBtn.style.display = hasActiveFilters ? 'inline-block' : 'none';
   }
+
+  savePersistedState('hackathon_filters', state.currentFilters);
 
   let filtered = state.allHackathons;
 

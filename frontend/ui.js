@@ -112,3 +112,40 @@ document.addEventListener('click', (e) => {
     dropdown.style.display = 'none';
   }
 });
+
+export function renderErrorRecovery(containerId, errorText, retryCallback) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  let isRetrying = false;
+
+  container.innerHTML = `
+    <div class="error-recovery-container" style="text-align: center; padding: 30px 20px; border: 1px dashed var(--border); border-radius: 12px; margin: 20px 0; background: rgba(255, 68, 68, 0.03);">
+      <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
+      <p style="color: var(--text); font-size: 15px; margin-bottom: 16px; font-weight: 500;">${errorText || 'Something went wrong.'}</p>
+      <button class="btn-primary retry-btn" style="min-height: 40px; padding: 10px 20px; font-family: var(--mono); font-size: 13px; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: all 0.3s;">
+        Try Again
+      </button>
+    </div>
+  `;
+
+  const btn = container.querySelector('.retry-btn');
+  if (btn) {
+    btn.addEventListener('click', async () => {
+      if (isRetrying) return;
+      isRetrying = true;
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Retrying...';
+      try {
+        await retryCallback();
+      } catch (err) {
+        console.error('Retry failed:', err);
+        btn.textContent = originalText;
+        btn.disabled = false;
+        isRetrying = false;
+      }
+    });
+  }
+}
+
