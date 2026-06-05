@@ -463,6 +463,38 @@
         <button class="filter-pill" onclick="filterCards(this,'hybrid')">🔀 Hybrid</button>
         <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
       </div>
+
+      <div class="filter-bar secondary-filters" style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <select id="filter-date" class="filter-pill" onchange="applyAdvancedFilters()" style="background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 7px 16px; border-radius: 100px; font-family: var(--mono); font-size: 11px; cursor: pointer; outline: none; transition: all 0.2s;">
+          <option value="all">📅 Any Date</option>
+          <option value="week">📅 This Week</option>
+          <option value="month">📅 This Month</option>
+          <option value="3months">📅 Next 3 Months</option>
+        </select>
+
+        <select id="filter-domain" class="filter-pill" onchange="applyAdvancedFilters()" style="background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 7px 16px; border-radius: 100px; font-family: var(--mono); font-size: 11px; cursor: pointer; outline: none; transition: all 0.2s;">
+          <option value="all">🚀 Any Domain</option>
+          <option value="AI/ML">🤖 AI/ML</option>
+          <option value="Web3/Blockchain">⛓️ Web3/Blockchain</option>
+          <option value="Cybersecurity">🛡️ Cybersecurity</option>
+          <option value="Mobile">📱 Mobile</option>
+          <option value="Open Source">🌐 Open Source</option>
+          <option value="HealthTech">🏥 HealthTech</option>
+          <option value="FinTech">💳 FinTech</option>
+        </select>
+
+        <button id="filter-beginner" class="filter-pill" onclick="toggleBeginnerFilter()" style="display: flex; align-items: center; gap: 6px; background: transparent;">
+          👶 Beginner Friendly
+        </button>
+
+        <button id="filter-prize" class="filter-pill" onclick="togglePrizeFilter()" style="display: flex; align-items: center; gap: 6px; background: transparent;">
+          🏆 Has Prize
+        </button>
+
+        <button id="filter-clear" class="filter-pill" onclick="clearAllFilters()" style="border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); display: none;">
+          ❌ Clear Filters
+        </button>
+      </div>
     </div>
 
     <div id="dash-stats"
@@ -692,8 +724,55 @@
           rank the best open teams for you.</p>
         <textarea id="match-skills" placeholder="e.g. React, Node.js, Machine Learning, UI design..."
           style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;min-height:80px;"></textarea>
+
+        <div style="display:flex;gap:12px;margin-top:12px;">
+          <div style="flex:1;">
+            <label style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;">Experience Level</label>
+            <select id="match-experience" style="width:100%;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;margin-top:6px;cursor:pointer;">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate" selected>Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;">Hackathon Type</label>
+            <select id="match-hackathon-type" style="width:100%;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;margin-top:6px;cursor:pointer;">
+              <option value="any" selected>Any</option>
+              <option value="online">Online</option>
+              <option value="offline">Offline</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <label style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Availability</label>
+          <div style="display:flex;gap:16px;font-family:var(--mono);font-size:12px;color:var(--text);">
+            <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
+              <input type="radio" name="match-availability" value="weekends" checked style="accent-color:var(--accent);"> Weekends
+            </label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
+              <input type="radio" name="match-availability" value="weekdays" style="accent-color:var(--accent);"> Weekdays
+            </label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
+              <input type="radio" name="match-availability" value="full-time" style="accent-color:var(--accent);"> Full-time
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <label style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Preferred Role</label>
+          <div class="interests-grid" id="match-roles-container" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="frontend" style="display:none;"> Frontend</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="backend" style="display:none;"> Backend</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="fullstack" style="display:none;"> Fullstack</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="ml" style="display:none;"> ML / AI</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="designer" style="display:none;"> Designer</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="pm" style="display:none;"> PM</label>
+          </div>
+        </div>
+
         <button onclick="runMatchmaker()"
-          style="margin-top:16px;width:100%;background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Find
+          style="margin-top:20px;width:100%;background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Find
           Best Teams →</button>
         <div id="match-results" style="margin-top:24px;display:flex;flex-direction:column;gap:12px;"></div>
       </div>

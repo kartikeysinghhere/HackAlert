@@ -244,11 +244,15 @@ app.use(cors({
 const cspDirectives = {
   defaultSrc: ["'self'"],
   scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+  scriptSrcAttr: ["'unsafe-inline'"],
   styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
   fontSrc: ["'self'", "https://fonts.gstatic.com"],
   connectSrc: ["'self'", "https://www.google-analytics.com"],
   imgSrc: ["'self'", "data:", "https://*"],
-  objectSrc: ["'none'"]
+  objectSrc: ["'none'"],
+  baseUri: ["'self'"],
+  formAction: ["'self'"],
+  frameAncestors: ["'self'"]
 };
 
 if (process.env.NODE_ENV === 'production') {
@@ -257,6 +261,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(helmet({
   contentSecurityPolicy: {
+    useDefaults: false,
     directives: cspDirectives
   }
 }));
@@ -560,6 +565,91 @@ app.post('/api/reset-password', authLimiter, async (req, res) => {
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/realhackito.html');
+});
+
+// ── DEADLINE REMINDER — runs every day at 9 AM ──
+cron.schedule('0 9 * * *', async () => {
+  console.log('Running daily deadline reminder cron job...');
+  if (!process.env.BREVO_API_KEY) return;
+
+  try {
+    const { data: savedHacks, error } = await supabase.from('saved_hackathons').select('*');
+    if (error) throw error;
+    if (!savedHacks || savedHacks.length === 0) return;
+
+    const dueHackathonsByUser = {};
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    savedHacks.forEach(h => {
+      if (!h.hackathon_start) return;
+      const hackStart = new Date(h.hackathon_start);
+      hackStart.setHours(0, 0, 0, 0);
+      const diffTime = hackStart.getTime() - today.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 2) {
+        const userEmail = h.user_email.trim().toLowerCase();
+        if (!dueHackathonsByUser[userEmail]) {
+          dueHackathonsByUser[userEmail] = [];
+        }
+        dueHackathonsByUser[userEmail].push(h);
+      }
+    });
+
+    for (const [user_email, hacks] of Object.entries(dueHackathonsByUser)) {
+      try {
+        const hackListHtml = hacks.map(h => `
+          <tr style="border-bottom:1px solid #00f0ff11;">
+            <td style="padding:12px 0;color:#fff;font-weight:700;">${escapeEmailHTML(h.hackathon_name)}</td>
+            <td style="padding:12px 0;color:#b9cacb;font-size:13px;text-align:right;">
+              📅 ${new Date(h.hackathon_start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </td>
+            <td style="padding:12px 0;text-align:right;width:100px;">
+              <a href="${escapeEmailHTML(h.hackathon_website || '#')}" 
+                 style="background:#00f0ff;color:#050508;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;display:inline-block;">
+                Register →
+              </a>
+            </td>
+          </tr>
+        `).join('');
+
+        const subject = hacks.length === 1 
+          ? `⏰ Reminder: ${hacks[0].hackathon_name} registration closes in 2 days!`
+          : `⏰ Reminder: ${hacks[0].hackathon_name} and ${hacks.length - 1} other${hacks.length - 1 > 1 ? 's' : ''} registration closes in 2 days!`;
+
+        await sendEmail({
+          to: user_email,
+          subject,
+          html: `
+            <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:600px;margin:0 auto;">
+              <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert ⚡</h2>
+              <p style="color:#b9cacb;font-size:13px;margin-bottom:24px;">Registration reminder for your saved events</p>
+              <h3 style="color:#fff;margin-bottom:16px;">⏰ Closing in 2 days!</h3>
+              <table style="width:100%;border-collapse:collapse;">
+                ${hackListHtml}
+              </table>
+              <div style="margin-top:32px;text-align:center;">
+                <a href="https://hackalert-xwpd.onrender.com" 
+                   style="background:#00f0ff;color:#050508;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">
+                  View Saved List →
+                </a>
+              </div>
+              <p style="color:#555;font-size:11px;margin-top:24px;text-align:center;">
+                You're receiving this because you saved these hackathons on Hack/Alert.<br>
+                <a href="https://hackalert-xwpd.onrender.com" style="color:#555;">Manage preferences</a>
+              </p>
+            </div>
+          `
+        });
+        console.log(`Sent 2-day reminder email to ${user_email} for ${hacks.length} hackathon(s).`);
+      } catch (innerError) {
+        console.error(`Error sending reminder email to ${user_email}:`, innerError);
+      }
+    }
+  } catch (err) {
+    console.error('Error in deadline reminder cron job:', err);
+  }
 });
 
 // ── DAILY DIGEST — runs every day at 10 AM ──
@@ -1486,13 +1576,39 @@ app.post('/api/ai/analyze', authenticate, async (req, res) => {
 });
 
 app.post('/api/teams/match', authenticate, async (req, res) => {
-  const { user_skills } = req.body;
+  const { user_skills, experience_level, availability, preferred_role, hackathon_type } = req.body;
   if (!user_skills?.trim()) return res.status(400).json({ error: 'Provide your skills.' });
   const { data: teams } = await supabase.from('teams').select('id, name, hackathon, skills, slots_left, size, leader_email').gt('slots_left', 0);
   if (!teams?.length) return res.status(200).json({ matches: [], message: 'No open teams found.' });
   try {
-    const prompt = `You are a team matchmaking engine.\n\nUser skills: "${user_skills}"\n\nOpen teams: ${JSON.stringify(teams.map(t => ({ id: t.id, name: t.name, hackathon: t.hackathon, looking_for: t.skills, slots_left: t.slots_left })))}\n\nReturn ONLY a JSON array of top 3 matches:\n[\n  {\n    "id": <team_id>,\n    "name": "<team_name>",\n    "match_score": <0-100>,\n    "reason": "<one sentence why>"\n  }\n]`;
-    const response = await client.chat.completions.create({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], max_tokens: 500, temperature: 0.3 });
+    const prompt = `You are a team matchmaking engine.
+
+User Information:
+- Skills: "${user_skills}"
+- Experience Level: "${experience_level || 'not specified'}"
+- Availability: "${availability || 'not specified'}"
+- Preferred Role: "${preferred_role || 'not specified'}"
+- Hackathon Type Interest: "${hackathon_type || 'any'}"
+
+Open teams: ${JSON.stringify(teams.map(t => ({ id: t.id, name: t.name, hackathon: t.hackathon, looking_for: t.skills, slots_left: t.slots_left })))}
+
+Analyze each team's details (target hackathon, required skills) and compare them with the user's skills, experience, availability, preferred role, and hackathon type interest.
+Return ONLY a valid JSON array of top 3 matches:
+[
+  {
+    "id": <team_id>,
+    "name": "<team_name>",
+    "match_score": <0-100>,
+    "reason": "<one sentence explaining why this team is a match>",
+    "compatibility_details": {
+      "skill_overlap%": <0-100 as integer>,
+      "skill_overlap": "<0-100>%",
+      "role_fit": "<one of: Low, Medium, High>",
+      "availability_match": "<one of: Low, Medium, High>"
+    }
+  }
+]`;
+    const response = await client.chat.completions.create({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], max_tokens: 600, temperature: 0.3 });
     const raw = response.choices[0].message.content.trim().replace(/```json|```/g, '').trim();
     const matches = JSON.parse(raw);
     const enriched = matches.map(m => ({ ...m, ...teams.find(t => t.id === m.id) }));

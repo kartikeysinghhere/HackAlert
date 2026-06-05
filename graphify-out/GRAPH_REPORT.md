@@ -1,16 +1,16 @@
-# Graph Report - hackito_old  (2026-06-01)
+# Graph Report - hackito_old  (2026-06-02)
 
 ## Corpus Check
-- 79 files · ~54,020 words
+- 80 files · ~55,848 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 325 nodes · 466 edges · 74 communities (66 shown, 8 thin omitted)
+- 332 nodes · 481 edges · 75 communities (67 shown, 8 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0b7da856`
+- Built from commit: `219c4b18`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -38,15 +38,15 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `showToast()` - 33 edges
-2. `safeHTML()` - 25 edges
-3. `authHeaders()` - 25 edges
+2. `authHeaders()` - 26 edges
+3. `safeHTML()` - 25 edges
 4. `goTo()` - 19 edges
 5. `escapeHTML()` - 15 edges
 6. `openModal()` - 13 edges
 7. `closeModal()` - 11 edges
 8. `Enterprise Production Audit: HackAlert Codebase` - 11 edges
-9. `sendChat()` - 10 edges
-10. `renderHackathons()` - 9 edges
+9. `renderHackathons()` - 10 edges
+10. `sendChat()` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `requestPasswordReset()` --calls--> `isValidEmail()`  [INFERRED]
@@ -56,19 +56,19 @@
 - `middleware()` --calls--> `updateSession()`  [INFERRED]
   web/src/middleware.ts → web/src/utils/supabase/middleware.ts
 
-## Communities (74 total, 8 thin omitted)
+## Communities (75 total, 8 thin omitted)
 
 ### Community 0 - "General UI Interaction"
 Cohesion: 0.06
-Nodes (47): closeModal(), confirmLogout(), copyLink(), deleteTeammateListing(), fallbackCopy(), fetchHackathons(), fetchTeammates(), getFallbackHackathons() (+39 more)
+Nodes (48): closeModal(), confirmLogout(), copyLink(), deleteTeammateListing(), fallbackCopy(), fetchHackathons(), fetchTeammates(), getFallbackHackathons() (+40 more)
 
 ### Community 1 - "Chat Messaging"
-Cohesion: 0.12
-Nodes (29): authHeaders(), closeTeamChat(), copyInviteLink(), createTeam(), deleteProject(), deleteReview(), deleteTeam(), hideCreateTeam() (+21 more)
+Cohesion: 0.1
+Nodes (32): analyzeHackathon(), appendDMMessage(), appendMessage(), appendTeamMessage(), applyAdvancedFilters(), buildCountryList(), censorMessage(), clearAllFilters() (+24 more)
 
 ### Community 2 - "Rendering Helpers"
 Cohesion: 0.12
-Nodes (28): analyzeHackathon(), appendDMMessage(), appendMessage(), appendTeamMessage(), buildCountryList(), censorMessage(), createHackathonCard(), escapeHTML() (+20 more)
+Nodes (29): authHeaders(), closeTeamChat(), copyInviteLink(), createTeam(), deleteProject(), deleteReview(), deleteTeam(), hideCreateTeam() (+21 more)
 
 ### Community 3 - "Data Fetching & Rendering"
 Cohesion: 0.08
@@ -114,7 +114,7 @@ Nodes (4): code:bash (npm run dev), Deploy on Vercel, Getting Started, Learn Mor
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `requestPasswordReset()` connect `User Profile Management` to `General UI Interaction`, `Chat Messaging`?**
+- **Why does `requestPasswordReset()` connect `User Profile Management` to `General UI Interaction`, `Rendering Helpers`?**
   _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Why does `startHeartbeat()` connect `Team Management` to `General UI Interaction`?**
   _High betweenness centrality (0.018) - this node is a cross-community bridge._
@@ -123,7 +123,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `General UI Interaction` be split into smaller, more focused modules?**
   _Cohesion score 0.06 - nodes in this community are weakly interconnected._
 - **Should `Chat Messaging` be split into smaller, more focused modules?**
-  _Cohesion score 0.12 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Rendering Helpers` be split into smaller, more focused modules?**
   _Cohesion score 0.12 - nodes in this community are weakly interconnected._
 - **Should `Data Fetching & Rendering` be split into smaller, more focused modules?**

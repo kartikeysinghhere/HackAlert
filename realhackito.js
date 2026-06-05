@@ -187,7 +187,7 @@ function createHackathonCard(hack, isDimmed = false) {
     <a href="${escapeHTML(hack.website)}" target="_blank">Visit Website →</a>
     <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
     <button onclick="copyLink(this, '${safeJSString(hack.website)}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-    <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
+    <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" data-website="${escapeHTML(hack.website)}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
   `);
   return card;
 }
@@ -253,16 +253,244 @@ function renderHackathonsSorted(matched, rest) {
 }
 
 // ── Filter hackathon cards ──
+let currentFilters = {
+  mode: 'all',
+  date: 'all',
+  beginner: false,
+  domain: 'all',
+  hasPrize: false
+};
+
 function filterCards(btn, type) {
-  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  // Reset Mode Pills
+  const modeBar = btn.closest('.filter-bar');
+  if (modeBar) {
+    modeBar.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  }
   btn.classList.add('active');
+  
+  currentFilters.mode = type;
+  applyAdvancedFilters();
+}
+
+function toggleBeginnerFilter() {
+  const btn = document.getElementById('filter-beginner');
+  currentFilters.beginner = !currentFilters.beginner;
+  if (currentFilters.beginner) {
+    btn.classList.add('active');
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    btn.style.background = 'rgba(0, 255, 136, 0.06)';
+  } else {
+    btn.classList.remove('active');
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--muted)';
+    btn.style.background = 'transparent';
+  }
+  applyAdvancedFilters();
+}
+
+function togglePrizeFilter() {
+  const btn = document.getElementById('filter-prize');
+  currentFilters.hasPrize = !currentFilters.hasPrize;
+  if (currentFilters.hasPrize) {
+    btn.classList.add('active');
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    btn.style.background = 'rgba(0, 255, 136, 0.06)';
+  } else {
+    btn.classList.remove('active');
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--muted)';
+    btn.style.background = 'transparent';
+  }
+  applyAdvancedFilters();
+}
+
+function clearAllFilters() {
+  currentFilters = {
+    mode: 'all',
+    date: 'all',
+    beginner: false,
+    domain: 'all',
+    hasPrize: false
+  };
+
+  // Reset Mode Pills
+  const modePills = document.querySelectorAll('.filter-bar:not(.secondary-filters) .filter-pill');
+  modePills.forEach(btn => {
+    if (btn.textContent.toLowerCase().includes('all')) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Reset dropdowns
+  const dateSelect = document.getElementById('filter-date');
+  if (dateSelect) {
+    dateSelect.value = 'all';
+    dateSelect.classList.remove('active');
+    dateSelect.style.borderColor = 'var(--border)';
+    dateSelect.style.color = 'var(--muted)';
+  }
+
+  const domainSelect = document.getElementById('filter-domain');
+  if (domainSelect) {
+    domainSelect.value = 'all';
+    domainSelect.classList.remove('active');
+    domainSelect.style.borderColor = 'var(--border)';
+    domainSelect.style.color = 'var(--muted)';
+  }
+
+  // Reset beginner pill
+  const begBtn = document.getElementById('filter-beginner');
+  if (begBtn) {
+    begBtn.classList.remove('active');
+    begBtn.style.borderColor = 'var(--border)';
+    begBtn.style.color = 'var(--muted)';
+    begBtn.style.background = 'transparent';
+  }
+
+  // Reset prize pill
+  const prizeBtn = document.getElementById('filter-prize');
+  if (prizeBtn) {
+    prizeBtn.classList.remove('active');
+    prizeBtn.style.borderColor = 'var(--border)';
+    prizeBtn.style.color = 'var(--muted)';
+    prizeBtn.style.background = 'transparent';
+  }
+
+  // Clear search input
   const searchInput = document.getElementById('search-input');
   if (searchInput) searchInput.value = '';
 
-  if (type === 'online') renderHackathons(allHackathons.filter(h => h.virtual));
-  else if (type === 'hybrid') renderHackathons(allHackathons.filter(h => h.hybrid));
-  else if (type === 'offline') renderHackathons(allHackathons.filter(h => !h.virtual && !h.hybrid));
-  else renderHackathons(allHackathons);
+  applyAdvancedFilters();
+}
+
+function applyAdvancedFilters() {
+  const dateSelect = document.getElementById('filter-date');
+  if (dateSelect) {
+    currentFilters.date = dateSelect.value;
+    if (currentFilters.date !== 'all') {
+      dateSelect.classList.add('active');
+      dateSelect.style.borderColor = 'var(--accent)';
+      dateSelect.style.color = 'var(--accent)';
+    } else {
+      dateSelect.classList.remove('active');
+      dateSelect.style.borderColor = 'var(--border)';
+      dateSelect.style.color = 'var(--muted)';
+    }
+  }
+
+  const domainSelect = document.getElementById('filter-domain');
+  if (domainSelect) {
+    currentFilters.domain = domainSelect.value;
+    if (currentFilters.domain !== 'all') {
+      domainSelect.classList.add('active');
+      domainSelect.style.borderColor = 'var(--accent)';
+      domainSelect.style.color = 'var(--accent)';
+    } else {
+      domainSelect.classList.remove('active');
+      domainSelect.style.borderColor = 'var(--border)';
+      domainSelect.style.color = 'var(--muted)';
+    }
+  }
+
+  // Show/Hide Clear button
+  const clearBtn = document.getElementById('filter-clear');
+  const hasActiveFilters = currentFilters.mode !== 'all' || currentFilters.date !== 'all' || currentFilters.beginner || currentFilters.domain !== 'all' || currentFilters.hasPrize;
+  if (clearBtn) {
+    clearBtn.style.display = hasActiveFilters ? 'inline-block' : 'none';
+  }
+
+  let filtered = allHackathons;
+
+  // 1. Mode filter
+  if (currentFilters.mode === 'online') {
+    filtered = filtered.filter(h => h.virtual);
+  } else if (currentFilters.mode === 'hybrid') {
+    filtered = filtered.filter(h => h.hybrid);
+  } else if (currentFilters.mode === 'offline') {
+    filtered = filtered.filter(h => !h.virtual && !h.hybrid);
+  }
+
+  // 2. Date filter
+  if (currentFilters.date !== 'all') {
+    const now = new Date();
+    filtered = filtered.filter(h => {
+      if (!h.start) return false;
+      const startDate = new Date(h.start);
+      const diffTime = startDate.getTime() - now.getTime();
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
+      
+      if (currentFilters.date === 'week') {
+        return diffDays >= 0 && diffDays <= 7;
+      } else if (currentFilters.date === 'month') {
+        return diffDays >= 0 && diffDays <= 30;
+      } else if (currentFilters.date === '3months') {
+        return diffDays >= 0 && diffDays <= 90;
+      }
+      return true;
+    });
+  }
+
+  // 3. Beginner friendly filter
+  if (currentFilters.beginner) {
+    filtered = filtered.filter(h => {
+      const text = `${h.name} ${h.tags || ''}`.toLowerCase();
+      return text.includes('beginner') || text.includes('student') || text.includes('first-time');
+    });
+  }
+
+  // 4. Domain filter
+  if (currentFilters.domain !== 'all') {
+    filtered = filtered.filter(h => {
+      const text = `${h.name} ${h.tags || ''}`.toLowerCase();
+      const dom = currentFilters.domain;
+      if (dom === 'AI/ML') {
+        return text.includes('ai') || text.includes('ml') || text.includes('artificial intelligence') || text.includes('machine learning') || text.includes('deep learning');
+      } else if (dom === 'Web3/Blockchain') {
+        return text.includes('web3') || text.includes('blockchain') || text.includes('crypto') || text.includes('ethereum') || text.includes('solidity') || text.includes('smart contract');
+      } else if (dom === 'Cybersecurity') {
+        return text.includes('cybersecurity') || text.includes('security') || text.includes('cyber') || text.includes('infosec') || text.includes('fraud') || text.includes('ethical hacking');
+      } else if (dom === 'Mobile') {
+        return text.includes('mobile') || text.includes('android') || text.includes('ios') || text.includes('flutter') || text.includes('react native') || text.includes('swift');
+      } else if (dom === 'Open Source') {
+        return text.includes('open source') || text.includes('foss') || text.includes('git') || text.includes('github');
+      } else if (dom === 'HealthTech') {
+        return text.includes('health') || text.includes('medical') || text.includes('healthtech') || text.includes('bio') || text.includes('clinical');
+      } else if (dom === 'FinTech') {
+        return text.includes('fintech') || text.includes('finance') || text.includes('banking') || text.includes('payment') || text.includes('defi') || text.includes('wealth');
+      }
+      return true;
+    });
+  }
+
+  // 5. Prize filter
+  if (currentFilters.hasPrize) {
+    filtered = filtered.filter(h => {
+      return !!(h.prize || h.prizes || h.prize_pool || h.name.toLowerCase().includes('prize') || h.name.toLowerCase().includes('$') || h.name.toLowerCase().includes('pool') || h.name.toLowerCase().includes('inr') || h.name.toLowerCase().includes('reward'));
+    });
+  }
+
+  // Apply search input filtering if there is search text
+  const searchInput = document.getElementById('search-input');
+  if (searchInput && searchInput.value.trim()) {
+    const q = searchInput.value.toLowerCase().trim();
+    const matched = [];
+    const rest = [];
+    filtered.forEach(h => {
+      const inName = h.name.toLowerCase().includes(q);
+      const inCity = h.city && h.city.toLowerCase().includes(q);
+      const inCountry = h.country && h.country.toLowerCase().includes(q);
+      if (inName || inCity || inCountry) matched.push(h);
+      else rest.push(h);
+    });
+    renderHackathonsSorted(matched, rest);
+  } else {
+    renderHackathons(filtered);
+  }
 }
 
 // ── Page navigation ──
@@ -560,6 +788,7 @@ async function loginUser() {
       } else {
         goTo('dashboard');
       }
+      requestNotificationPermission();
       showToast('🎉', 'Login Successful!', `Welcome back, ${data.user?.name || 'user'}!`);
     } else {
       showToast('❌', 'Login Failed', data.error || 'Something went wrong during login.');
@@ -917,6 +1146,7 @@ function getFallbackHackathons() {
 function toggleSave(btn) {
   const name = btn.dataset.name;
   const start = btn.dataset.start;
+  const website = btn.dataset.website || '';
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
   const existingIndex = saved.findIndex(s => s.name === name);
 
@@ -927,15 +1157,70 @@ function toggleSave(btn) {
     btn.textContent = '🔖 Save';
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
+
+    // Sync with Supabase via backend
+    fetch(`/api/saved/${encodeURIComponent(name)}`, {
+      method: 'DELETE',
+      headers: authHeaders(),
+      credentials: 'include'
+    }).catch(err => console.error('Error deleting saved hackathon:', err));
   } else {
-    saved.push({ name, start });
+    saved.push({ name, start, website });
     btn.textContent = '✅ Saved';
     btn.style.borderColor = 'var(--accent)';
     btn.style.color = 'var(--accent)';
+
+    // Sync with Supabase via backend
+    fetch('/api/saved', {
+      method: 'POST',
+      headers: authHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ hackathon_name: name, hackathon_start: start, hackathon_website: website })
+    }).catch(err => console.error('Error saving hackathon:', err));
+
+    // Browser Notification
+    requestNotificationPermission().then(permission => {
+      if (permission === 'granted') {
+        new Notification("🔖 Hackathon Saved", {
+          body: `"${name}" has been saved to your reminders.`
+        });
+        scheduleNotificationCheck();
+      }
+    });
   }
   localStorage.setItem('saved', JSON.stringify(saved));
   updateStats();
   loadProfile(); // Update profile page if it's active
+}
+
+function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    return Promise.resolve('denied');
+  }
+  return Notification.requestPermission();
+}
+
+function scheduleNotificationCheck() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  
+  const saved = JSON.parse(localStorage.getItem('saved') || '[]');
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  saved.forEach(hack => {
+    if (!hack.start) return;
+    const hackDate = new Date(hack.start);
+    hackDate.setHours(0, 0, 0, 0);
+    const diffTime = hackDate.getTime() - today.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 2) {
+      new Notification("⏰ Hackathon Reminder", {
+        body: `"${hack.name}" is starting in 2 days!`,
+        tag: `reminder-${hack.name}`
+      });
+    }
+  });
 }
 
 function copyLink(btn, url) {
@@ -1332,6 +1617,17 @@ async function runMatchmaker() {
   const skills = document.getElementById('match-skills').value.trim();
   if (!skills) { showToast('⚠️', 'Missing', 'Enter your skills first.'); return; }
 
+  const experience = document.getElementById('match-experience').value;
+  const availability = document.querySelector('input[name="match-availability"]:checked')?.value || 'weekends';
+  
+  const selectedRoles = [];
+  document.querySelectorAll('#match-roles-container .interest-chip.selected input').forEach(inp => {
+    selectedRoles.push(inp.value);
+  });
+  const preferred_role = selectedRoles.join(', ');
+
+  const hackathon_type = document.getElementById('match-hackathon-type').value;
+
   const resultsDiv = document.getElementById('match-results');
   resultsDiv.innerHTML = '<p style="color:var(--muted);font-family:var(--mono);font-size:13px;">🤖 Analyzing teams...</p>';
 
@@ -1340,7 +1636,13 @@ async function runMatchmaker() {
       method: 'POST',
       headers: authHeaders(),
       credentials: 'include',
-      body: JSON.stringify({ user_skills: skills })
+      body: JSON.stringify({ 
+        user_skills: skills,
+        experience_level: experience,
+        availability: availability,
+        preferred_role: preferred_role,
+        hackathon_type: hackathon_type
+      })
     });
 
     const data = await res.json();
@@ -1355,22 +1657,35 @@ async function runMatchmaker() {
       return;
     }
 
-    resultsDiv.innerHTML = safeHTML(data.matches.map(m => `
-      <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:12px;padding:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <strong style="color:var(--text);font-size:15px;">${escapeHTML(m.name)}</strong>
-          <span style="background:rgba(0,240,255,0.1);color:var(--accent);font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:100px;border:1px solid rgba(0,240,255,0.3);">${m.match_score}% match</span>
+    resultsDiv.innerHTML = safeHTML(data.matches.map(m => {
+      const overlap = m.compatibility_details ? (m.compatibility_details['skill_overlap%'] !== undefined ? `${m.compatibility_details['skill_overlap%']}%` : (m.compatibility_details.skill_overlap || '0%')) : '0%';
+      const roleFit = m.compatibility_details ? (m.compatibility_details.role_fit || 'Medium') : 'Medium';
+      const availMatch = m.compatibility_details ? (m.compatibility_details.availability_match || 'Medium') : 'Medium';
+
+      return `
+        <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:12px;padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong style="color:var(--text);font-size:15px;">${escapeHTML(m.name)}</strong>
+            <span style="background:rgba(0,240,255,0.1);color:var(--accent);font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:100px;border:1px solid rgba(0,240,255,0.3);">${m.match_score}% match</span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">🏆 ${escapeHTML(m.hackathon || 'Open')}</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">🛠 Looking for: ${escapeHTML(m.skills || 'Any')}</p>
+          
+          <div style="display:flex;gap:12px;background:rgba(0,240,255,0.02);border:1px solid rgba(0,240,255,0.1);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);justify-content:space-between;flex-wrap:wrap;">
+            <div>📚 Overlap: <strong style="color:var(--text);">${escapeHTML(overlap)}</strong></div>
+            <div>👤 Role: <strong style="color:var(--accent2);">${escapeHTML(roleFit)}</strong></div>
+            <div>⏱️ Time: <strong style="color:var(--accent);">${escapeHTML(availMatch)}</strong></div>
+          </div>
+
+          <p style="font-size:13px;color:var(--accent3);font-style:italic;margin-bottom:12px;">"${escapeHTML(m.reason)}"</p>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">👥 ${m.slots_left} slot${m.slots_left !== 1 ? 's' : ''} left</p>
+          <button onclick="joinTeam(${m.id},'${safeJSString(m.name)}')"
+            style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">
+            Join Team →
+          </button>
         </div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">🏆 ${escapeHTML(m.hackathon || 'Open')}</p>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">🛠 Looking for: ${escapeHTML(m.skills || 'Any')}</p>
-        <p style="font-size:13px;color:var(--accent3);font-style:italic;margin-bottom:12px;">"${escapeHTML(m.reason)}"</p>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">👥 ${m.slots_left} slot${m.slots_left !== 1 ? 's' : ''} left</p>
-        <button onclick="joinTeam(${m.id},'${safeJSString(m.name)}')"
-          style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">
-          Join Team →
-        </button>
-      </div>
-    `).join(''));
+      `;
+    }).join(''));
 
   } catch (err) {
     resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Could not reach server.</p>';
