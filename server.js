@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 require('dotenv').config();
+require('./config/env');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { slowDown } = require('express-slow-down');
@@ -76,10 +77,32 @@ const speedLimiter = slowDown({
   delayMs: (hits) => hits * 500 // Add 500ms delay per request above 50
 });
 
+const feedbackLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  statusCode: 429,
+  message: { error: 'Too many feedback submissions. Please try again after an hour.' }
+});
+
+const messageLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30,
+  statusCode: 429,
+  message: { error: 'Too many messages sent. Please slow down.' }
+});
+
+const teamManagementLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  statusCode: 429,
+  message: { error: 'Too many team requests. Please try again after 15 minutes.' }
+});
+
+
 function blockSuspiciousHeaders(req, res, next) {
   const userAgent = req.headers['user-agent'] || '';
   const suspiciousUserAgents = /sqlmap|nikto|acunetix|dirbuster|censys|zgrab|nmap|masscan|hydra|w3af|arachni/i;
-  
+
   if (suspiciousUserAgents.test(userAgent)) {
     return res.status(400).json({ error: 'Suspicious request blocked.' });
   }
@@ -110,7 +133,7 @@ function censorMessage(text) {
 }
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_KEY);
 
 async function sendEmail({ to, subject, html }) {
   if (!process.env.BREVO_API_KEY) {
@@ -390,6 +413,39 @@ app.get('/api/bug-reports', authenticate, async (req, res) => {
   }
 });
 
+app.post('/api/feedback', authenticate, feedbackLimiter, async (req, res) => {
+  const { title, description, rating } = req.body;
+  if (!title || !description || rating === undefined) {
+    return res.status(400).json({ error: 'Required fields missing' });
+  }
+
+  const ratingNum = parseInt(rating, 10);
+  if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+    return res.status(400).json({ error: 'Invalid rating value' });
+  }
+
+  try {
+    const feedback = {
+      user_email: req.user.email,
+      title: sanitizeInput(title),
+      description: sanitizeInput(description),
+      rating: ratingNum,
+      created_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabase.from('app_feedback').insert([feedback]);
+    if (error) {
+      console.warn('[Feedback Fallback Log] DB write failed. Logging feedback contents:\n', JSON.stringify(feedback, null, 2));
+      console.warn('DB Error details:', error.message);
+      return handleError(res, error, 'Failed to submit feedback');
+    }
+
+    res.status(201).json({ message: 'Feedback submitted successfully. Thank you for your support! ❤️' });
+  } catch (err) {
+    handleError(res, err, 'Failed to submit feedback');
+  }
+});
+
 // Teammates Routes (MVP)
 const teammateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -496,7 +552,19 @@ app.post('/api/forgot-password', emailLimiter, async (req, res) => {
 
       if (!dbError) {
         // 4. Send email
-        const resetLink = `http://${req.get('host')}/realhackito.html?reset_token=${token}`;
+        const appUrl = (process.env.PUBLIC_APP_URL || 'https://localhost:3000').replace(/\/+$/, '');
+        const resetLink = `${appUrl}/realhackito.html?reset_token=${token}`;
+
+        // Validate the reset link
+        const parsedAppUrl = new URL(process.env.PUBLIC_APP_URL || 'https://localhost:3000');
+        const parsedReset = new URL(resetLink);
+        if (parsedReset.hostname !== parsedAppUrl.hostname) {
+          throw new Error('Security Exception: Generated reset link hostname does not match the configured application domain.');
+        }
+        if (parsedReset.protocol !== 'https:') {
+          throw new Error('Security Exception: Generated reset link protocol must be HTTPS.');
+        }
+
         await sendEmail({
           to: normalizedEmail,
           subject: 'Password Reset Request 🔐',
@@ -614,7 +682,7 @@ cron.schedule('0 9 * * *', async () => {
           </tr>
         `).join('');
 
-        const subject = hacks.length === 1 
+        const subject = hacks.length === 1
           ? `⏰ Reminder: ${hacks[0].hackathon_name} registration closes in 2 days!`
           : `⏰ Reminder: ${hacks[0].hackathon_name} and ${hacks.length - 1} other${hacks.length - 1 > 1 ? 's' : ''} registration closes in 2 days!`;
 
@@ -826,11 +894,42 @@ async function syncHackathons() {
     });
 
     // Cache in global variable for immediate use
-    globalHackathons = unique;
+    const mappedUnique = unique.map(h => ({
+      name: h.name,
+      start: h.start || h.hackathon_start || h.starts_at || null,
+      end: h.end || h.ends_at || h.deadline || null,
+      city: h.city || null,
+      country: h.country || null,
+      website: h.website || h.url || h.hackathon_website || null,
+      virtual: h.virtual || false,
+      hybrid: h.hybrid || false,
+      banner: h.banner || null,
+      logo: h.logo || null
+    }));
 
-    // Optional: Sync to a 'hackathon_cache' table if you want persistence across restarts
-    // await supabase.from('hackathon_cache').delete().neq('id', 0);
-    // await supabase.from('hackathon_cache').insert(unique);
+    globalHackathons = mappedUnique;
+
+    // Sync to a 'hackathons_cache' table for persistence across restarts
+    try {
+      await supabase.from('hackathons_cache').delete().neq('name', '');
+      if (mappedUnique.length > 0) {
+        const dbPayload = mappedUnique.map(h => ({
+          name: h.name,
+          start_date: h.start,
+          end_date: h.end,
+          city: h.city,
+          country: h.country,
+          website: h.website,
+          virtual: h.virtual,
+          hybrid: h.hybrid,
+          banner: h.banner,
+          logo: h.logo
+        }));
+        await supabase.from('hackathons_cache').insert(dbPayload);
+      }
+    } catch (cacheErr) {
+      console.warn('Database cache sync failed (optional step):', cacheErr.message);
+    }
 
     console.log(`✅ Cached ${unique.length} hackathons`);
   } catch (err) {
@@ -843,6 +942,10 @@ cron.schedule('0 */4 * * *', syncHackathons);
 syncHackathons();
 
 app.get('/api/hackathons', async (req, res) => {
+  if (globalHackathons && globalHackathons.length > 0) {
+    return res.json(globalHackathons);
+  }
+
   try {
     const { data, error } = await supabase
       .from('hackathons_cache')
@@ -864,7 +967,9 @@ app.get('/api/hackathons', async (req, res) => {
       logo: h.logo
     }));
 
-    globalHackathons = mapped;
+    if (mapped.length > 0) {
+      globalHackathons = mapped;
+    }
     res.json(mapped);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch hackathons' });
@@ -1148,7 +1253,8 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { email, pass } = req.body;
   if (!email || !pass) return res.status(400).json({ error: 'Fields required' });
-  const { data, error } = await supabase.from('users').select('id, name, email, password, mobile, college, username, gender, bio, skills').eq('email', email).single();
+  const normalizedEmail = normalizeEmail(email);
+  const { data, error } = await supabase.from('users').select('id, name, email, password, mobile, college, username, gender, bio, skills').eq('email', normalizedEmail).single();
   if (error || !data) return res.status(401).json({ error: 'Invalid email or password' });
   const match = await bcrypt.compare(pass, data.password);
   if (!match) return res.status(401).json({ error: 'Invalid email or password' });
@@ -1193,7 +1299,7 @@ app.get('/api/teams/:id', async (req, res) => {
   res.json(data);
 });
 
-app.post('/api/teams', authenticate, async (req, res) => {
+app.post('/api/teams', authenticate, teamManagementLimiter, async (req, res) => {
   const { name, hackathon, skills, size } = req.body;
   const leader_email = req.user.email;
   if (!name) return res.status(400).json({ error: 'Team name required' });
@@ -1208,7 +1314,7 @@ app.post('/api/teams', authenticate, async (req, res) => {
   res.json(data);
 });
 
-app.post('/api/teams/:id/members', authenticate, async (req, res) => {
+app.post('/api/teams/:id/members', authenticate, teamManagementLimiter, async (req, res) => {
   const { error } = await supabase.rpc('join_team', {
     team_id_input: parseInt(req.params.id),
     user_email_input: req.user.email,
@@ -1242,10 +1348,17 @@ app.get('/api/teams/:id/stream', authenticate, async (req, res) => {
   res.flushHeaders();
   if (!teamClients[id]) teamClients[id] = [];
   teamClients[id].push(res);
-  req.on('close', () => { teamClients[id] = teamClients[id].filter(c => c !== res); });
+  req.on('close', () => {
+    if (teamClients[id]) {
+      teamClients[id] = teamClients[id].filter(c => c !== res);
+      if (teamClients[id].length === 0) {
+        delete teamClients[id];
+      }
+    }
+  });
 });
 
-app.post('/api/teams/:id/messages', authenticate, async (req, res) => {
+app.post('/api/teams/:id/messages', authenticate, messageLimiter, async (req, res) => {
   const { id } = req.params;
   const { message } = req.body;
   const sender_email = req.user.email;
@@ -1318,13 +1431,32 @@ app.get('/api/teams/:id/members', authenticate, async (req, res) => {
 app.delete('/api/teams/:team_id/members/:user_email', authenticate, async (req, res) => {
   const { team_id } = req.params;
   const user_email = req.user.email;
-  const { data: team, error: teamError } = await supabase.from('teams').select('leader_email, slots_left').eq('id', team_id).single();
-  if (teamError || !team) return res.status(404).json({ error: 'Team not found' });
-  if (team.leader_email === user_email) return res.status(403).json({ error: 'Leader cannot leave. Delete the team instead.' });
-  const { error: deleteError } = await supabase.from('team_members').delete().eq('team_id', team_id).eq('user_email', user_email);
-  if (deleteError) return res.status(500).json({ error: deleteError.message });
-  await supabase.from('teams').update({ slots_left: team.slots_left + 1 }).eq('id', team_id);
-  res.json({ message: 'Successfully left the team' });
+
+  const teamIdParsed = parseInt(team_id, 10);
+  if (isNaN(teamIdParsed)) {
+    return res.status(400).json({ error: 'Invalid team ID' });
+  }
+
+  try {
+    const { error } = await supabase.rpc('leave_team', {
+      team_id_input: teamIdParsed,
+      user_email_input: user_email
+    });
+
+    if (error) {
+      if (error.message.includes('Team not found')) {
+        return res.status(404).json({ error: 'Team not found' });
+      }
+      if (error.message.includes('Leader cannot leave')) {
+        return res.status(403).json({ error: 'Leader cannot leave. Delete the team instead.' });
+      }
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ message: 'Successfully left the team' });
+  } catch (err) {
+    handleError(res, err, 'Failed to leave the team');
+  }
 });
 
 app.delete('/api/teams/:team_id', authenticate, async (req, res) => {
@@ -1470,13 +1602,30 @@ app.get('/api/friends/requests', authenticate, async (req, res) => {
 app.put('/api/friends/requests/:id', authenticate, async (req, res) => {
   const { status } = req.body;
   const { id } = req.params;
-  const { data: request } = await supabase.from('friend_requests').select('*').eq('id', id).eq('to_email', req.user.email).single();
-  if (!request) return res.status(404).json({ error: 'Request not found' });
-  await supabase.from('friend_requests').update({ status }).eq('id', id);
-  if (status === 'accepted') {
-    await supabase.from('friendships').upsert([{ user1_email: request.from_email, user2_email: request.to_email }], { onConflict: 'user1_email,user2_email' });
+
+  const requestIdParsed = parseInt(id, 10);
+  if (isNaN(requestIdParsed)) {
+    return res.status(400).json({ error: 'Invalid request ID' });
   }
-  res.json({ message: `Request ${status}` });
+
+  try {
+    const { error } = await supabase.rpc('accept_friend_request', {
+      request_id_input: requestIdParsed,
+      user_email_input: req.user.email,
+      status_input: status
+    });
+
+    if (error) {
+      if (error.message.includes('Request not found')) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ message: `Request ${status}` });
+  } catch (err) {
+    handleError(res, err, 'Failed to process friend request');
+  }
 });
 
 app.get('/api/friends', authenticate, async (req, res) => {
@@ -1522,7 +1671,7 @@ app.get('/api/dm/:partner_email', authenticate, async (req, res) => {
   res.json(data || []);
 });
 
-app.post('/api/dm/:partner_email', authenticate, async (req, res) => {
+app.post('/api/dm/:partner_email', authenticate, messageLimiter, async (req, res) => {
   const from_email = req.user.email;
   const to_email = decodeURIComponent(req.params.partner_email);
   const { message } = req.body;
@@ -1555,7 +1704,14 @@ app.get('/api/dm/:partner_email/stream', authenticate, (req, res) => {
   res.flushHeaders();
   if (!dmClients[dmKey]) dmClients[dmKey] = [];
   dmClients[dmKey].push(res);
-  req.on('close', () => { dmClients[dmKey] = dmClients[dmKey].filter(c => c !== res); });
+  req.on('close', () => {
+    if (dmClients[dmKey]) {
+      dmClients[dmKey] = dmClients[dmKey].filter(c => c !== res);
+      if (dmClients[dmKey].length === 0) {
+        delete dmClients[dmKey];
+      }
+    }
+  });
 });
 
 app.post('/api/ai/ideas', authenticate, async (req, res) => {
@@ -1639,7 +1795,7 @@ app.get('/api/users/online', authenticate, async (req, res) => {
 });
 
 app.get('/debug-env', (req, res) => {
-  res.json({ has_groq: !!process.env.GROQ_API_KEY, has_jwt: !!process.env.JWT_SECRET, has_supabase_url: !!process.env.SUPABASE_URL, has_supabase_key: !!process.env.SUPABASE_KEY });
+  res.json({ has_groq: !!process.env.GROQ_API_KEY, has_jwt: !!process.env.JWT_SECRET, has_supabase_url: !!process.env.SUPABASE_URL, has_supabase_key: !!process.env.SUPABASE_KEY, has_supabase_service_role_key: !!process.env.SUPABASE_SERVICE_ROLE_KEY });
 });
 
 // ── Public Profile ──
