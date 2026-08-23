@@ -13,7 +13,13 @@ const fallbackHackathons = [
   { name: "Open Source Jam", start: "2026-07-08", city: "", country: "", virtual: true, hybrid: false, website: "https://example.com/oss-jam" },
   { name: "Cyber Defense CTF", start: "2026-07-15", city: "Tel Aviv", country: "Israel", virtual: true, hybrid: false, website: "https://example.com/cyber-ctf" },
   { name: "EdTech Innovate", start: "2026-07-22", city: "Toronto", country: "Canada", virtual: false, hybrid: true, website: "https://example.com/edtech-innovate" },
-  { name: "Smart Cities Hack", start: "2026-08-01", city: "Dubai", country: "United Arab Emirates", virtual: false, hybrid: true, website: "https://example.com/smart-cities" }
+  { name: "Smart Cities Hack", start: "2026-08-01", city: "Dubai", country: "United Arab Emirates", virtual: false, hybrid: true, website: "https://example.com/smart-cities" },
+  { name: "HackMIT 2026", start: "2026-09-12", city: "Boston", country: "USA", virtual: false, hybrid: true, website: "https://hackmit.org" },
+  { name: "ETHDenver 2026", start: "2026-02-27", city: "Denver", country: "USA", virtual: false, hybrid: true, website: "https://ethdenver.com" },
+  { name: "HackFT 2026", start: "2026-08-15", city: "Singapore", country: "Singapore", virtual: false, hybrid: false, website: "https://example.com/hackft" },
+  { name: "SuperAI Hackathon", start: "2026-06-05", city: "Singapore", country: "Singapore", virtual: false, hybrid: true, website: "https://example.com/superai" },
+  { name: "EuroHack Munich", start: "2026-10-02", city: "Munich", country: "Germany", virtual: false, hybrid: true, website: "https://example.com/eurohack" },
+  { name: "AI Agent Decathlon", start: "2026-07-20", city: "", country: "", virtual: true, hybrid: false, website: "https://example.com/ai-agent-decathlon" }
 ];
 
 const getAll = async () => {

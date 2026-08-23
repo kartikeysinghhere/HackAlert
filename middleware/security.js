@@ -46,6 +46,37 @@ const aiLimiter = rateLimit({
     }
 });
 
+// 3.5. Feedback submission protection
+const feedbackLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour window
+    max: 5,
+    message: {
+        error: 'Too many feedback submissions. Please try again after an hour.',
+        code: 429
+    }
+});
+
+// 3.6. Message/Chat sending protection
+const messageLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 30,
+    message: {
+        error: 'Too many messages sent. Please slow down.',
+        code: 429
+    }
+});
+
+// 3.7. Team management protection
+const teamManagementLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes window
+    max: 10,
+    message: {
+        error: 'Too many team requests. Please try again after 15 minutes.',
+        code: 429
+    }
+});
+
+
 // 4. Progressive Slow-down (Anti-Abuse)
 // Instead of blocking, we slow down the response time for suspicious users.
 // This frustrates scrapers and bots while being less intrusive for real users.
@@ -110,5 +141,8 @@ module.exports = {
     aiLimiter,
     speedLimiter,
     botProtection,
-    aiPromptSanityCheck
+    aiPromptSanityCheck,
+    feedbackLimiter,
+    messageLimiter,
+    teamManagementLimiter
 };

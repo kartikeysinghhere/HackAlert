@@ -24,8 +24,8 @@
     "hash": "321e873fb352bbab097a439f03614118"
   },
   "D:\\hackito_old\\server.js": {
-    "mtime": 1780653842.142089,
-    "hash": "b544deb18d40f0ee4d6307e1389d0e85"
+    "mtime": 1780694537.7908835,
+    "hash": "b793512494b34a3db29c72a135ae58eb"
   },
   "D:\\hackito_old\\server_original.js": {
     "mtime": 1778566073.2922785,
@@ -116,44 +116,44 @@
     "hash": "c7c419e2253b82bc70c4c8d0288b9edb"
   },
   "D:\\hackito_old\\frontend\\auth.js": {
-    "mtime": 1780653642.9258356,
-    "hash": "89747be1376984e615635d0026fcf70b"
+    "mtime": 1780694363.443438,
+    "hash": "3493e3c9ce1666e3b71400e2a98032c7"
   },
   "D:\\hackito_old\\frontend\\chat.js": {
-    "mtime": 1780653666.5266736,
-    "hash": "473ae476e053acb470b784fcf0f775d7"
+    "mtime": 1780693405.7121167,
+    "hash": "a5efb52fb759c3416f26a53bcec73b22"
   },
   "D:\\hackito_old\\frontend\\hackathons.js": {
-    "mtime": 1780656395.4814372,
-    "hash": "3acff5c204591095c9a0c7a8996676b3"
+    "mtime": 1780694437.357376,
+    "hash": "9ee187f6a6664c454faf36741e8f0edb"
   },
   "D:\\hackito_old\\frontend\\main.js": {
-    "mtime": 1780656410.6504228,
-    "hash": "0bc2ff16692d5f00d6f796a7035d8c0f"
+    "mtime": 1780694481.726237,
+    "hash": "b4aeab6270321b791abe341ae61a3c28"
   },
   "D:\\hackito_old\\frontend\\profile.js": {
-    "mtime": 1780656288.5029223,
-    "hash": "3ea28c982ba81631349db7b1f026180f"
+    "mtime": 1780694341.6352546,
+    "hash": "f6f919e6f71dbefc9ca746eb7f557c41"
   },
   "D:\\hackito_old\\frontend\\router.js": {
-    "mtime": 1780656401.1911082,
-    "hash": "b2599717bf00554ba87333753c0598a2"
+    "mtime": 1780693361.7763476,
+    "hash": "7845892b483ab3f6144061085218bf39"
   },
   "D:\\hackito_old\\frontend\\state.js": {
     "mtime": 1780656297.767785,
     "hash": "5cf6c4fdee151320bbcba95bf02a5706"
   },
   "D:\\hackito_old\\frontend\\teams.js": {
-    "mtime": 1780656222.6140797,
-    "hash": "555ed2496cb66177233cd0e58aca6f0a"
+    "mtime": 1780694443.2311814,
+    "hash": "927e73891d58cbaa5cd5a505c84d3337"
   },
   "D:\\hackito_old\\frontend\\theme.js": {
     "mtime": 1780653611.8421257,
     "hash": "d0bed93e4c9e6850418c3dec8df4d0aa"
   },
   "D:\\hackito_old\\frontend\\ui.js": {
-    "mtime": 1780655959.7999763,
-    "hash": "9ab18bcb9d5db1edf39150f661ea0c21"
+    "mtime": 1780694465.5994632,
+    "hash": "3a41ec9d5e9c76f8eb6c7c0811a3dfc9"
   },
   "D:\\hackito_old\\jobs\\alerts.job.js": {
     "mtime": 1778493666.1165109,
@@ -240,8 +240,8 @@
     "hash": "8d4c880ea83e2ad6464406f3d31ff8ab"
   },
   "D:\\hackito_old\\services\\hackathons.service.js": {
-    "mtime": 1778506836.1588435,
-    "hash": "8e5ff6a6efacdd0f790bf89f52573710"
+    "mtime": 1780694403.2430346,
+    "hash": "a1108602d7fc612d20ded7bddfba4eee"
   },
   "D:\\hackito_old\\services\\messaging.service.js": {
     "mtime": 1778493666.146369,
@@ -352,8 +352,8 @@
     "hash": "3a4a167c73ff142da3348ab413688ffa"
   },
   "D:\\hackito_old\\realhackito.html": {
-    "mtime": 1780653736.0109527,
-    "hash": "3fbe6f5ca423cfbe254899b57fc1d318"
+    "mtime": 1780694456.702274,
+    "hash": "66e6109ab7a8fef4e0135580072a8a4a"
   },
   "D:\\hackito_old\\realhackito.js_new_part.txt": {
     "mtime": 1779445744.15574,

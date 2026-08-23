@@ -34,7 +34,9 @@ import {
 } from './profile.js';
 import {
   showToast, openModal, closeModal, showBugReport, hideBugReport,
-  submitBugReport, toggleNavMenu, suggestTranslation
+  submitBugReport, toggleNavMenu, suggestTranslation,
+  showFeedback, hideFeedback, submitFeedback,
+  openLanguageModal, closeLanguageModal, changeLanguage
 } from './ui.js';
 
 // Expose state and functions globally on window for full backward compatibility
@@ -136,6 +138,31 @@ window.hideBugReport = hideBugReport;
 window.submitBugReport = submitBugReport;
 window.toggleNavMenu = toggleNavMenu;
 window.suggestTranslation = suggestTranslation;
+window.openLanguageModal = openLanguageModal;
+window.closeLanguageModal = closeLanguageModal;
+window.changeLanguage = changeLanguage;
+window.showFeedback = showFeedback;
+window.hideFeedback = hideFeedback;
+window.submitFeedback = submitFeedback;
+
+// Polling controls
+let onlineUsersInterval = null;
+
+export function startOnlineUsersPolling() {
+  if (onlineUsersInterval) return;
+  fetchOnlineUsers();
+  onlineUsersInterval = setInterval(fetchOnlineUsers, 15000);
+}
+
+export function stopOnlineUsersPolling() {
+  if (onlineUsersInterval) {
+    clearInterval(onlineUsersInterval);
+    onlineUsersInterval = null;
+  }
+}
+
+window.startOnlineUsersPolling = startOnlineUsersPolling;
+window.stopOnlineUsersPolling = stopOnlineUsersPolling;
 
 // Initialization
 initTheme();
@@ -163,11 +190,21 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     startHeartbeat();
-    setInterval(fetchOnlineUsers, 15000);
-    fetchOnlineUsers();
+    startOnlineUsersPolling();
     startCountdowns();
   }
   showWelcomeMessage();
+
+  // Handle visibility changes to pause/resume polling
+  document.addEventListener('visibilitychange', () => {
+    if (localStorage.getItem('loggedIn') === 'true') {
+      if (document.hidden) {
+        stopOnlineUsersPolling();
+      } else {
+        startOnlineUsersPolling();
+      }
+    }
+  });
 
   const params = new URLSearchParams(window.location.search);
   const joinTeamId = params.get('join_team');
@@ -189,5 +226,27 @@ window.addEventListener('DOMContentLoaded', () => {
     const hash = window.location.hash.startsWith('#/') ? window.location.hash.slice(2) : (persistedRoute || 'landing');
     handleRoute(hash);
   }
+
+  // Accessibility Quick Wins: logo keypress
+  const logo = document.querySelector('.nav-logo');
+  if (logo) {
+    logo.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        goTo('landing');
+      }
+    });
+  }
+
+  // Accessibility Quick Wins: star ratings keypress
+  const stars = document.querySelectorAll('#star-input .star');
+  stars.forEach((s, idx) => {
+    s.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setRating(idx + 1);
+      }
+    });
+  });
 });
 

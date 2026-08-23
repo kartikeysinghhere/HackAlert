@@ -111,7 +111,7 @@
 
 ---
 
-## 📊 Final Scores
+##  Final Scores
 - **Overall Architecture:** 3/10
 - **Security:** 2/10
 - **Scalability:** 4/10
@@ -119,7 +119,7 @@
 
 ---
 
-## 🗺️ Prioritized Fix Roadmap
+##  Prioritized Fix Roadmap
 
 ### Phase 1: Critical Security Hotfixes (Do This Today)
 1. **Stop the Client-Side Secret Leak:** Remove `localStorage.setItem('authToken', ...)` from `realhackito.js`. Ensure the backend only issues HttpOnly cookies.

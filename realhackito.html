@@ -14,17 +14,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hack/Alert — Never Miss a Hackathon</title>
+  <meta name="description"
+    content="Hack/Alert aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you." />
+  <meta name="keywords"
+    content="hackathons, hackathon finder, developer team matching, code challenges, programmer events, buildathons" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://hackalert.co" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hackalert.co" />
+  <meta property="og:title" content="Hack/Alert — Never Miss a Hackathon" />
+  <meta property="og:description"
+    content="Discover, track, and form teams for the world's best hackathons. Search and filter by category, prizes, and region." />
+  <meta property="og:image" content="https://hackalert.co/assets/og-image.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://hackalert.co" />
+  <meta name="twitter:title" content="Hack/Alert — Find Your Next Hackathon & Team" />
+  <meta name="twitter:description"
+    content="Aggregates and tracks upcoming hackathons, helping you find teammates and build projects." />
+  <meta name="twitter:image" content="https://hackalert.co/assets/og-image.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="realhackito.css?v=2">
-  <meta name="description"
-    content="Hack/Alert aggregates every upcoming hackathon — filtered, ranked, and delivered straight to you." />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%2300f0ff%22><polygon points=%2213 2 3 14 12 14 11 22 21 10 12 10 13 2%22/></svg>">
+  <script>
+    // Immediate Theme Initialization to avoid lag or flash
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light');
+        document.addEventListener('DOMContentLoaded', () => {
+          document.body.classList.add('light');
+          const btn = document.getElementById('theme-btn');
+          if (btn) btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+        });
+      }
+    })();
+  </script>
   <style>
     /* ── THEME TOGGLE ── */
     .theme-toggle {
@@ -49,6 +86,31 @@
       background: rgba(0, 240, 255, 0.06);
     }
 
+    .lang-card:hover {
+      border-color: var(--accent) !important;
+      background: rgba(0, 240, 255, 0.08) !important;
+      transform: translateY(-2px);
+    }
+
+    /* Google Translate Clean Overrides */
+    .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame {
+      display: none !important;
+    }
+    body {
+      top: 0px !important;
+    }
+    .skiptranslate > iframe {
+      display: none !important;
+    }
+    .goog-tooltip, .goog-tooltip:hover {
+      display: none !important;
+    }
+    .goog-text-highlight {
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
     /* ── FLOATING BOT ── */
     #floating-bot {
       position: fixed;
@@ -57,12 +119,11 @@
       width: 56px;
       height: 56px;
       background: var(--accent);
-      color: #121212;
+      color: #050508;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -72,6 +133,12 @@
     #floating-bot:hover {
       transform: scale(1.1);
       box-shadow: 0 6px 20px rgba(0, 240, 255, 0.6);
+    }
+
+    #floating-bot svg {
+      width: 26px;
+      height: 26px;
+      stroke: #050508;
     }
 
     /* hide floating bot on bot page */
@@ -85,11 +152,16 @@
 
   <!-- NAVBAR -->
   <nav id="navbar">
-    <div class="nav-logo" onclick="goTo('landing')">Hack<span>/</span>Alert</div>
+    <div class="nav-logo" onclick="goTo('landing')" tabindex="0" role="link" aria-label="Hack/Alert Home">
+      Hack<span>/</span>Alert</div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button class="theme-toggle" onclick="suggestTranslation()" title="Translate page"
-        style="font-size:14px;">🌐</button>
-      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
+      <button class="theme-toggle" onclick="openLanguageModal()" id="lang-btn" title="Translate / Select Language" aria-label="Translate / Select Language"
+        style="font-size:14px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme" aria-label="Toggle theme">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
       <div class="nav-links" id="nav-auth">
         <button class="nav-btn" onclick="goTo('login')">Login</button>
         <button class="nav-btn cta" onclick="goTo('signup')">Sign Up →</button>
@@ -98,35 +170,37 @@
         <div style="position:relative;">
           <button class="nav-btn" onclick="toggleNavMenu()" id="nav-menu-btn"
             style="display:flex;align-items:center;gap:6px;">
-            ☰ Menu
+            Menu
           </button>
           <div id="nav-dropdown"
             style="display:none;position:absolute;right:0;top:48px;background:var(--surface);border:1px solid var(--border-light);border-radius:16px;padding:8px;min-width:200px;z-index:500;box-shadow:0 8px 24px rgba(0,0,0,0.3);">
             <button class="nav-btn" onclick="goTo('profile');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">👤 Profile</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Profile</button>
             <button class="nav-btn" onclick="goTo('dashboard');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🏆 Hackathons</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Hackathons</button>
             <button class="nav-btn" onclick="goTo('teams');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🤝 Teams</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Teams</button>
             <button class="nav-btn" onclick="goTo('find-teammates');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🎯 Find Teammates</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Find Teammates</button>
             <button class="nav-btn" onclick="goTo('calendar');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">📅 Calendar</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Calendar</button>
             <button class="nav-btn" onclick="goTo('showcase');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🚀 Showcase</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Showcase</button>
             <button class="nav-btn" onclick="goTo('messages');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">💬 Messages <span
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Messages <span
                 id="nav-unread-badge"
                 style="display:none;background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:100px;margin-left:4px;font-family:var(--mono);">0</span></button>
             <button class="nav-btn" onclick="goTo('ai-tools');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🧠 AI Tools</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">AI Tools</button>
             <button class="nav-btn" onclick="goTo('find-friends');toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">🔍 Find Friends</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;">Find Friends</button>
             <button class="nav-btn" onclick="showBugReport();toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:#f87171;">🐞 Report Bug</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:#f87171;">Report Bug</button>
+            <button class="nav-btn" onclick="showFeedback();toggleNavMenu()"
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:var(--accent);">Share Feedback</button>
             <div style="border-top:1px solid var(--border);margin:8px 0;"></div>
             <button class="nav-btn" onclick="logout();toggleNavMenu()"
-              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:#ef4444;">🚪 Logout</button>
+              style="width:100%;text-align:left;padding:10px 16px;border-radius:10px;color:#ef4444;">Logout</button>
           </div>
         </div>
       </div>
@@ -137,29 +211,32 @@
   <div id="bug-report-modal" class="modal">
     <div class="modal-content" style="max-width:500px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-        <h2 style="margin:0;color:#fff;display:flex;align-items:center;gap:10px;">🐞 Report a Bug</h2>
-        <button class="close-btn" onclick="hideBugReport()">✕</button>
+        <h2 style="margin:0;color:#fff;display:flex;align-items:center;gap:10px;">Report a Bug</h2>
+        <button class="close-btn" onclick="hideBugReport()">&times;</button>
       </div>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Found a glitch? Let us know and we'll squash it! 🛠️</p>
-      
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Found a glitch? Let us know and we'll fix it promptly.</p>
+
       <div class="input-group">
         <label for="bug-title">Title</label>
         <input type="text" id="bug-title" placeholder="Short summary of the issue" required>
       </div>
-      
+
       <div class="input-group">
         <label for="bug-desc">Description</label>
-        <textarea id="bug-desc" placeholder="What happened? How can we reproduce it?" style="min-height:120px;padding:12px;background:var(--surface);border:1px solid var(--border);color:#fff;width:100%;border-radius:10px;resize:vertical;" required></textarea>
+        <textarea id="bug-desc" placeholder="What happened? How can we reproduce it?"
+          style="min-height:120px;padding:12px;background:var(--surface);border:1px solid var(--border);color:#fff;width:100%;border-radius:10px;resize:vertical;"
+          required></textarea>
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
         <div class="input-group" style="margin-bottom:0;">
           <label for="bug-severity">Severity</label>
-          <select id="bug-severity" style="width:100%;background:var(--surface);border:1px solid var(--border);color:#fff;padding:10px;border-radius:10px;cursor:pointer;">
+          <select id="bug-severity"
+            style="width:100%;background:var(--surface);border:1px solid var(--border);color:#fff;padding:10px;border-radius:10px;cursor:pointer;">
             <option value="low">Low</option>
             <option value="medium" selected>Medium</option>
             <option value="high">High</option>
-            <option value="critical">Critical 🔥</option>
+            <option value="critical">Critical</option>
           </select>
         </div>
         <div class="input-group" style="margin-bottom:0;">
@@ -172,6 +249,43 @@
     </div>
   </div>
 
+  <!-- FEEDBACK MODAL -->
+  <div id="feedback-modal" class="modal">
+    <div class="modal-content" style="max-width:500px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2 style="margin:0;color:#fff;display:flex;align-items:center;gap:10px;">Share Feedback</h2>
+        <button class="close-btn" onclick="hideFeedback()">&times;</button>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Have ideas, suggestions, or general feedback? We'd love to hear from you!</p>
+
+      <div class="input-group">
+        <label for="feedback-title">Subject</label>
+        <input type="text" id="feedback-title" placeholder="What is this feedback about?" required>
+      </div>
+
+      <div class="input-group">
+        <label for="feedback-desc">Your Feedback</label>
+        <textarea id="feedback-desc" placeholder="Share your experience or suggestions for improvement..."
+          style="min-height:120px;padding:12px;background:var(--surface);border:1px solid var(--border);color:#fff;width:100%;border-radius:10px;resize:vertical;"
+          required></textarea>
+      </div>
+
+      <div class="input-group">
+        <label for="feedback-rating">How would you rate your overall experience?</label>
+        <select id="feedback-rating"
+          style="width:100%;background:var(--surface);border:1px solid var(--border);color:#fff;padding:10px;border-radius:10px;cursor:pointer;">
+          <option value="5">5 - Excellent</option>
+          <option value="4">4 - Great</option>
+          <option value="3" selected>3 - Good</option>
+          <option value="2">2 - Fair</option>
+          <option value="1">1 - Poor</option>
+        </select>
+      </div>
+
+      <button onclick="submitFeedback()" class="btn-primary" style="width:100%;font-weight:700;">Submit Feedback →</button>
+    </div>
+  </div>
+
   <!-- LANDING -->
   <div class="page active" id="page-landing">
     <div class="orb orb-1"></div>
@@ -179,7 +293,7 @@
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-badge">⚡ AI-Powered Hackathon Platform</div>
+      <div class="hero-badge">AI-Powered Hackathon Platform</div>
       <h1>Never Miss<br>A <span class="highlight">HACKATHON</span><br>Again<span class="highlight">!</span></h1>
       <p>Your AI-powered hub for hackathons, teammates, and project ideas.</p>
       <div class="hero-actions">
@@ -223,32 +337,44 @@
     <!-- FEATURES GRID -->
     <div class="features" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
       <div class="feature-card" style="border-color:rgba(0,240,255,0.2);">
-        <div class="feature-icon">🤖</div>
+        <div class="feature-icon" style="color:var(--accent);display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+        </div>
         <h3>HackBot AI</h3>
         <p>Find hackathons instantly using AI prompts.</p>
       </div>
       <div class="feature-card" style="border-color:rgba(208,91,255,0.2);">
-        <div class="feature-icon">💡</div>
+        <div class="feature-icon" style="color:var(--accent2);display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+        </div>
         <h3>Project Idea Generator</h3>
         <p>Turn themes into hackathon-ready project ideas instantly.</p>
       </div>
       <div class="feature-card" style="border-color:rgba(0,240,255,0.2);">
-        <div class="feature-icon">🔍</div>
+        <div class="feature-icon" style="color:var(--accent);display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
         <h3>Difficulty Analyzer</h3>
         <p>Analyze skill match, prep time, and winning chances.</p>
       </div>
       <div class="feature-card" style="border-color:rgba(208,91,255,0.2);">
-        <div class="feature-icon">🤝</div>
+        <div class="feature-icon" style="color:var(--accent2);display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
         <h3>Team Builder</h3>
         <p>Create teams, manage tasks, and collaborate in real time.</p>
       </div>
       <div class="feature-card" style="border-color:rgba(0,240,255,0.2);">
-        <div class="feature-icon">💬</div>
+        <div class="feature-icon" style="color:var(--accent);display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
         <h3>Hacker Social</h3>
         <p>Meet builders, form teams, and stay connected in one place.</p>
       </div>
       <div class="feature-card" style="border-color:rgba(208,91,255,0.2);">
-        <div class="feature-icon">📅</div>
+        <div class="feature-icon" style="color:var(--accent2);display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
         <h3>Smart Calendar</h3>
         <p>Never miss deadlines, finals, or registrations again.</p>
       </div>
@@ -264,8 +390,9 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;">
         <div style="text-align:center;">
           <div
-            style="width:56px;height:56px;border-radius:16px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
-            🎯</div>
+            style="width:56px;height:56px;border-radius:16px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent);margin:0 auto 16px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
           <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:6px;">STEP 1</div>
           <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Find Your Hackathon</h4>
           <p style="color:var(--muted);font-size:12px;">Browse 24+ hackathons or ask HackBot to find the perfect one
@@ -273,8 +400,9 @@
         </div>
         <div style="text-align:center;">
           <div
-            style="width:56px;height:56px;border-radius:16px;background:rgba(208,91,255,0.1);border:1px solid rgba(208,91,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
-            🤝</div>
+            style="width:56px;height:56px;border-radius:16px;background:rgba(208,91,255,0.1);border:1px solid rgba(208,91,255,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent2);margin:0 auto 16px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
           <div style="font-family:var(--mono);font-size:10px;color:var(--accent2);margin-bottom:6px;">STEP 2</div>
           <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Build Your Team</h4>
           <p style="color:var(--muted);font-size:12px;">Find teammates by skills, send friend requests, and plan
@@ -282,8 +410,9 @@
         </div>
         <div style="text-align:center;">
           <div
-            style="width:56px;height:56px;border-radius:16px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
-            💡</div>
+            style="width:56px;height:56px;border-radius:16px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent);margin:0 auto 16px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+          </div>
           <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:6px;">STEP 3</div>
           <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Generate Ideas</h4>
           <p style="color:var(--muted);font-size:12px;">Use AI to generate winning project ideas with full tech stack
@@ -291,8 +420,9 @@
         </div>
         <div style="text-align:center;">
           <div
-            style="width:56px;height:56px;border-radius:16px;background:rgba(208,91,255,0.1);border:1px solid rgba(208,91,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">
-            🏆</div>
+            style="width:56px;height:56px;border-radius:16px;background:rgba(208,91,255,0.1);border:1px solid rgba(208,91,255,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent2);margin:0 auto 16px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7.5a1.5 1.5 0 0 0-1.5 1.5v0c0 .28.22.5.5.5h11c.28 0 .5-.22.5-.5v0a1.5 1.5 0 0 0-1.5-1.5H15c-.55 0-1-.45-1-1v-2.34"/><path d="M18 4H6v7a6 6 0 0 0 12 0V4z"/></svg>
+          </div>
           <div style="font-family:var(--mono);font-size:10px;color:var(--accent2);margin-bottom:6px;">STEP 4</div>
           <h4 style="color:#fff;font-size:14px;margin-bottom:6px;">Win & Showcase</h4>
           <p style="color:var(--muted);font-size:12px;">Submit your project to our showcase and build your hacker
@@ -304,16 +434,18 @@
     <!-- CTA SECTION -->
     <div
       style="margin:20px 40px 60px;padding:48px;background:linear-gradient(135deg,rgba(0,240,255,0.08),rgba(208,91,255,0.08));border:1px solid rgba(0,240,255,0.2);border-radius:24px;text-align:center;">
-      <h2 id="bottom-cta-heading" style="font-size:clamp(22px,3vw,36px);font-weight:800;color:#fff;margin-bottom:12px;">Ready to win your first hackathon?</h2>
+      <h2 id="bottom-cta-heading" style="font-size:clamp(22px,3vw,36px);font-weight:800;color:#fff;margin-bottom:12px;">
+        Ready to win your first hackathon?</h2>
       <p style="color:var(--muted);font-size:15px;margin-bottom:28px;">Join thousands of developers who use Hack/Alert
         to find, prepare, and win hackathons.</p>
       <button class="btn-hero primary" onclick="goTo('signup')" id="get-started-btn2"
         style="font-size:15px;padding:18px 48px;">Create Free Account →</button>
     </div>
 
-    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win 🤍<br>
-      <span style="display:inline-block;margin-top:8px;font-size:12px;color:var(--muted);">Designed &amp; Built with ⚡
-        by <strong style="color:var(--accent);text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+    <footer class="site-footer">© 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block;margin-top:8px;font-size:12px;color:var(--muted);">Designed &amp; Built
+        by <strong style="color:var(--accent);text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
@@ -323,7 +455,7 @@
     <div class="orb auth-orb2"></div>
     <div class="auth-box">
       <div class="auth-logo">Hack/Alert</div>
-      <h2 class="auth-title">Welcome back 👋</h2>
+      <h2 class="auth-title">Welcome back</h2>
       <p class="auth-sub">Log in to track your hackathons</p>
       <form onsubmit="event.preventDefault(); loginUser();">
         <label for="login-email">Email address</label>
@@ -333,7 +465,8 @@
         <button type="submit" class="auth-submit">Log in →</button>
       </form>
       <div class="auth-footer">
-        <a onclick="goTo('forgot-password')" style="color:var(--accent);display:block;margin-bottom:8px;">Forgot Password?</a>
+        <a onclick="goTo('forgot-password')" style="color:var(--accent);display:block;margin-bottom:8px;">Forgot
+          Password?</a>
         Don't have an account? <a onclick="goTo('signup')">Sign up free</a>
       </div>
     </div>
@@ -345,7 +478,7 @@
     <div class="orb auth-orb2"></div>
     <div class="auth-box">
       <div class="auth-logo">Hack/Alert</div>
-      <h2 class="auth-title">Reset Password 🔒</h2>
+      <h2 class="auth-title">Reset Password</h2>
       <p class="auth-sub">Enter your email and we'll send you a link</p>
       <form onsubmit="event.preventDefault(); requestPasswordReset();">
         <label for="forgot-email">Email address</label>
@@ -362,7 +495,7 @@
     <div class="orb auth-orb2"></div>
     <div class="auth-box">
       <div class="auth-logo">Hack/Alert</div>
-      <h2 class="auth-title">New Password 🔑</h2>
+      <h2 class="auth-title">New Password</h2>
       <p class="auth-sub">Please enter your new secure password</p>
       <form onsubmit="event.preventDefault(); handlePasswordReset();">
         <label for="reset-pass">New Password</label>
@@ -403,14 +536,14 @@
             id="gender-male-label">
             <input type="radio" name="gender" value="male" id="gender-male" style="display:none;"
               onchange="selectGender('male')">
-            ♂ Male
+            Male
           </label>
           <label for="gender-female"
             style="display:flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--border-light);border-radius:10px;cursor:pointer;flex:1;justify-content:center;font-size:14px;color:var(--muted);transition:all 0.2s;"
             id="gender-female-label">
             <input type="radio" name="gender" value="female" id="gender-female" style="display:none;"
               onchange="selectGender('female')">
-            ♀ Female
+            Female
           </label>
         </div>
         <label for="signup-bio">Bio (Optional)</label>
@@ -438,12 +571,11 @@
     <div class="dash-header">
       <div>
         <h2>Upcoming <span>Hackathons</span></h2>
-        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Live data · Updated just
-          now</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Live data · Updated regularly</p>
       </div>
 
-      <input type="text" id="search-input" aria-label="Search hackathons" placeholder="🔍 Search hackathons..." oninput="searchHackathons(this.value)"
-        style="
+      <input type="text" id="search-input" aria-label="Search hackathons" placeholder="Search hackathons..."
+        oninput="searchHackathons(this.value)" style="
         background: rgba(255,255,255,0.05);
         border: 1px solid var(--border-light);
         border-radius: 10px;
@@ -459,56 +591,62 @@
 
       <div class="filter-bar">
         <button class="filter-pill active" onclick="filterCards(this,'all')">All</button>
-        <button class="filter-pill" onclick="filterCards(this,'online')">🌐 Online</button>
-        <button class="filter-pill" onclick="filterCards(this,'hybrid')">🔀 Hybrid</button>
-        <button class="filter-pill" onclick="filterCards(this,'offline')">📍 Offline</button>
+        <button class="filter-pill" onclick="filterCards(this,'online')">Online</button>
+        <button class="filter-pill" onclick="filterCards(this,'hybrid')">Hybrid</button>
+        <button class="filter-pill" onclick="filterCards(this,'offline')">Offline</button>
       </div>
 
-      <div class="filter-bar secondary-filters" style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-        <select id="filter-date" class="filter-pill" onchange="applyAdvancedFilters()" style="background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 7px 16px; border-radius: 100px; font-family: var(--mono); font-size: 11px; cursor: pointer; outline: none; transition: all 0.2s;">
-          <option value="all">📅 Any Date</option>
-          <option value="week">📅 This Week</option>
-          <option value="month">📅 This Month</option>
-          <option value="3months">📅 Next 3 Months</option>
+      <div class="filter-bar secondary-filters"
+        style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <select id="filter-date" class="filter-pill" onchange="applyAdvancedFilters()"
+          style="background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 7px 16px; border-radius: 100px; font-family: var(--mono); font-size: 11px; cursor: pointer; outline: none; transition: all 0.2s;">
+          <option value="all">Any Date</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="3months">Next 3 Months</option>
         </select>
 
-        <select id="filter-domain" class="filter-pill" onchange="applyAdvancedFilters()" style="background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 7px 16px; border-radius: 100px; font-family: var(--mono); font-size: 11px; cursor: pointer; outline: none; transition: all 0.2s;">
-          <option value="all">🚀 Any Domain</option>
-          <option value="AI/ML">🤖 AI/ML</option>
-          <option value="Web3/Blockchain">⛓️ Web3/Blockchain</option>
-          <option value="Cybersecurity">🛡️ Cybersecurity</option>
-          <option value="Mobile">📱 Mobile</option>
-          <option value="Open Source">🌐 Open Source</option>
-          <option value="HealthTech">🏥 HealthTech</option>
-          <option value="FinTech">💳 FinTech</option>
+        <select id="filter-domain" class="filter-pill" onchange="applyAdvancedFilters()"
+          style="background: var(--surface); color: var(--muted); border: 1px solid var(--border); padding: 7px 16px; border-radius: 100px; font-family: var(--mono); font-size: 11px; cursor: pointer; outline: none; transition: all 0.2s;">
+          <option value="all">Any Domain</option>
+          <option value="AI/ML">AI/ML</option>
+          <option value="Web3/Blockchain">Web3/Blockchain</option>
+          <option value="Cybersecurity">Cybersecurity</option>
+          <option value="Mobile">Mobile</option>
+          <option value="Open Source">Open Source</option>
+          <option value="HealthTech">HealthTech</option>
+          <option value="FinTech">FinTech</option>
         </select>
 
-        <button id="filter-beginner" class="filter-pill" onclick="toggleBeginnerFilter()" style="display: flex; align-items: center; gap: 6px; background: transparent;">
-          👶 Beginner Friendly
+        <button id="filter-beginner" class="filter-pill" onclick="toggleBeginnerFilter()"
+          style="display: flex; align-items: center; gap: 6px; background: transparent;">
+          Beginner Friendly
         </button>
 
-        <button id="filter-prize" class="filter-pill" onclick="togglePrizeFilter()" style="display: flex; align-items: center; gap: 6px; background: transparent;">
-          🏆 Has Prize
+        <button id="filter-prize" class="filter-pill" onclick="togglePrizeFilter()"
+          style="display: flex; align-items: center; gap: 6px; background: transparent;">
+          Has Prize
         </button>
 
-        <button id="filter-clear" class="filter-pill" onclick="clearAllFilters()" style="border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); display: none;">
-          ❌ Clear Filters
+        <button id="filter-clear" class="filter-pill" onclick="clearAllFilters()"
+          style="border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); display: none;">
+          Clear Filters
         </button>
       </div>
     </div>
 
     <div id="dash-stats"
       style="display:flex;gap:24px;padding:16px 40px;border-bottom:1px solid var(--border);flex-wrap:wrap;">
-      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">📦 Total: <strong id="stat-total"
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">Total: <strong id="stat-total"
           style="color:var(--text);">0</strong></div>
-      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">✅ Upcoming: <strong id="stat-upcoming"
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">Upcoming: <strong id="stat-upcoming"
           style="color:var(--accent);">0</strong></div>
-      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">⏰ Ended: <strong id="stat-ended"
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">Ended: <strong id="stat-ended"
           style="color:#ef4444;">0</strong></div>
-      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">🔖 Saved: <strong id="stat-saved"
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted);">Saved: <strong id="stat-saved"
           style="color:var(--accent2);">0</strong></div>
       <div style="margin-left:auto;position:relative;">
-        <input id="country-search" aria-label="Filter by country" type="text" placeholder="🌍 Filter by country..."
+        <input id="country-search" aria-label="Filter by country" type="text" placeholder="Filter by country..."
           oninput="filterCountryList(this.value)"
           onfocus="document.getElementById('country-list').style.display='block'"
           onblur="setTimeout(()=>document.getElementById('country-list').style.display='none',200)"
@@ -521,21 +659,25 @@
 
     <div class="hackathon-grid" id="hackathon-grid"></div>
 
-    <div style="text-align:center;color:var(--muted);font-size:13px;font-family:var(--mono);margin:32px 0 16px 0;opacity:0.8;">
-      🚧 This website is still under construction — be patient, we will update new hackathons soon!
+    <div
+      style="text-align:center;color:var(--muted);font-size:13px;font-family:var(--mono);margin:32px 0 16px 0;opacity:0.8;">
+      Platform is continuously updated with new hackathons and live opportunities.
     </div>
 
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
   <!-- BOT -->
   <div class="page" id="page-bot">
     <div class="bot-header">
-      <div class="bot-avatar">🤖</div>
+      <div class="bot-avatar" style="display:flex;align-items:center;justify-content:center;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.3);color:var(--accent);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+      </div>
       <div class="bot-info">
         <h3>HackBot</h3>
         <p>// AI Hackathon Assistant</p>
@@ -554,12 +696,14 @@
       <button class="quick-chip" onclick="quickSend(this)">Hackathons for students</button>
     </div>
     <div class="chat-input-wrap">
-      <button id="mic-btn" onclick="toggleVoiceInput()" title="Voice input"
-        style="background:transparent;border:1px solid var(--border-light);border-radius:8px;padding:0 12px;height:44px;cursor:pointer;font-size:18px;color:var(--muted);transition:all 0.2s;flex-shrink:0;">🎤</button>
+      <button id="mic-btn" onclick="toggleVoiceInput()" title="Voice input" aria-label="Voice input"
+        style="background:transparent;border:1px solid var(--border-light);border-radius:8px;padding:0 12px;height:44px;cursor:pointer;color:var(--muted);transition:all 0.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
       <input type="text" id="chat-input" aria-label="Ask HackBot" placeholder="Ask me about any hackathon..." />
       <button id="stop-btn" onclick="stopSpeech()" title="Stop speaking"
         style="display:none;background:#ef4444;border:none;border-radius:8px;width:44px;height:44px;cursor:pointer;font-size:14px;color:#fff;flex-shrink:0;align-items:center;justify-content:center;">■</button>
-      <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
+      <button class="send-btn" id="send-btn" onclick="sendChat()" aria-label="Send message">→</button>
     </div>
   </div>
 
@@ -578,27 +722,27 @@
       <div class="feature-card">
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
           <div id="profile-avatar"
-            style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">
-            👤</div>
+            style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#050508;flex-shrink:0;">
+          </div>
           <div>
             <h3 id="profile-name" style="color:#fff;margin-bottom:4px;">—</h3>
             <p id="profile-username" style="color:var(--accent);font-family:var(--mono);font-size:13px;">@—</p>
           </div>
-          <div id="profile-gender-badge" style="margin-left:auto;font-size:28px;"></div>
+          <div id="profile-gender-badge" style="margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:700;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid var(--border);"></div>
         </div>
         <div id="profile-bio-display"
           style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;font-style:italic;"></div>
         <div style="display:grid;gap:10px;">
-          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">📧 Email:</strong>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">Email:</strong>
             <span id="profile-email" style="color:var(--text);">—</span>
           </p>
-          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">📱 Mobile:</strong>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">Mobile:</strong>
             <span id="profile-mobile" style="color:var(--text);">—</span>
           </p>
-          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🎓 College:</strong>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">College:</strong>
             <span id="profile-college" style="color:var(--text);">—</span>
           </p>
-          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🛠 Skills:</strong>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">Skills:</strong>
             <span id="profile-skills" style="color:var(--accent);">—</span>
           </p>
         </div>
@@ -606,20 +750,20 @@
 
       <!-- Saved Hackathons Card -->
       <div class="feature-card">
-        <h3 style="margin-bottom:20px;">🔖 Saved Hackathons</h3>
+        <h3 style="margin-bottom:20px;">Saved Hackathons</h3>
         <div id="saved-list"></div>
       </div>
 
       <!-- Interactive Roadmap Card -->
       <div class="feature-card" style="grid-column: 1 / -1;">
-        <h3 style="margin-bottom:20px;">🗓️ My Hackathon Roadmap</h3>
+        <h3 style="margin-bottom:20px;">My Hackathon Roadmap</h3>
         <div id="roadmap-list"></div>
       </div>
 
       <!-- Friends Card -->
       <div class="feature-card" style="grid-column: 1 / -1;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-          <h3>👥 Friends</h3>
+          <h3>Friends</h3>
           <button onclick="showUserSearch()"
             style="background:var(--accent);color:#050508;border:none;padding:8px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;">+
             Add Friend</button>
@@ -632,9 +776,10 @@
 
     </div>
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
@@ -643,45 +788,56 @@
     <div class="dash-header">
       <div>
         <h2>Find <span>Friends</span></h2>
-        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Search and add other builders to your network</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Search and add other
+          builders to your network</p>
       </div>
     </div>
 
     <div style="padding:24px 40px;max-width:600px;margin:0 auto;">
       <div class="feature-card">
-        <h3 style="margin-bottom:20px;color:#fff;">🔍 Find Friends</h3>
-        <input id="user-search-input" type="text" placeholder="Search by username..."
-          oninput="searchUsers(this.value)"
+        <h3 style="margin-bottom:20px;color:#fff;">Find Friends</h3>
+        <input id="user-search-input" type="text" placeholder="Search by username..." oninput="searchUsers(this.value)"
           style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;margin-bottom:16px;">
         <div id="user-search-results"></div>
       </div>
     </div>
 
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
   <!-- HACKATHON MODAL -->
   <div id="hack-modal" class="modal">
     <div class="modal-content" style="max-width:560px;">
-      <button onclick="closeModal('hack-modal')" class="close-btn">✕</button>
+      <button onclick="closeModal('hack-modal')" class="close-btn">&times;</button>
       <div id="modal-content">
         <!-- Hackathon details will be loaded here -->
       </div>
       <!-- REVIEWS SECTION -->
       <div id="reviews-section" style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;">
-        <h4 style="color:#fff;margin-bottom:16px;">⭐ Reviews</h4>
+        <h4 style="color:#fff;margin-bottom:16px;">Reviews</h4>
         <div id="reviews-list" style="margin-bottom:16px;"></div>
         <div id="review-form" style="display:none;">
           <div style="display:flex;gap:8px;margin-bottom:12px;" id="star-input">
-            <span onclick="setRating(1)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
-            <span onclick="setRating(2)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
-            <span onclick="setRating(3)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
-            <span onclick="setRating(4)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
-            <span onclick="setRating(5)" class="star" style="font-size:24px;cursor:pointer;">⭐</span>
+            <span onclick="setRating(1)" class="star" style="cursor:pointer;color:#facc15;display:inline-flex;" tabindex="0" role="button" aria-label="1 star out of 5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            <span onclick="setRating(2)" class="star" style="cursor:pointer;color:#facc15;display:inline-flex;" tabindex="0" role="button" aria-label="2 stars out of 5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            <span onclick="setRating(3)" class="star" style="cursor:pointer;color:#facc15;display:inline-flex;" tabindex="0" role="button" aria-label="3 stars out of 5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            <span onclick="setRating(4)" class="star" style="cursor:pointer;color:#facc15;display:inline-flex;" tabindex="0" role="button" aria-label="4 stars out of 5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            <span onclick="setRating(5)" class="star" style="cursor:pointer;color:#facc15;display:inline-flex;" tabindex="0" role="button" aria-label="5 stars out of 5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
           </div>
           <textarea id="review-text" aria-label="Review text" placeholder="Share your experience..." rows="3"
             style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:10px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;margin-bottom:8px;"></textarea>
@@ -690,8 +846,7 @@
             Review</button>
         </div>
         <button id="write-review-btn" onclick="showReviewForm()"
-          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;cursor:pointer;">✏️
-          Write a Review</button>
+          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;cursor:pointer;">Write a Review</button>
       </div>
     </div>
   </div>
@@ -701,42 +856,40 @@
     <div class="dash-header">
       <div>
         <h2>Find Your <span>Team</span></h2>
-        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Build your dream hackathon
-          squad
-        </p>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Build your dream hackathon squad</p>
       </div>
       <div style="display:flex;gap:12px;align-items:center;">
-        <button class="btn-hero secondary" style="padding:10px 24px;font-size:13px;" onclick="showMatchmaker()">🤖 Find
-          My
-          Team</button>
-        <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showCreateTeam()">+ Create
-          Team</button>
+        <button class="btn-hero secondary" style="padding:10px 24px;font-size:13px;" onclick="showMatchmaker()">Find My Team</button>
+        <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showCreateTeam()">+ Create Team</button>
       </div>
     </div>
 
     <!-- AI Team Matcher Modal -->
     <div id="matchmaker-modal" class="modal">
       <div class="modal-content" style="max-width:540px;">
-        <button onclick="hideMatchmaker()" class="close-btn">✕</button>
-        <h3 style="margin-bottom:8px;color:var(--text);">🤖 AI Team Matcher</h3>
-        <p style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:24px;">Enter your skills and
-          AI will
-          rank the best open teams for you.</p>
-        <textarea id="match-skills" aria-label="Skills for matchmaking" placeholder="e.g. React, Node.js, Machine Learning, UI design..."
+        <button onclick="hideMatchmaker()" class="close-btn">&times;</button>
+        <h3 style="margin-bottom:8px;color:var(--text);">AI Team Matcher</h3>
+        <p style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:24px;">Enter your skills and AI will rank the best open teams for you.</p>
+        <textarea id="match-skills" aria-label="Skills for matchmaking"
+          placeholder="e.g. React, Node.js, Machine Learning, UI design..."
           style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;min-height:80px;"></textarea>
 
         <div style="display:flex;gap:12px;margin-top:12px;">
           <div style="flex:1;">
-            <label for="match-experience" style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;">Experience Level</label>
-            <select id="match-experience" style="width:100%;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;margin-top:6px;cursor:pointer;">
+            <label for="match-experience"
+              style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;">Experience Level</label>
+            <select id="match-experience"
+              style="width:100%;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;margin-top:6px;cursor:pointer;">
               <option value="beginner">Beginner</option>
               <option value="intermediate" selected>Intermediate</option>
               <option value="advanced">Advanced</option>
             </select>
           </div>
           <div style="flex:1;">
-            <label for="match-hackathon-type" style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;">Hackathon Type</label>
-            <select id="match-hackathon-type" style="width:100%;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;margin-top:6px;cursor:pointer;">
+            <label for="match-hackathon-type"
+              style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;">Hackathon Type</label>
+            <select id="match-hackathon-type"
+              style="width:100%;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;margin-top:6px;cursor:pointer;">
               <option value="any" selected>Any</option>
               <option value="online">Online</option>
               <option value="offline">Offline</option>
@@ -745,35 +898,45 @@
         </div>
 
         <div style="margin-top:16px;">
-          <label style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Availability</label>
+          <label
+            style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Availability</label>
           <div style="display:flex;gap:16px;font-family:var(--mono);font-size:12px;color:var(--text);">
             <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
-              <input type="radio" name="match-availability" value="weekends" checked style="accent-color:var(--accent);"> Weekends
+              <input type="radio" name="match-availability" value="weekends" checked
+                style="accent-color:var(--accent);"> Weekends
             </label>
             <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
-              <input type="radio" name="match-availability" value="weekdays" style="accent-color:var(--accent);"> Weekdays
+              <input type="radio" name="match-availability" value="weekdays" style="accent-color:var(--accent);">
+              Weekdays
             </label>
             <label style="cursor:pointer;display:flex;align-items:center;gap:6px;">
-              <input type="radio" name="match-availability" value="full-time" style="accent-color:var(--accent);"> Full-time
+              <input type="radio" name="match-availability" value="full-time" style="accent-color:var(--accent);">
+              Full-time
             </label>
           </div>
         </div>
 
         <div style="margin-top:16px;">
-          <label style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Preferred Role</label>
+          <label
+            style="color:var(--muted);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:8px;">Preferred Role</label>
           <div class="interests-grid" id="match-roles-container" style="display:flex;gap:8px;flex-wrap:wrap;">
-            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="frontend" style="display:none;"> Frontend</label>
-            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="backend" style="display:none;"> Backend</label>
-            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="fullstack" style="display:none;"> Fullstack</label>
-            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="ml" style="display:none;"> ML / AI</label>
-            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="designer" style="display:none;"> Designer</label>
-            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input type="checkbox" value="pm" style="display:none;"> PM</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input
+                type="checkbox" value="frontend" style="display:none;"> Frontend</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input
+                type="checkbox" value="backend" style="display:none;"> Backend</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input
+                type="checkbox" value="fullstack" style="display:none;"> Fullstack</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input
+                type="checkbox" value="ml" style="display:none;"> ML / AI</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input
+                type="checkbox" value="designer" style="display:none;"> Designer</label>
+            <label class="interest-chip" onclick="toggleChip(this)" style="padding:6px 12px;font-size:12px;"><input
+                type="checkbox" value="pm" style="display:none;"> PM</label>
           </div>
         </div>
 
         <button onclick="runMatchmaker()"
-          style="margin-top:20px;width:100%;background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Find
-          Best Teams →</button>
+          style="margin-top:20px;width:100%;background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Find Best Teams →</button>
         <div id="match-results" style="margin-top:24px;display:flex;flex-direction:column;gap:12px;"></div>
       </div>
     </div>
@@ -781,7 +944,7 @@
     <!-- Create Team Modal -->
     <div id="create-team-modal" class="modal">
       <div class="modal-content" style="max-width:500px;">
-        <button onclick="hideCreateTeam()" class="close-btn">✕</button>
+        <button onclick="hideCreateTeam()" class="close-btn">&times;</button>
         <h3 style="margin-bottom:24px;color:var(--text);">Create New Team</h3>
         <div style="display:flex;flex-direction:column;gap:16px;">
           <input id="team-name" aria-label="Team Name" placeholder="Team Name *"
@@ -798,8 +961,7 @@
             <option value="5">5 Members</option>
           </select>
           <button onclick="createTeam()"
-            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Create
-            Team →</button>
+            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Create Team →</button>
         </div>
       </div>
     </div>
@@ -810,14 +972,15 @@
 
     <!-- Team Chat Modal -->
     <div id="team-chat-modal" class="modal">
-      <div class="modal-content" style="max-width:560px;height:75vh;display:flex;flex-direction:column;padding:0;overflow:hidden;">
+      <div class="modal-content"
+        style="max-width:560px;height:75vh;display:flex;flex-direction:column;padding:0;overflow:hidden;">
         <div
           style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
           <h3 id="chat-team-name"></h3>
           <div id="team-chat-actions" style="display:flex;gap:8px;">
             <!-- Leave Team button will be inserted here by JS -->
           </div>
-          <button onclick="closeTeamChat()" class="close-btn" style="position:static;">✕</button>
+          <button onclick="closeTeamChat()" class="close-btn" style="position:static;">&times;</button>
         </div>
         <div id="team-members-list"
           style="padding: 8px 24px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -830,15 +993,16 @@
             onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendTeamMessage(); }"
             style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
           <button onclick="sendTeamMessage()"
-            style="background:var(--accent);border:none;border-radius:10px;padding:10px 16px;color:#050508;cursor:pointer;font-size:16px;">➤</button>
+            style="background:var(--accent);border:none;border-radius:10px;padding:10px 16px;color:#050508;cursor:pointer;font-size:16px;">→</button>
         </div>
       </div>
     </div>
 
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
@@ -850,9 +1014,11 @@
         <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Discover open roles and recruit builders</p>
       </div>
       <div style="display:flex;gap:12px;align-items:center;">
-        <input type="text" id="tm-skill-search" aria-label="Search by skill" placeholder="🔍 Search by skill..." oninput="fetchTeammates()"
+        <input type="text" id="tm-skill-search" aria-label="Search by skill" placeholder="Search by skill..."
+          oninput="fetchTeammates()"
           style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:10px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;width:180px;transition:all 0.2s;" />
-        <input type="text" id="tm-hackathon-search" aria-label="Search by hackathon" placeholder="🎯 Search hackathon..." oninput="fetchTeammates()"
+        <input type="text" id="tm-hackathon-search" aria-label="Search by hackathon"
+          placeholder="Search hackathon..." oninput="fetchTeammates()"
           style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:10px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;width:180px;transition:all 0.2s;" />
         <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showCreateTeammateModal()">+ Create Listing</button>
       </div>
@@ -861,27 +1027,32 @@
     <!-- Create Listing Modal -->
     <div id="create-teammate-modal" class="modal">
       <div class="modal-content" style="max-width:540px;">
-        <button onclick="hideCreateTeammateModal()" class="close-btn">✕</button>
-        <h3 style="margin-bottom:8px;color:var(--text);">🎯 Create Teammate Listing</h3>
+        <button onclick="hideCreateTeammateModal()" class="close-btn">&times;</button>
+        <h3 style="margin-bottom:8px;color:var(--text);">Create Teammate Listing</h3>
         <p style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:24px;">Looking for someone specific? Post your requirements here.</p>
         <div style="display:flex;flex-direction:column;gap:16px;">
           <input id="tm-hackathon" aria-label="Hackathon Name" placeholder="Hackathon Name *"
-            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;" required>
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;"
+            required>
           <input id="tm-role" aria-label="Required Role" placeholder="Required Role (e.g. Frontend Dev, UI/UX) *"
-            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;" required>
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;"
+            required>
           <input id="tm-stack" aria-label="Tech Stack" placeholder="Tech Stack (e.g. React, Node, Figma) *"
-            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;" required>
-          
+            style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;"
+            required>
+
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
             <select id="tm-exp" aria-label="Experience Level"
-              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;" required>
+              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;"
+              required>
               <option value="" disabled selected>Experience Level *</option>
               <option value="Beginner">Beginner</option>
               <option value="Intermediate">Intermediate</option>
               <option value="Advanced">Advanced</option>
             </select>
             <select id="tm-size" aria-label="Spots Left"
-              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;" required>
+              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;"
+              required>
               <option value="" disabled selected>Spots Left *</option>
               <option value="1">1 Spot</option>
               <option value="2">2 Spots</option>
@@ -889,7 +1060,8 @@
               <option value="4">4 Spots</option>
             </select>
             <select id="tm-mode" aria-label="Mode"
-              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;" required>
+              style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;"
+              required>
               <option value="" disabled selected>Mode *</option>
               <option value="Online">Online</option>
               <option value="Offline">Offline</option>
@@ -897,9 +1069,11 @@
             </select>
           </div>
 
-          <textarea id="tm-desc" aria-label="Description of requirement" placeholder="Short description of the idea or what you're looking for... *"
-            style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;min-height:80px;" required></textarea>
-          
+          <textarea id="tm-desc" aria-label="Description of requirement"
+            placeholder="Short description of the idea or what you're looking for... *"
+            style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;min-height:80px;"
+            required></textarea>
+
           <button onclick="submitTeammateListing()"
             style="margin-top:8px;width:100%;background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Post Listing →</button>
         </div>
@@ -907,14 +1081,16 @@
     </div>
 
     <!-- Listings Grid -->
-    <div id="teammate-listings-grid" class="responsive-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;padding:24px 40px;">
+    <div id="teammate-listings-grid" class="responsive-grid"
+      style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;padding:24px 40px;">
       <p style="color:var(--muted);font-size:13px;">Loading listings...</p>
     </div>
 
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
@@ -923,18 +1099,15 @@
     <div class="dash-header">
       <div>
         <h2>Hackathon <span>Calendar</span></h2>
-        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Your visual hackathon
-          schedule</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Your visual hackathon schedule</p>
       </div>
       <div style="display:flex;gap:12px;align-items:center;">
         <button onclick="prevMonth()"
-          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:var(--mono);font-size:13px;">←
-          Prev</button>
+          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:var(--mono);font-size:13px;">← Prev</button>
         <span id="calendar-month-label"
           style="font-family:var(--mono);font-size:15px;color:var(--text);font-weight:700;min-width:160px;text-align:center;"></span>
         <button onclick="nextMonth()"
-          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:var(--mono);font-size:13px;">Next
-          →</button>
+          style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:var(--mono);font-size:13px;">Next →</button>
       </div>
     </div>
 
@@ -955,9 +1128,10 @@
 
     <div id="calendar-grid" style="padding:0 8px 40px;overflow-x:hidden;"></div>
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
@@ -966,11 +1140,9 @@
     <div class="dash-header">
       <div>
         <h2>Project <span>Showcase</span></h2>
-        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">What teams are building 🚀
-        </p>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">What teams are building</p>
       </div>
-      <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showSubmitProject()">+ Submit
-        Project</button>
+      <button class="btn-hero primary" style="padding:10px 24px;font-size:13px;" onclick="showSubmitProject()">+ Submit Project</button>
     </div>
 
     <div id="showcase-grid" class="responsive-grid"
@@ -979,8 +1151,8 @@
     <!-- Submit Project Modal -->
     <div id="submit-project-modal" class="modal">
       <div class="modal-content" style="max-width:500px;">
-        <button onclick="hideSubmitProject()" class="close-btn">✕</button>
-        <h3 style="margin-bottom:24px;color:#fff;">🚀 Submit Your Project</h3>
+        <button onclick="hideSubmitProject()" class="close-btn">&times;</button>
+        <h3 style="margin-bottom:24px;color:#fff;">Submit Your Project</h3>
         <div style="display:flex;flex-direction:column;gap:14px;">
           <select id="project-team-id" aria-label="Select Team"
             style="background:var(--surface);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
@@ -988,7 +1160,8 @@
           </select>
           <input id="project-title" aria-label="Project Title" placeholder="Project Title *"
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
-          <textarea id="project-desc" aria-label="Project Description" placeholder="What are you building? (description)" rows="3"
+          <textarea id="project-desc" aria-label="Project Description"
+            placeholder="What are you building? (description)" rows="3"
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;"></textarea>
           <input id="project-github" aria-label="GitHub Link" placeholder="GitHub Link"
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
@@ -997,16 +1170,16 @@
           <input id="project-tech" aria-label="Tech Stack" placeholder="Tech Stack (e.g. React, Node, ML)"
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
           <button onclick="submitProject()"
-            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Submit
-            Project →</button>
+            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Submit Project →</button>
         </div>
       </div>
     </div>
 
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
@@ -1014,9 +1187,8 @@
   <div class="page" id="page-messages">
     <div class="dash-header">
       <div>
-        <h2>💬 <span>Messages</span></h2>
-        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Direct messages with
-          friends</p>
+        <h2>Messages</h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Direct messages with friends</p>
       </div>
     </div>
 
@@ -1046,7 +1218,7 @@
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDM();}"
             style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
           <button onclick="sendDM()"
-            style="background:var(--accent);border:none;border-radius:10px;padding:10px 16px;color:#050508;cursor:pointer;font-size:16px;">➤</button>
+            style="background:var(--accent);border:none;border-radius:10px;padding:10px 16px;color:#050508;cursor:pointer;font-size:16px;">→</button>
         </div>
       </div>
     </div>
@@ -1056,9 +1228,8 @@
   <div class="page" id="page-ai-tools">
     <div class="dash-header">
       <div>
-        <h2>🧠 AI <span>Tools</span></h2>
-        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Powered by AI — built for
-          hackers</p>
+        <h2>AI <span>Tools</span></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Powered by AI — built for hackers</p>
       </div>
     </div>
 
@@ -1066,11 +1237,12 @@
 
       <!-- Project Idea Generator -->
       <div class="feature-card" style="grid-column:1/-1;">
-        <h3 style="margin-bottom:8px;">💡 Project Idea Generator</h3>
+        <h3 style="margin-bottom:8px;">Project Idea Generator</h3>
         <p style="color:var(--muted);font-size:13px;margin-bottom:20px;font-family:var(--mono);">Enter hackathon
           theme/problem statement → Get 5 unique project ideas with tech stack & winning potential</p>
         <div style="display:flex;flex-direction:column;gap:12px;">
-          <input id="idea-theme" aria-label="Hackathon theme" placeholder="e.g. Climate Change, HealthTech, Web3, EdTech..."
+          <input id="idea-theme" aria-label="Hackathon theme"
+            placeholder="e.g. Climate Change, HealthTech, Web3, EdTech..."
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
           <textarea id="idea-problem" aria-label="Problem statement"
             placeholder="Problem statement (optional) — paste the exact problem statement from the hackathon..."
@@ -1094,37 +1266,36 @@
               style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:8px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
           </div>
           <button onclick="generateIdeas()"
-            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">✨
-            Generate Project Ideas</button>
+            style="background:var(--accent);color:#050508;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Generate Project Ideas</button>
         </div>
         <div id="ideas-output" style="margin-top:24px;"></div>
       </div>
 
       <!-- Hackathon Difficulty Analyzer -->
       <div class="feature-card" style="grid-column:1/-1;">
-        <h3 style="margin-bottom:8px;">🔍 Hackathon Difficulty Analyzer</h3>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;font-family:var(--mono);">Paste hackathon details
-          → AI analyzes difficulty, required skills, winning chances & prep time</p>
+        <h3 style="margin-bottom:8px;">Hackathon Difficulty Analyzer</h3>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;font-family:var(--mono);">Paste hackathon details → AI analyzes difficulty, required skills, winning chances & prep time</p>
         <div style="display:flex;flex-direction:column;gap:12px;">
           <input id="analyzer-name" aria-label="Hackathon name" placeholder="Hackathon name..."
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
           <textarea id="analyzer-details" aria-label="Hackathon details"
             placeholder="Paste hackathon description, problem statements, judging criteria, prize pool info..." rows="5"
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:vertical;"></textarea>
-          <input id="analyzer-skills" aria-label="Your current skills" placeholder="Your current skills (e.g. React, Node.js, beginner ML)..."
+          <input id="analyzer-skills" aria-label="Your current skills"
+            placeholder="Your current skills (e.g. React, Node.js, beginner ML)..."
             style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px 16px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;">
           <button onclick="analyzeHackathon()"
-            style="background:var(--accent2);color:#fff;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">🔍
-            Analyze Difficulty</button>
+            style="background:var(--accent2);color:#fff;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;">Analyze Difficulty</button>
         </div>
         <div id="analyzer-output" style="margin-top:24px;"></div>
       </div>
 
     </div>
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
@@ -1132,12 +1303,11 @@
   <div class="page" id="page-public-profile">
     <div class="dash-header">
       <div>
-        <h2>👤 <span id="pub-profile-title">Profile</span></h2>
+        <h2><span id="pub-profile-title">Profile</span></h2>
         <p style="font-size:13px;color:var(--muted);margin-top:4px;font-family:var(--mono);">Public hacker profile</p>
       </div>
       <button onclick="goTo('dashboard')"
-        style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;cursor:pointer;">←
-        Back</button>
+        style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;cursor:pointer;">← Back</button>
     </div>
 
     <div style="padding:32px 40px;max-width:900px;">
@@ -1150,7 +1320,7 @@
           <div style="flex:1;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
               <h2 id="pub-name" style="color:#fff;margin:0;"></h2>
-              <span id="pub-gender" style="font-size:20px;"></span>
+              <span id="pub-gender" style="font-size:13px;font-family:var(--mono);font-weight:700;color:var(--accent);"></span>
             </div>
             <p id="pub-username" style="color:var(--accent);font-family:var(--mono);font-size:13px;margin-bottom:8px;">
             </p>
@@ -1158,10 +1328,10 @@
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🎓 College:</strong>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">College:</strong>
             <span id="pub-college" style="color:var(--text);"></span>
           </p>
-          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">🛠 Skills:</strong>
+          <p style="font-size:13px;"><strong style="color:var(--muted);font-family:var(--mono);">Skills:</strong>
             <span id="pub-skills" style="color:var(--accent);"></span>
           </p>
         </div>
@@ -1169,27 +1339,30 @@
 
       <!-- Projects -->
       <div class="feature-card" style="margin-bottom:24px;">
-        <h3 style="margin-bottom:16px;">🚀 Projects</h3>
+        <h3 style="margin-bottom:16px;">Projects</h3>
         <div id="pub-projects"></div>
       </div>
 
       <!-- Teams -->
       <div class="feature-card">
-        <h3 style="margin-bottom:16px;">🤝 Teams</h3>
+        <h3 style="margin-bottom:16px;">Teams</h3>
         <div id="pub-teams"></div>
       </div>
     </div>
     <footer class="site-footer">
-      © 2025-2026 <span>Hack/Alert</span> — Built for hackers, by hackers 🤍<br>
-      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built with ⚡ by
-        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh Rajpurohit</strong></span>
+      © 2025-2026 <span>Hack/Alert</span> — Built for developers who want to win<br>
+      <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--muted);">Designed & Built by
+        <strong style="color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,0.3);">Kartikey Singh
+          Rajpurohit</strong></span>
     </footer>
   </div>
 
   <!-- LOGOUT MODAL -->
   <div id="logout-modal" class="modal">
     <div class="modal-content" style="max-width:380px;text-align:center;">
-      <div style="font-size:40px;margin-bottom:16px;">👋</div>
+      <div style="margin-bottom:16px;display:flex;justify-content:center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </div>
       <h3 style="color:#fff;margin-bottom:8px;">Logging out?</h3>
       <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">You'll need to login again to access your
         dashboard.</p>
@@ -1199,6 +1372,80 @@
         <button onclick="confirmLogout()"
           style="background:#ef4444;border:none;color:#fff;padding:12px 28px;border-radius:10px;cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:700;">Yes,
           Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANGUAGE MODAL -->
+  <div id="language-modal" class="modal">
+    <div class="modal-content" style="max-width:520px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2 style="margin:0;color:#fff;display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Select Language
+        </h2>
+        <button class="close-btn" onclick="closeModal('language-modal')">&times;</button>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;font-family:var(--mono);">Choose your preferred language for Hack/Alert:</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:10px;margin-bottom:20px;" id="language-options-grid">
+        <button onclick="changeLanguage('en', 'English')" class="lang-card active" data-lang="en" style="background:rgba(0,240,255,0.1);border:1px solid var(--accent);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">English</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Default</div>
+        </button>
+        <button onclick="changeLanguage('hi', 'Hindi')" class="lang-card" data-lang="hi" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">हिन्दी</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Hindi</div>
+        </button>
+        <button onclick="changeLanguage('es', 'Spanish')" class="lang-card" data-lang="es" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">Español</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Spanish</div>
+        </button>
+        <button onclick="changeLanguage('fr', 'French')" class="lang-card" data-lang="fr" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">Français</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">French</div>
+        </button>
+        <button onclick="changeLanguage('de', 'German')" class="lang-card" data-lang="de" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">Deutsch</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">German</div>
+        </button>
+        <button onclick="changeLanguage('ja', 'Japanese')" class="lang-card" data-lang="ja" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">日本語</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Japanese</div>
+        </button>
+        <button onclick="changeLanguage('zh-CN', 'Chinese')" class="lang-card" data-lang="zh-CN" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">简体中文</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Chinese</div>
+        </button>
+        <button onclick="changeLanguage('pt', 'Portuguese')" class="lang-card" data-lang="pt" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">Português</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Portuguese</div>
+        </button>
+        <button onclick="changeLanguage('ru', 'Russian')" class="lang-card" data-lang="ru" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">Русский</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Russian</div>
+        </button>
+        <button onclick="changeLanguage('ar', 'Arabic')" class="lang-card" data-lang="ar" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">العربية</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Arabic</div>
+        </button>
+        <button onclick="changeLanguage('bn', 'Bengali')" class="lang-card" data-lang="bn" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">বাংলা</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Bengali</div>
+        </button>
+        <button onclick="changeLanguage('te', 'Telugu')" class="lang-card" data-lang="te" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">తెలుగు</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Telugu</div>
+        </button>
+        <button onclick="changeLanguage('ta', 'Tamil')" class="lang-card" data-lang="ta" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:10px;padding:12px;text-align:left;cursor:pointer;color:var(--text);font-family:var(--mono);transition:all 0.2s;">
+          <div style="font-weight:700;font-size:14px;color:#fff;">தமிழ்</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Tamil</div>
+        </button>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border-light);">
+        <button onclick="changeLanguage('en', 'English')" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;font-family:var(--mono);font-size:12px;cursor:pointer;">Reset to English</button>
+        <button onclick="closeModal('language-modal')" style="background:var(--accent);color:#050508;border:none;padding:8px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;">Done</button>
       </div>
     </div>
   </div>
@@ -1213,11 +1460,14 @@
   <!-- OTP MODAL -->
   <div id="otp-modal" class="modal">
     <div class="modal-content" style="max-width:400px;text-align:center;">
-      <div style="font-size:40px;margin-bottom:16px;">📧</div>
+      <div style="margin-bottom:16px;display:flex;justify-content:center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </div>
       <h3 style="color:#fff;margin-bottom:8px;">Check your email</h3>
       <p id="otp-email-display" style="color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:28px;">
       </p>
-      <input id="otp-input" aria-label="OTP Verification Code" type="text" maxlength="6" placeholder="000000" inputmode="numeric"
+      <input id="otp-input" aria-label="OTP Verification Code" type="text" maxlength="6" placeholder="000000"
+        inputmode="numeric"
         style="width:100%;text-align:center;letter-spacing:12px;font-size:32px;font-family:var(--mono);font-weight:700;background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:12px;padding:16px;color:var(--accent);outline:none;margin-bottom:20px;">
       <button onclick="verifyOTP()"
         style="width:100%;background:var(--accent);color:#050508;border:none;border-radius:12px;padding:16px;font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px;">Verify
@@ -1228,10 +1478,26 @@
     </div>
   </div>
 
-
-
   <!-- FLOATING BOT -->
-  <div id="floating-bot" onclick="goTo('bot')" title="Talk to HackBot">🤖</div>
+  <div id="floating-bot" onclick="goTo('bot')" title="Talk to HackBot" aria-label="Talk to HackBot">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#050508" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+  </div>
+
+  <div id="google_translate_element" style="display:none;"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      try {
+        new google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'en,hi,es,fr,de,ja,zh-CN,pt,ru,ar,bn,te,ta',
+          autoDisplay: false
+        }, 'google_translate_element');
+      } catch (e) {
+        console.warn('Google Translate init:', e);
+      }
+    }
+  </script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script type="module" src="frontend/main.js"></script>
   <script>

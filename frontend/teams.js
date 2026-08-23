@@ -43,16 +43,16 @@ export async function loadTeams() {
     grid.innerHTML = safeHTML(teams.map(t => `
       <div class="feature-card">
         <h3 style="margin-bottom: 8px;">${escapeHTML(t.name)}</h3>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">🏆 ${escapeHTML(t.hackathon || 'Open Hackathon')}</p>
-        <p style="font-size:13px;margin-bottom:4px;">🛠 ${escapeHTML(t.skills || 'Any skills welcome')}</p>
-        <p style="font-size:13px;margin-bottom:8px;">👥 ${t.slots_left} slots left / ${t.size} total</p>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">Hackathon: ${escapeHTML(t.hackathon || 'Open Hackathon')}</p>
+        <p style="font-size:13px;margin-bottom:4px;">Skills: ${escapeHTML(t.skills || 'Any skills welcome')}</p>
+        <p style="font-size:13px;margin-bottom:8px;">Slots: ${t.slots_left} left / ${t.size} total</p>
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Leader: ${escapeHTML(t.leader_email)}</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           ${t.leader_email === currentUserEmail
         ? `<button onclick="window.deleteTeam(${t.id})" class="btn-primary" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Delete Team</button>`
         : `<button onclick="window.joinTeam(${t.id}, '${safeJSString(t.name)}')" class="btn-primary" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join Team</button>`
       }
-          <button onclick="window.openTeamChat(${t.id},'${safeJSString(t.name)}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
+          <button onclick="window.openTeamChat(${t.id},'${safeJSString(t.name)}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">Chat</button>
         </div>
       </div>
     `).join(''));
@@ -77,7 +77,7 @@ export async function createTeam() {
   const skills = document.getElementById('team-skills').value.trim();
   const size = parseInt(document.getElementById('team-size').value);
   if (!name || isNaN(size) || size <= 0) {
-    showToast('❌', 'Error', 'Team Name and Team Size are required.');
+    showToast('error', 'Error', 'Team Name and Team Size are required.');
     return;
   }
   const res = await fetch('/api/teams', {
@@ -90,7 +90,7 @@ export async function createTeam() {
     loadTeams();
   } else {
     const d = await res.json();
-    showToast('❌', 'Error creating team', d.error);
+    showToast('error', 'Error creating team', d.error);
   }
 }
 
@@ -102,10 +102,10 @@ export async function joinTeam(teamId, teamName) {
   });
   const d = await res.json();
   if (res.ok) {
-    showToast('✅', 'Joined Team!', `You have successfully joined ${teamName}.`);
+    showToast('success', 'Joined Team!', `You have successfully joined ${teamName}.`);
     loadTeams();
   } else {
-    showToast('❌', 'Failed to Join', d.error);
+    showToast('error', 'Failed to Join', d.error);
   }
 }
 
@@ -115,35 +115,48 @@ export async function openTeamChat(teamId, teamName) {
   openModal('team-chat-modal');
 
   try {
-    await loadTeamMessages();
-
     const currentUserEmail = localStorage.getItem('userEmail');
-    const teamRes = await fetch(`/api/teams/${teamId}`);
-    if (!teamRes.ok) throw new Error('Failed to load team details');
-    const currentTeam = await teamRes.json();
+    const [_, teamRes, membersRes] = await Promise.all([
+      loadTeamMessages(),
+      fetch(`/api/teams/${teamId}`),
+      fetch(`/api/teams/${teamId}/members`)
+    ]);
 
-    const membersRes = await fetch(`/api/teams/${teamId}/members`);
+    if (!teamRes.ok) throw new Error('Failed to load team details');
     if (!membersRes.ok) throw new Error('Failed to load members');
-    const members = await membersRes.json();
+
+    const [currentTeam, members] = await Promise.all([
+      teamRes.json(),
+      membersRes.json()
+    ]);
+
     const isMember = members.some(member => member.user_email === currentUserEmail);
     const isLeader = currentTeam && currentTeam.leader_email === currentUserEmail;
 
     const membersListDiv = document.getElementById('team-members-list');
     if (membersListDiv) {
-      membersListDiv.innerHTML = '👥 ' + safeHTML(members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join(''));
+      membersListDiv.innerHTML = safeHTML(members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join(''));
     }
 
     const teamActionsDiv = document.getElementById('team-chat-actions');
     if (teamActionsDiv) {
       teamActionsDiv.innerHTML = '';
       if (isMember && !isLeader) {
-        teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="window.leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Leave Team</button>`);
+        teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="window.leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-right:8px;">Leave Team</button>`);
       }
-      teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="window.copyInviteLink(${teamId})" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-left:8px;">🔗 Invite</button>`);
+      
+      const inviteUrl = `${window.location.origin}${window.location.pathname}?join_team=${teamId}`;
+      const inviteText = `Join my team on Hack/Alert! `;
+
+      teamActionsDiv.insertAdjacentHTML('beforeend', `
+        <button onclick="window.copyInviteLink(${teamId})" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-right:8px;">Copy Invite</button>
+        <a href="https://wa.me/?text=${encodeURIComponent(inviteText + inviteUrl)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;margin-right:8px;display:inline-flex;align-items:center;">WhatsApp</a>
+        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(inviteText)}&url=${encodeURIComponent(inviteUrl)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;display:inline-flex;align-items:center;">Twitter/X</a>
+      `);
     }
   } catch (err) {
     console.error('Error loading team chat:', err);
-    showToast('⚠️', 'Error', 'Failed to load team details. Please try again.');
+    showToast('warning', 'Error', 'Failed to load team details. Please try again.');
   }
 
   if (state.chatEventSource) {
@@ -161,7 +174,7 @@ export function copyInviteLink(teamId) {
   const url = `${window.location.origin}${window.location.pathname}?join_team=${teamId}`;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(() => {
-      showToast('✅', 'Copied!', 'Invite link copied to clipboard.');
+      showToast('success', 'Copied!', 'Invite link copied to clipboard.');
     });
   } else {
     const ta = document.createElement('textarea');
@@ -170,7 +183,7 @@ export function copyInviteLink(teamId) {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('✅', 'Copied!', 'Invite link copied to clipboard.');
+    showToast('success', 'Copied!', 'Invite link copied to clipboard.');
   }
 }
 
@@ -180,7 +193,6 @@ export function closeTeamChat() {
     state.chatEventSource.close();
     state.chatEventSource = null;
   }
-  state.currentTeamId = null;
 }
 
 export function appendTeamMessage(m) {
@@ -206,68 +218,72 @@ export async function loadTeamMessages() {
 }
 
 export async function sendTeamMessage() {
-  const input = document.getElementById('team-msg-input');
-  if (!input) return;
+  const input = document.getElementById('team-chat-input');
   const message = input.value.trim();
-  if (!message) return;
+  if (!message || !state.currentTeamId) return;
 
-  const res = await fetch(`/api/teams/${state.currentTeamId}/messages`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ message })
-  });
-
-  if (!res.ok) {
-    const d = await res.json();
-    showToast('❌', 'Blocked', d.error);
-    return;
-  }
   input.value = '';
+  try {
+    const res = await fetch(`/api/teams/${state.currentTeamId}/messages`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ message })
+    });
+    if (!res.ok) {
+      const d = await res.json();
+      if (res.status === 403) {
+        showToast('error', 'Blocked', d.error);
+      }
+    }
+  } catch (err) {
+    console.error('Error sending message:', err);
+  }
 }
 
 export async function leaveTeam(teamId) {
-  if (!confirm('Are you sure you want to leave this team?')) return;
-
-  const user_email = localStorage.getItem('userEmail');
-  if (!user_email) {
-    showToast('❌', 'Error', 'You must be logged in to leave a team.');
+  const userEmail = localStorage.getItem('userEmail');
+  if (!userEmail) {
+    showToast('error', 'Error', 'You must be logged in to leave a team.');
     return;
   }
 
+  if (!confirm("Are you sure you want to leave this team?")) return;
+
   try {
-    const res = await fetch(`/api/teams/${teamId}/members/${encodeURIComponent(user_email)}`, {
+    const res = await fetch(`/api/teams/${teamId}/members/${encodeURIComponent(userEmail)}`, {
       method: 'DELETE',
       headers: authHeaders()
     });
-    const d = await res.json();
     if (res.ok) {
-      showToast('✅', 'Left Team', 'You have successfully left the team.');
+      showToast('success', 'Left Team', 'You have successfully left the team.');
       closeTeamChat();
       loadTeams();
     } else {
-      showToast('❌', 'Error', d.error);
+      const d = await res.json();
+      showToast('error', 'Error', d.error);
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Could not leave team.');
+    showToast('error', 'Error', 'Could not leave team.');
   }
 }
 
 export async function deleteTeam(teamId) {
-  if (!confirm('Are you sure you want to delete this team? This cannot be undone.')) return;
+  if (!confirm("Are you sure you want to delete this team?")) return;
+
   try {
     const res = await fetch(`/api/teams/${teamId}`, {
       method: 'DELETE',
       headers: authHeaders()
     });
-    const d = await res.json();
     if (res.ok) {
-      showToast('✅', 'Deleted', 'Team deleted successfully.');
+      showToast('success', 'Deleted', 'Team deleted successfully.');
       loadTeams();
     } else {
-      showToast('❌', 'Error', d.error);
+      const d = await res.json();
+      showToast('error', 'Error', d.error);
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Could not delete team.');
+    showToast('error', 'Error', 'Could not delete team.');
   }
 }
 
@@ -314,7 +330,7 @@ export async function loadShowcase() {
     const projects = await res.json();
 
     if (!projects.length) {
-      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:40px;">No projects submitted yet. Be the first! 🚀</p>';
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:40px;">No projects submitted yet. Be the first!</p>';
       return;
     }
 
@@ -333,7 +349,7 @@ export async function loadShowcase() {
               <p style="font-family:var(--mono);font-size:11px;color:var(--accent);">by ${escapeHTML(p.teams?.name || 'Unknown Team')}</p>
             </div>
             <span style="font-family:var(--mono);font-size:10px;color:var(--muted);background:rgba(255,255,255,0.04);padding:4px 8px;border-radius:6px;border:1px solid var(--border);white-space:nowrap;">
-              🏆 ${escapeHTML(p.teams?.hackathon || 'Open')}
+              ${escapeHTML(p.teams?.hackathon || 'Open')}
             </span>
           </div>
 
@@ -346,9 +362,9 @@ export async function loadShowcase() {
           </p>
 
           <div class="project-links">
-            ${p.github_link ? `<a href="${escapeHTML(p.github_link)}" target="_blank" class="project-link-btn github">⬡ GitHub</a>` : ''}
-            ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">▶ Live Demo</a>` : ''}
-            ${p.submitted_by === currentUserEmail ? `<button onclick="window.deleteProject(${p.team_id})" class="project-link-btn" style="color:#ef4444;border-color:rgba(239,68,68,0.3);">✕ Delete</button>` : ''}
+            ${p.github_link ? `<a href="${escapeHTML(p.github_link)}" target="_blank" class="project-link-btn github">GitHub</a>` : ''}
+            ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">Live Demo</a>` : ''}
+            ${p.submitted_by === currentUserEmail ? `<button onclick="window.deleteProject(${p.team_id})" class="project-link-btn" style="color:#ef4444;border-color:rgba(239,68,68,0.3);">Delete</button>` : ''}
           </div>
         </div>
       `;
@@ -393,8 +409,8 @@ export async function submitProject() {
   const demo_link = document.getElementById('project-demo').value.trim();
   const tech_stack = document.getElementById('project-tech').value.trim();
 
-  if (!team_id) { showToast('❌', 'Error', 'Select a team.'); return; }
-  if (!title) { showToast('❌', 'Error', 'Project title is required.'); return; }
+  if (!team_id) { showToast('error', 'Error', 'Select a team.'); return; }
+  if (!title) { showToast('error', 'Error', 'Project title is required.'); return; }
 
   try {
     const res = await fetch(`/api/teams/${team_id}/project`, {
@@ -406,17 +422,17 @@ export async function submitProject() {
 
     const data = await res.json();
     if (res.ok) {
-      showToast('🚀', 'Submitted!', 'Your project is now live in the showcase.');
+      showToast('submit', 'Submitted!', 'Your project is now live in the showcase.');
       hideSubmitProject();
       loadShowcase();
       ['project-title', 'project-desc', 'project-github', 'project-demo', 'project-tech'].forEach(id => {
         document.getElementById(id).value = '';
       });
     } else {
-      showToast('❌', 'Error', data.error);
+      showToast('error', 'Error', data.error);
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Could not submit project.');
+    showToast('error', 'Error', 'Could not submit project.');
   }
 }
 
@@ -427,11 +443,11 @@ export async function deleteProject(teamId) {
     headers: authHeaders()
   });
   if (res.ok) {
-    showToast('✅', 'Deleted', 'Project removed.');
+    showToast('success', 'Deleted', 'Project removed.');
     loadShowcase();
   } else {
     const d = await res.json();
-    showToast('❌', 'Error', d.error);
+    showToast('error', 'Error', d.error);
   }
 }
 
@@ -490,21 +506,21 @@ export async function fetchTeammates() {
 
     grid.innerHTML = data.map(tm => `<div class="feature-card" style="position:relative;display:flex;flex-direction:column;gap:12px;">
       ${tm.creator_email === localStorage.getItem('userEmail') ? `<div style="position:absolute;top:16px;right:16px;display:flex;gap:8px;">
-        <button onclick="window.markTeammateFilled('${tm.id}')" title="Mark as Filled" style="background:var(--accent);border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:#000;">✅ Filled</button>
-        <button onclick="window.deleteTeammateListing('${tm.id}')" title="Delete" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;">🗑️ Delete</button>
+        <button onclick="window.markTeammateFilled('${tm.id}')" title="Mark as Filled" style="background:var(--accent);border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:#000;">Filled</button>
+        <button onclick="window.deleteTeammateListing('${tm.id}')" title="Delete" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;">Delete</button>
       </div>` : ''}
       <div style="font-family:var(--mono);font-size:11px;color:var(--accent);">${safeHTML(tm.hackathon_name)}</div>
       <h3 style="color:#fff;margin:0;">${safeHTML(tm.required_role)}</h3>
       <p style="color:var(--muted);font-size:13px;margin:0;">${safeHTML(tm.description)}</p>
       
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">🛠 ${safeHTML(tm.tech_stack)}</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">⭐ ${safeHTML(tm.experience_level)}</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">👥 ${tm.team_size_remaining} spots</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">📍 ${safeHTML(tm.mode)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">${safeHTML(tm.tech_stack)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">${safeHTML(tm.experience_level)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">${tm.team_size_remaining} spots</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">${safeHTML(tm.mode)}</span>
       </div>
       <div style="margin-top:12px;">
-        <a href="mailto:${safeHTML(tm.creator_email)}" style="display:block;text-align:center;background:rgba(0,240,255,0.1);color:var(--accent);border:1px solid rgba(0,240,255,0.3);padding:8px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;">✉️ Contact ${safeHTML(tm.creator_email)}</a>
+        <a href="mailto:${safeHTML(tm.creator_email)}" style="display:block;text-align:center;background:rgba(0,240,255,0.1);color:var(--accent);border:1px solid rgba(0,240,255,0.3);padding:8px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;">Contact ${safeHTML(tm.creator_email)}</a>
       </div>
     </div>`).join('');
   } catch (err) {
@@ -593,7 +609,7 @@ export async function runMatchmaker() {
   document.querySelectorAll('#match-roles-container input[type="checkbox"]:checked').forEach(c => preferredRoles.push(c.value));
 
   if (!user_skills) {
-    showToast('⚠️', 'Missing Info', 'Provide your skills to match.');
+    showToast('warning', 'Missing Info', 'Provide your skills to match.');
     return;
   }
 
@@ -629,17 +645,17 @@ export async function runMatchmaker() {
             <h4 style="color:#fff;margin:0;font-size:15px;">${escapeHTML(m.name)}</h4>
             <span style="font-family:var(--mono);font-size:14px;color:var(--accent);font-weight:700;">${m.match_score}% Match</span>
           </div>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">🏆 ${escapeHTML(m.hackathon || 'Open')}</p>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">🛠 Looking for: ${escapeHTML(m.skills || 'Any')}</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">Hackathon: ${escapeHTML(m.hackathon || 'Open')}</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Looking for: ${escapeHTML(m.skills || 'Any')}</p>
           
           <div style="display:flex;gap:12px;background:rgba(0,240,255,0.02);border:1px solid rgba(0,240,255,0.1);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);justify-content:space-between;flex-wrap:wrap;">
-            <div>📚 Overlap: <strong style="color:var(--text);">${escapeHTML(overlap)}</strong></div>
-            <div>👤 Role: <strong style="color:var(--accent2);">${escapeHTML(roleFit)}</strong></div>
-            <div>⏱️ Time: <strong style="color:var(--accent);">${escapeHTML(availMatch)}</strong></div>
+            <div>Overlap: <strong style="color:var(--text);">${escapeHTML(overlap)}</strong></div>
+            <div>Role: <strong style="color:var(--accent2);">${escapeHTML(roleFit)}</strong></div>
+            <div>Time: <strong style="color:var(--accent);">${escapeHTML(availMatch)}</strong></div>
           </div>
 
           <p style="font-size:13px;color:var(--accent3);font-style:italic;margin-bottom:12px;">"${escapeHTML(m.reason)}"</p>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">👥 ${m.slots_left} slot${m.slots_left !== 1 ? 's' : ''} left</p>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">${m.slots_left} slot${m.slots_left !== 1 ? 's' : ''} left</p>
           <button onclick="window.joinTeam(${m.id},'${safeJSString(m.name)}')"
             style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">
             Join Team →
@@ -648,6 +664,7 @@ export async function runMatchmaker() {
       `;
     }).join(''));
   } catch (err) {
-    resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Could not reach server.</p>';
+    resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">Could not reach server.</p>';
   }
 }
+

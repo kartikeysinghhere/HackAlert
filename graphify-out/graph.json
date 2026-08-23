@@ -9,7 +9,7 @@
       "source_file": "find_fixed_elements.js",
       "source_location": "L1",
       "id": "find_fixed_elements_js",
-      "community": 47,
+      "community": 48,
       "norm_label": "find_fixed_elements.js"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "react.js",
       "source_location": "L1",
       "id": "react_js",
-      "community": 29,
+      "community": 30,
       "norm_label": "react.js"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "react.js",
       "source_location": "L8",
       "id": "hackito_old_react_cn",
-      "community": 29,
+      "community": 30,
       "norm_label": "cn()"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "realhackito.js",
       "source_location": "L14",
       "id": "hackito_old_realhackito_censormessage",
-      "community": 12,
+      "community": 5,
       "norm_label": "censormessage()"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "realhackito.js",
       "source_location": "L20",
       "id": "hackito_old_realhackito_escapehtml",
-      "community": 7,
+      "community": 5,
       "norm_label": "escapehtml()"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "realhackito.js",
       "source_location": "L33",
       "id": "hackito_old_realhackito_safejsstring",
-      "community": 7,
+      "community": 5,
       "norm_label": "safejsstring()"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "realhackito.js",
       "source_location": "L38",
       "id": "hackito_old_realhackito_safehtml",
-      "community": 7,
+      "community": 5,
       "norm_label": "safehtml()"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "realhackito.js",
       "source_location": "L62",
       "id": "hackito_old_realhackito_getcountdown",
-      "community": 7,
+      "community": 5,
       "norm_label": "getcountdown()"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "realhackito.js",
       "source_location": "L129",
       "id": "hackito_old_realhackito_fetchhackathons",
-      "community": 5,
+      "community": 6,
       "norm_label": "fetchhackathons()"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "realhackito.js",
       "source_location": "L150",
       "id": "hackito_old_realhackito_createhackathoncard",
-      "community": 7,
+      "community": 5,
       "norm_label": "createhackathoncard()"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "realhackito.js",
       "source_location": "L245",
       "id": "hackito_old_realhackito_renderhackathonssorted",
-      "community": 7,
+      "community": 5,
       "norm_label": "renderhackathonssorted()"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "realhackito.js",
       "source_location": "L501",
       "id": "hackito_old_realhackito_handleroute",
-      "community": 5,
+      "community": 6,
       "norm_label": "handleroute()"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "realhackito.js",
       "source_location": "L542",
       "id": "hackito_old_realhackito_goto",
-      "community": 5,
+      "community": 6,
       "norm_label": "goto()"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "realhackito.js",
       "source_location": "L556",
       "id": "hackito_old_realhackito_requestpasswordreset",
-      "community": 6,
+      "community": 7,
       "norm_label": "requestpasswordreset()"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "realhackito.js",
       "source_location": "L579",
       "id": "hackito_old_realhackito_handlepasswordreset",
-      "community": 5,
+      "community": 3,
       "norm_label": "handlepasswordreset()"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "realhackito.js",
       "source_location": "L621",
       "id": "hackito_old_realhackito_appendmessage",
-      "community": 12,
+      "community": 5,
       "norm_label": "appendmessage()"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "realhackito.js",
       "source_location": "L653",
       "id": "hackito_old_realhackito_showtyping",
-      "community": 12,
+      "community": 5,
       "norm_label": "showtyping()"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "realhackito.js",
       "source_location": "L670",
       "id": "hackito_old_realhackito_removetyping",
-      "community": 12,
+      "community": 5,
       "norm_label": "removetyping()"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "realhackito.js",
       "source_location": "L690",
       "id": "hackito_old_realhackito_sendchat",
-      "community": 12,
+      "community": 5,
       "norm_label": "sendchat()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "realhackito.js",
       "source_location": "L742",
       "id": "hackito_old_realhackito_speaktext",
-      "community": 12,
+      "community": 2,
       "norm_label": "speaktext()"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "realhackito.js",
       "source_location": "L765",
       "id": "hackito_old_realhackito_quicksend",
-      "community": 12,
+      "community": 5,
       "norm_label": "quicksend()"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "realhackito.js",
       "source_location": "L833",
       "id": "hackito_old_realhackito_signupuser",
-      "community": 5,
+      "community": 6,
       "norm_label": "signupuser()"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1050",
       "id": "hackito_old_realhackito_openmodal",
-      "community": 5,
+      "community": 6,
       "norm_label": "openmodal()"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1105",
       "id": "hackito_old_realhackito_logout",
-      "community": 5,
+      "community": 6,
       "norm_label": "logout()"
     },
     {
@@ -441,7 +441,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1150",
       "id": "hackito_old_realhackito_getfallbackhackathons",
-      "community": 5,
+      "community": 6,
       "norm_label": "getfallbackhackathons()"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1356",
       "id": "hackito_old_realhackito_openhackmodal",
-      "community": 7,
+      "community": 5,
       "norm_label": "openhackmodal()"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1432",
       "id": "hackito_old_realhackito_showcreateteam",
-      "community": 5,
+      "community": 6,
       "norm_label": "showcreateteam()"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1472",
       "id": "hackito_old_realhackito_openteamchat",
-      "community": 2,
+      "community": 3,
       "norm_label": "openteamchat()"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1549",
       "id": "hackito_old_realhackito_appendteammessage",
-      "community": 7,
+      "community": 5,
       "norm_label": "appendteammessage()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1561",
       "id": "hackito_old_realhackito_loadteammessages",
-      "community": 2,
+      "community": 3,
       "norm_label": "loadteammessages()"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1636",
       "id": "hackito_old_realhackito_showmatchmaker",
-      "community": 5,
+      "community": 6,
       "norm_label": "showmatchmaker()"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1645",
       "id": "hackito_old_realhackito_runmatchmaker",
-      "community": 7,
+      "community": 5,
       "norm_label": "runmatchmaker()"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1727",
       "id": "hackito_old_realhackito_gotocalendar",
-      "community": 5,
+      "community": 6,
       "norm_label": "gotocalendar()"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1731",
       "id": "hackito_old_realhackito_rendercalendar",
-      "community": 5,
+      "community": 6,
       "norm_label": "rendercalendar()"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1800",
       "id": "hackito_old_realhackito_prevmonth",
-      "community": 5,
+      "community": 6,
       "norm_label": "prevmonth()"
     },
     {
@@ -747,7 +747,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1805",
       "id": "hackito_old_realhackito_nextmonth",
-      "community": 5,
+      "community": 6,
       "norm_label": "nextmonth()"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1812",
       "id": "hackito_old_realhackito_loadshowcase",
-      "community": 5,
+      "community": 6,
       "norm_label": "loadshowcase()"
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1865",
       "id": "hackito_old_realhackito_showsubmitproject",
-      "community": 5,
+      "community": 6,
       "norm_label": "showsubmitproject()"
     },
     {
@@ -792,7 +792,7 @@
       "source_file": "realhackito.js",
       "source_location": "L1910",
       "id": "hackito_old_realhackito_deleteproject",
-      "community": 5,
+      "community": 6,
       "norm_label": "deleteproject()"
     },
     {
@@ -855,7 +855,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2038",
       "id": "hackito_old_realhackito_loadfindfriends",
-      "community": 5,
+      "community": 6,
       "norm_label": "loadfindfriends()"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2047",
       "id": "hackito_old_realhackito_showusersearch",
-      "community": 5,
+      "community": 6,
       "norm_label": "showusersearch()"
     },
     {
@@ -936,7 +936,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2263",
       "id": "hackito_old_realhackito_generateideas",
-      "community": 7,
+      "community": 5,
       "norm_label": "generateideas()"
     },
     {
@@ -945,7 +945,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2349",
       "id": "hackito_old_realhackito_analyzehackathon",
-      "community": 7,
+      "community": 5,
       "norm_label": "analyzehackathon()"
     },
     {
@@ -963,7 +963,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2473",
       "id": "hackito_old_realhackito_eyeunseen",
-      "community": 7,
+      "community": 5,
       "norm_label": "eyeunseen()"
     },
     {
@@ -972,7 +972,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2483",
       "id": "hackito_old_realhackito_eyeseen",
-      "community": 7,
+      "community": 5,
       "norm_label": "eyeseen()"
     },
     {
@@ -981,7 +981,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2492",
       "id": "hackito_old_realhackito_loadconversations",
-      "community": 7,
+      "community": 18,
       "norm_label": "loadconversations()"
     },
     {
@@ -990,7 +990,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2533",
       "id": "hackito_old_realhackito_opendmchat",
-      "community": 7,
+      "community": 18,
       "norm_label": "opendmchat()"
     },
     {
@@ -999,7 +999,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2577",
       "id": "hackito_old_realhackito_loaddmmessages",
-      "community": 3,
+      "community": 18,
       "norm_label": "loaddmmessages()"
     },
     {
@@ -1008,7 +1008,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2592",
       "id": "hackito_old_realhackito_appenddmmessage",
-      "community": 7,
+      "community": 5,
       "norm_label": "appenddmmessage()"
     },
     {
@@ -1053,7 +1053,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2765",
       "id": "hackito_old_realhackito_stopspeech",
-      "community": 12,
+      "community": 2,
       "norm_label": "stopspeech()"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2799",
       "id": "hackito_old_realhackito_openpublicprofile",
-      "community": 5,
+      "community": 3,
       "norm_label": "openpublicprofile()"
     },
     {
@@ -1089,7 +1089,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2864",
       "id": "hackito_old_realhackito_showbugreport",
-      "community": 5,
+      "community": 6,
       "norm_label": "showbugreport()"
     },
     {
@@ -1116,7 +1116,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2911",
       "id": "hackito_old_realhackito_startheartbeat",
-      "community": 9,
+      "community": 11,
       "norm_label": "startheartbeat()"
     },
     {
@@ -1125,7 +1125,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2923",
       "id": "hackito_old_realhackito_fetchonlineusers",
-      "community": 9,
+      "community": 11,
       "norm_label": "fetchonlineusers()"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2931",
       "id": "hackito_old_realhackito_isonline",
-      "community": 2,
+      "community": 18,
       "norm_label": "isonline()"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "realhackito.js",
       "source_location": "L2935",
       "id": "hackito_old_realhackito_onlinedot",
-      "community": 2,
+      "community": 18,
       "norm_label": "onlinedot()"
     },
     {
@@ -1206,7 +1206,7 @@
       "source_file": "realhackito_original.js",
       "source_location": "L1",
       "id": "realhackito_original_js",
-      "community": 48,
+      "community": 49,
       "norm_label": "realhackito_original.js"
     },
     {
@@ -1215,7 +1215,7 @@
       "source_file": "server.js",
       "source_location": "L1",
       "id": "server_js",
-      "community": 6,
+      "community": 7,
       "norm_label": "server.js"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "server.js",
       "source_location": "L21",
       "id": "hackito_old_server_handleerror",
-      "community": 6,
+      "community": 7,
       "norm_label": "handleerror()"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "server.js",
       "source_location": "L26",
       "id": "hackito_old_server_sanitizeinput",
-      "community": 6,
+      "community": 7,
       "norm_label": "sanitizeinput()"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "server.js",
       "source_location": "L79",
       "id": "hackito_old_server_blocksuspiciousheaders",
-      "community": 6,
+      "community": 7,
       "norm_label": "blocksuspiciousheaders()"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "server.js",
       "source_location": "L103",
       "id": "hackito_old_server_censormessage",
-      "community": 6,
+      "community": 7,
       "norm_label": "censormessage()"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "server.js",
       "source_location": "L115",
       "id": "hackito_old_server_sendemail",
-      "community": 6,
+      "community": 7,
       "norm_label": "sendemail()"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "server.js",
       "source_location": "L139",
       "id": "hackito_old_server_compacttext",
-      "community": 6,
+      "community": 7,
       "norm_label": "compacttext()"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_file": "server.js",
       "source_location": "L143",
       "id": "hackito_old_server_normalizeemail",
-      "community": 6,
+      "community": 7,
       "norm_label": "normalizeemail()"
     },
     {
@@ -1287,7 +1287,7 @@
       "source_file": "server.js",
       "source_location": "L147",
       "id": "hackito_old_server_isvalidemail",
-      "community": 6,
+      "community": 7,
       "norm_label": "isvalidemail()"
     },
     {
@@ -1296,7 +1296,7 @@
       "source_file": "server.js",
       "source_location": "L151",
       "id": "hackito_old_server_escapeemailhtml",
-      "community": 6,
+      "community": 7,
       "norm_label": "escapeemailhtml()"
     },
     {
@@ -1305,7 +1305,7 @@
       "source_file": "server.js",
       "source_location": "L162",
       "id": "hackito_old_server_normalizehackathon",
-      "community": 6,
+      "community": 7,
       "norm_label": "normalizehackathon()"
     },
     {
@@ -1314,7 +1314,7 @@
       "source_file": "server.js",
       "source_location": "L177",
       "id": "hackito_old_server_detecthackathonintent",
-      "community": 6,
+      "community": 7,
       "norm_label": "detecthackathonintent()"
     },
     {
@@ -1323,7 +1323,7 @@
       "source_file": "server.js",
       "source_location": "L199",
       "id": "hackito_old_server_rankhackathonsforquestion",
-      "community": 6,
+      "community": 7,
       "norm_label": "rankhackathonsforquestion()"
     },
     {
@@ -1332,7 +1332,7 @@
       "source_file": "server.js",
       "source_location": "L224",
       "id": "hackito_old_server_authenticate",
-      "community": 6,
+      "community": 7,
       "norm_label": "authenticate()"
     },
     {
@@ -1341,16 +1341,16 @@
       "source_file": "server.js",
       "source_location": "L275",
       "id": "hackito_old_server_blocksensitivefiles",
-      "community": 6,
+      "community": 7,
       "norm_label": "blocksensitivefiles()"
     },
     {
       "label": "syncHackathons()",
       "file_type": "code",
       "source_file": "server.js",
-      "source_location": "L786",
+      "source_location": "L819",
       "id": "hackito_old_server_synchackathons",
-      "community": 6,
+      "community": 7,
       "norm_label": "synchackathons()"
     },
     {
@@ -1359,7 +1359,7 @@
       "source_file": "server_original.js",
       "source_location": "L1",
       "id": "server_original_js",
-      "community": 49,
+      "community": 50,
       "norm_label": "server_original.js"
     },
     {
@@ -1368,7 +1368,7 @@
       "source_file": "test_bot.js",
       "source_location": "L1",
       "id": "test_bot_js",
-      "community": 30,
+      "community": 31,
       "norm_label": "test_bot.js"
     },
     {
@@ -1377,7 +1377,7 @@
       "source_file": "test_bot.js",
       "source_location": "L3",
       "id": "hackito_old_test_bot_testbot",
-      "community": 30,
+      "community": 31,
       "norm_label": "testbot()"
     },
     {
@@ -1386,7 +1386,7 @@
       "source_file": "test_bug_report.js",
       "source_location": "L1",
       "id": "test_bug_report_js",
-      "community": 50,
+      "community": 51,
       "norm_label": "test_bug_report.js"
     },
     {
@@ -1395,7 +1395,7 @@
       "source_file": "test_full_flow.js",
       "source_location": "L1",
       "id": "test_full_flow_js",
-      "community": 51,
+      "community": 52,
       "norm_label": "test_full_flow.js"
     },
     {
@@ -1404,7 +1404,7 @@
       "source_file": "test_jsdom.js",
       "source_location": "L1",
       "id": "test_jsdom_js",
-      "community": 52,
+      "community": 53,
       "norm_label": "test_jsdom.js"
     },
     {
@@ -1413,7 +1413,7 @@
       "source_file": "test_server_node.js",
       "source_location": "L1",
       "id": "test_server_node_js",
-      "community": 53,
+      "community": 54,
       "norm_label": "test_server_node.js"
     },
     {
@@ -1422,7 +1422,7 @@
       "source_file": "verify_fix1.js",
       "source_location": "L1",
       "id": "verify_fix1_js",
-      "community": 31,
+      "community": 32,
       "norm_label": "verify_fix1.js"
     },
     {
@@ -1431,7 +1431,7 @@
       "source_file": "verify_fix1.js",
       "source_location": "L1",
       "id": "hackito_old_verify_fix1_runtests",
-      "community": 31,
+      "community": 32,
       "norm_label": "runtests()"
     },
     {
@@ -1440,7 +1440,7 @@
       "source_file": "verify_refresh.js",
       "source_location": "L1",
       "id": "verify_refresh_js",
-      "community": 32,
+      "community": 33,
       "norm_label": "verify_refresh.js"
     },
     {
@@ -1449,7 +1449,7 @@
       "source_file": "verify_refresh.js",
       "source_location": "L3",
       "id": "hackito_old_verify_refresh_runtests",
-      "community": 32,
+      "community": 33,
       "norm_label": "runtests()"
     },
     {
@@ -1458,7 +1458,7 @@
       "source_file": "verify_schema.js",
       "source_location": "L1",
       "id": "verify_schema_js",
-      "community": 33,
+      "community": 34,
       "norm_label": "verify_schema.js"
     },
     {
@@ -1467,7 +1467,7 @@
       "source_file": "verify_schema.js",
       "source_location": "L5",
       "id": "hackito_old_verify_schema_verifyschema",
-      "community": 33,
+      "community": 34,
       "norm_label": "verifyschema()"
     },
     {
@@ -1530,7 +1530,7 @@
       "source_file": "config/ai.js",
       "source_location": "L1",
       "id": "config_ai_js",
-      "community": 54,
+      "community": 55,
       "norm_label": "ai.js"
     },
     {
@@ -1539,7 +1539,7 @@
       "source_file": "config/db.js",
       "source_location": "L1",
       "id": "config_db_js",
-      "community": 55,
+      "community": 56,
       "norm_label": "db.js"
     },
     {
@@ -1548,7 +1548,7 @@
       "source_file": "config/env.js",
       "source_location": "L1",
       "id": "config_env_js",
-      "community": 56,
+      "community": 57,
       "norm_label": "env.js"
     },
     {
@@ -1557,7 +1557,7 @@
       "source_file": "config/mailer.js",
       "source_location": "L1",
       "id": "config_mailer_js",
-      "community": 57,
+      "community": 58,
       "norm_label": "mailer.js"
     },
     {
@@ -1566,7 +1566,7 @@
       "source_file": "config/resend.js",
       "source_location": "L1",
       "id": "config_resend_js",
-      "community": 58,
+      "community": 59,
       "norm_label": "resend.js"
     },
     {
@@ -1575,7 +1575,7 @@
       "source_file": "controllers/ai.controller.js",
       "source_location": "L1",
       "id": "controllers_ai_controller_js",
-      "community": 59,
+      "community": 60,
       "norm_label": "ai.controller.js"
     },
     {
@@ -1584,7 +1584,7 @@
       "source_file": "controllers/auth.controller.js",
       "source_location": "L1",
       "id": "controllers_auth_controller_js",
-      "community": 60,
+      "community": 61,
       "norm_label": "auth.controller.js"
     },
     {
@@ -1593,7 +1593,7 @@
       "source_file": "controllers/hackathons.controller.js",
       "source_location": "L1",
       "id": "controllers_hackathons_controller_js",
-      "community": 61,
+      "community": 62,
       "norm_label": "hackathons.controller.js"
     },
     {
@@ -1602,7 +1602,7 @@
       "source_file": "controllers/messaging.controller.js",
       "source_location": "L1",
       "id": "controllers_messaging_controller_js",
-      "community": 34,
+      "community": 35,
       "norm_label": "messaging.controller.js"
     },
     {
@@ -1611,7 +1611,7 @@
       "source_file": "controllers/messaging.controller.js",
       "source_location": "L27",
       "id": "controllers_messaging_controller_streammessages",
-      "community": 34,
+      "community": 35,
       "norm_label": "streammessages()"
     },
     {
@@ -1620,7 +1620,7 @@
       "source_file": "controllers/teams.controller.js",
       "source_location": "L1",
       "id": "controllers_teams_controller_js",
-      "community": 62,
+      "community": 63,
       "norm_label": "teams.controller.js"
     },
     {
@@ -1629,7 +1629,7 @@
       "source_file": "controllers/users.controller.js",
       "source_location": "L1",
       "id": "controllers_users_controller_js",
-      "community": 63,
+      "community": 64,
       "norm_label": "users.controller.js"
     },
     {
@@ -1708,7 +1708,7 @@
       "label": "signupUser()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L66",
+      "source_location": "L67",
       "id": "frontend_auth_signupuser",
       "community": 0,
       "norm_label": "signupuser()"
@@ -1717,7 +1717,7 @@
       "label": "verifyOTP()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L103",
+      "source_location": "L104",
       "id": "frontend_auth_verifyotp",
       "community": 0,
       "norm_label": "verifyotp()"
@@ -1726,7 +1726,7 @@
       "label": "resendOTP()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L178",
+      "source_location": "L180",
       "id": "frontend_auth_resendotp",
       "community": 0,
       "norm_label": "resendotp()"
@@ -1735,7 +1735,7 @@
       "label": "toggleChip()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L196",
+      "source_location": "L198",
       "id": "frontend_auth_togglechip",
       "community": 0,
       "norm_label": "togglechip()"
@@ -1744,7 +1744,7 @@
       "label": "logout()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L200",
+      "source_location": "L202",
       "id": "frontend_auth_logout",
       "community": 0,
       "norm_label": "logout()"
@@ -1753,7 +1753,7 @@
       "label": "hideLogoutModal()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L204",
+      "source_location": "L206",
       "id": "frontend_auth_hidelogoutmodal",
       "community": 0,
       "norm_label": "hidelogoutmodal()"
@@ -1762,7 +1762,7 @@
       "label": "confirmLogout()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L208",
+      "source_location": "L210",
       "id": "frontend_auth_confirmlogout",
       "community": 0,
       "norm_label": "confirmlogout()"
@@ -1771,7 +1771,7 @@
       "label": "selectGender()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L241",
+      "source_location": "L252",
       "id": "frontend_auth_selectgender",
       "community": 0,
       "norm_label": "selectgender()"
@@ -1780,7 +1780,7 @@
       "label": "requestPasswordReset()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L257",
+      "source_location": "L268",
       "id": "frontend_auth_requestpasswordreset",
       "community": 0,
       "norm_label": "requestpasswordreset()"
@@ -1789,7 +1789,7 @@
       "label": "handlePasswordReset()",
       "file_type": "code",
       "source_file": "frontend/auth.js",
-      "source_location": "L280",
+      "source_location": "L291",
       "id": "frontend_auth_handlepasswordreset",
       "community": 0,
       "norm_label": "handlepasswordreset()"
@@ -1800,7 +1800,7 @@
       "source_file": "frontend/chat.js",
       "source_location": "L1",
       "id": "frontend_chat_js",
-      "community": 0,
+      "community": 8,
       "norm_label": "chat.js"
     },
     {
@@ -1809,7 +1809,7 @@
       "source_file": "frontend/chat.js",
       "source_location": "L5",
       "id": "frontend_chat_appendmessage",
-      "community": 0,
+      "community": 8,
       "norm_label": "appendmessage()"
     },
     {
@@ -1818,7 +1818,7 @@
       "source_file": "frontend/chat.js",
       "source_location": "L35",
       "id": "frontend_chat_showtyping",
-      "community": 0,
+      "community": 8,
       "norm_label": "showtyping()"
     },
     {
@@ -1827,7 +1827,7 @@
       "source_file": "frontend/chat.js",
       "source_location": "L53",
       "id": "frontend_chat_removetyping",
-      "community": 0,
+      "community": 8,
       "norm_label": "removetyping()"
     },
     {
@@ -1836,7 +1836,7 @@
       "source_file": "frontend/chat.js",
       "source_location": "L58",
       "id": "frontend_chat_showwelcomemessage",
-      "community": 0,
+      "community": 8,
       "norm_label": "showwelcomemessage()"
     },
     {
@@ -1845,7 +1845,7 @@
       "source_file": "frontend/chat.js",
       "source_location": "L71",
       "id": "frontend_chat_sendchat",
-      "community": 0,
+      "community": 8,
       "norm_label": "sendchat()"
     },
     {
@@ -1854,52 +1854,52 @@
       "source_file": "frontend/chat.js",
       "source_location": "L126",
       "id": "frontend_chat_speaktext",
-      "community": 0,
+      "community": 8,
       "norm_label": "speaktext()"
     },
     {
       "label": "stopSpeech()",
       "file_type": "code",
       "source_file": "frontend/chat.js",
-      "source_location": "L147",
+      "source_location": "L154",
       "id": "frontend_chat_stopspeech",
-      "community": 0,
+      "community": 8,
       "norm_label": "stopspeech()"
     },
     {
       "label": "quickSend()",
       "file_type": "code",
       "source_file": "frontend/chat.js",
-      "source_location": "L151",
+      "source_location": "L158",
       "id": "frontend_chat_quicksend",
-      "community": 0,
+      "community": 8,
       "norm_label": "quicksend()"
     },
     {
       "label": "initSpeechRecognition()",
       "file_type": "code",
       "source_file": "frontend/chat.js",
-      "source_location": "L159",
+      "source_location": "L166",
       "id": "frontend_chat_initspeechrecognition",
-      "community": 0,
+      "community": 8,
       "norm_label": "initspeechrecognition()"
     },
     {
       "label": "toggleVoiceInput()",
       "file_type": "code",
       "source_file": "frontend/chat.js",
-      "source_location": "L215",
+      "source_location": "L222",
       "id": "frontend_chat_togglevoiceinput",
-      "community": 0,
+      "community": 8,
       "norm_label": "togglevoiceinput()"
     },
     {
       "label": "stopListening()",
       "file_type": "code",
       "source_file": "frontend/chat.js",
-      "source_location": "L240",
+      "source_location": "L247",
       "id": "frontend_chat_stoplistening",
-      "community": 0,
+      "community": 8,
       "norm_label": "stoplistening()"
     },
     {
@@ -1942,7 +1942,7 @@
       "label": "fetchHackathons()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L127",
+      "source_location": "L129",
       "id": "frontend_hackathons_fetchhackathons",
       "community": 1,
       "norm_label": "fetchhackathons()"
@@ -1951,7 +1951,7 @@
       "label": "createHackathonCard()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L153",
+      "source_location": "L159",
       "id": "frontend_hackathons_createhackathoncard",
       "community": 1,
       "norm_label": "createhackathoncard()"
@@ -1960,7 +1960,7 @@
       "label": "renderHackathons()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L202",
+      "source_location": "L208",
       "id": "frontend_hackathons_renderhackathons",
       "community": 1,
       "norm_label": "renderhackathons()"
@@ -1969,7 +1969,7 @@
       "label": "searchHackathons()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L220",
+      "source_location": "L226",
       "id": "frontend_hackathons_searchhackathons",
       "community": 1,
       "norm_label": "searchhackathons()"
@@ -1978,7 +1978,7 @@
       "label": "renderHackathonsSorted()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L246",
+      "source_location": "L252",
       "id": "frontend_hackathons_renderhackathonssorted",
       "community": 1,
       "norm_label": "renderhackathonssorted()"
@@ -1987,7 +1987,7 @@
       "label": "filterCards()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L261",
+      "source_location": "L267",
       "id": "frontend_hackathons_filtercards",
       "community": 1,
       "norm_label": "filtercards()"
@@ -1996,7 +1996,7 @@
       "label": "toggleBeginnerFilter()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L272",
+      "source_location": "L278",
       "id": "frontend_hackathons_togglebeginnerfilter",
       "community": 1,
       "norm_label": "togglebeginnerfilter()"
@@ -2005,7 +2005,7 @@
       "label": "togglePrizeFilter()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L290",
+      "source_location": "L296",
       "id": "frontend_hackathons_toggleprizefilter",
       "community": 1,
       "norm_label": "toggleprizefilter()"
@@ -2014,16 +2014,16 @@
       "label": "clearAllFilters()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L308",
+      "source_location": "L314",
       "id": "frontend_hackathons_clearallfilters",
-      "community": 1,
+      "community": 0,
       "norm_label": "clearallfilters()"
     },
     {
       "label": "applyAdvancedFilters()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L365",
+      "source_location": "L371",
       "id": "frontend_hackathons_applyadvancedfilters",
       "community": 1,
       "norm_label": "applyadvancedfilters()"
@@ -2032,7 +2032,7 @@
       "label": "toggleSave()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L485",
+      "source_location": "L491",
       "id": "frontend_hackathons_togglesave",
       "community": 1,
       "norm_label": "togglesave()"
@@ -2041,7 +2041,7 @@
       "label": "requestNotificationPermission()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L532",
+      "source_location": "L538",
       "id": "frontend_hackathons_requestnotificationpermission",
       "community": 1,
       "norm_label": "requestnotificationpermission()"
@@ -2050,7 +2050,7 @@
       "label": "scheduleNotificationCheck()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L539",
+      "source_location": "L545",
       "id": "frontend_hackathons_schedulenotificationcheck",
       "community": 1,
       "norm_label": "schedulenotificationcheck()"
@@ -2059,7 +2059,7 @@
       "label": "copyLink()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L562",
+      "source_location": "L568",
       "id": "frontend_hackathons_copylink",
       "community": 1,
       "norm_label": "copylink()"
@@ -2068,7 +2068,7 @@
       "label": "fallbackCopy()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L581",
+      "source_location": "L587",
       "id": "frontend_hackathons_fallbackcopy",
       "community": 1,
       "norm_label": "fallbackcopy()"
@@ -2077,7 +2077,7 @@
       "label": "unsaveHackathon()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L595",
+      "source_location": "L601",
       "id": "frontend_hackathons_unsavehackathon",
       "community": 1,
       "norm_label": "unsavehackathon()"
@@ -2086,7 +2086,7 @@
       "label": "updateStats()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L602",
+      "source_location": "L608",
       "id": "frontend_hackathons_updatestats",
       "community": 1,
       "norm_label": "updatestats()"
@@ -2095,7 +2095,7 @@
       "label": "filterByCountry()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L614",
+      "source_location": "L620",
       "id": "frontend_hackathons_filterbycountry",
       "community": 1,
       "norm_label": "filterbycountry()"
@@ -2104,7 +2104,7 @@
       "label": "buildCountryList()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L626",
+      "source_location": "L632",
       "id": "frontend_hackathons_buildcountrylist",
       "community": 1,
       "norm_label": "buildcountrylist()"
@@ -2113,7 +2113,7 @@
       "label": "filterCountryList()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L650",
+      "source_location": "L656",
       "id": "frontend_hackathons_filtercountrylist",
       "community": 1,
       "norm_label": "filtercountrylist()"
@@ -2122,7 +2122,7 @@
       "label": "selectCountry()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L659",
+      "source_location": "L665",
       "id": "frontend_hackathons_selectcountry",
       "community": 1,
       "norm_label": "selectcountry()"
@@ -2131,7 +2131,7 @@
       "label": "openHackModal()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L668",
+      "source_location": "L674",
       "id": "frontend_hackathons_openhackmodal",
       "community": 1,
       "norm_label": "openhackmodal()"
@@ -2140,7 +2140,7 @@
       "label": "hideHackModal()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L709",
+      "source_location": "L717",
       "id": "frontend_hackathons_hidehackmodal",
       "community": 1,
       "norm_label": "hidehackmodal()"
@@ -2149,7 +2149,7 @@
       "label": "startCountdowns()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L713",
+      "source_location": "L721",
       "id": "frontend_hackathons_startcountdowns",
       "community": 1,
       "norm_label": "startcountdowns()"
@@ -2158,7 +2158,7 @@
       "label": "prevMonth()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L735",
+      "source_location": "L743",
       "id": "frontend_hackathons_prevmonth",
       "community": 1,
       "norm_label": "prevmonth()"
@@ -2167,7 +2167,7 @@
       "label": "nextMonth()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L740",
+      "source_location": "L748",
       "id": "frontend_hackathons_nextmonth",
       "community": 1,
       "norm_label": "nextmonth()"
@@ -2176,7 +2176,7 @@
       "label": "renderCalendar()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L745",
+      "source_location": "L753",
       "id": "frontend_hackathons_rendercalendar",
       "community": 1,
       "norm_label": "rendercalendar()"
@@ -2185,7 +2185,7 @@
       "label": "showReviewForm()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L813",
+      "source_location": "L821",
       "id": "frontend_hackathons_showreviewform",
       "community": 1,
       "norm_label": "showreviewform()"
@@ -2194,7 +2194,7 @@
       "label": "setRating()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L822",
+      "source_location": "L830",
       "id": "frontend_hackathons_setrating",
       "community": 1,
       "norm_label": "setrating()"
@@ -2203,7 +2203,7 @@
       "label": "loadReviews()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L829",
+      "source_location": "L837",
       "id": "frontend_hackathons_loadreviews",
       "community": 1,
       "norm_label": "loadreviews()"
@@ -2212,7 +2212,7 @@
       "label": "submitReview()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L871",
+      "source_location": "L879",
       "id": "frontend_hackathons_submitreview",
       "community": 1,
       "norm_label": "submitreview()"
@@ -2221,7 +2221,7 @@
       "label": "deleteReview()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L898",
+      "source_location": "L906",
       "id": "frontend_hackathons_deletereview",
       "community": 1,
       "norm_label": "deletereview()"
@@ -2230,7 +2230,7 @@
       "label": "getFallbackHackathons()",
       "file_type": "code",
       "source_file": "frontend/hackathons.js",
-      "source_location": "L910",
+      "source_location": "L918",
       "id": "frontend_hackathons_getfallbackhackathons",
       "community": 1,
       "norm_label": "getfallbackhackathons()"
@@ -2243,6 +2243,24 @@
       "id": "frontend_main_js",
       "community": 0,
       "norm_label": "main.js"
+    },
+    {
+      "label": "startOnlineUsersPolling()",
+      "file_type": "code",
+      "source_file": "frontend/main.js",
+      "source_location": "L147",
+      "id": "frontend_main_startonlineuserspolling",
+      "community": 0,
+      "norm_label": "startonlineuserspolling()"
+    },
+    {
+      "label": "stopOnlineUsersPolling()",
+      "file_type": "code",
+      "source_file": "frontend/main.js",
+      "source_location": "L153",
+      "id": "frontend_main_stoponlineuserspolling",
+      "community": 0,
+      "norm_label": "stoponlineuserspolling()"
     },
     {
       "label": "profile.js",
@@ -2329,7 +2347,7 @@
       "label": "respondRequest()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L296",
+      "source_location": "L299",
       "id": "frontend_profile_respondrequest",
       "community": 0,
       "norm_label": "respondrequest()"
@@ -2338,7 +2356,7 @@
       "label": "removeFriend()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L313",
+      "source_location": "L316",
       "id": "frontend_profile_removefriend",
       "community": 0,
       "norm_label": "removefriend()"
@@ -2347,7 +2365,7 @@
       "label": "openPublicProfile()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L325",
+      "source_location": "L328",
       "id": "frontend_profile_openpublicprofile",
       "community": 0,
       "norm_label": "openpublicprofile()"
@@ -2356,7 +2374,7 @@
       "label": "eyeUnseen()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L389",
+      "source_location": "L392",
       "id": "frontend_profile_eyeunseen",
       "community": 0,
       "norm_label": "eyeunseen()"
@@ -2365,7 +2383,7 @@
       "label": "eyeSeen()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L399",
+      "source_location": "L402",
       "id": "frontend_profile_eyeseen",
       "community": 0,
       "norm_label": "eyeseen()"
@@ -2374,7 +2392,7 @@
       "label": "loadConversations()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L408",
+      "source_location": "L411",
       "id": "frontend_profile_loadconversations",
       "community": 0,
       "norm_label": "loadconversations()"
@@ -2383,7 +2401,7 @@
       "label": "openDMChat()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L477",
+      "source_location": "L480",
       "id": "frontend_profile_opendmchat",
       "community": 0,
       "norm_label": "opendmchat()"
@@ -2392,7 +2410,7 @@
       "label": "loadDMMessages()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L524",
+      "source_location": "L525",
       "id": "frontend_profile_loaddmmessages",
       "community": 0,
       "norm_label": "loaddmmessages()"
@@ -2401,7 +2419,7 @@
       "label": "appendDMMessage()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L550",
+      "source_location": "L551",
       "id": "frontend_profile_appenddmmessage",
       "community": 0,
       "norm_label": "appenddmmessage()"
@@ -2410,7 +2428,7 @@
       "label": "sendDM()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L573",
+      "source_location": "L574",
       "id": "frontend_profile_senddm",
       "community": 0,
       "norm_label": "senddm()"
@@ -2419,16 +2437,16 @@
       "label": "startHeartbeat()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L600",
+      "source_location": "L601",
       "id": "frontend_profile_startheartbeat",
-      "community": 9,
+      "community": 0,
       "norm_label": "startheartbeat()"
     },
     {
       "label": "fetchOnlineUsers()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L612",
+      "source_location": "L613",
       "id": "frontend_profile_fetchonlineusers",
       "community": 0,
       "norm_label": "fetchonlineusers()"
@@ -2437,7 +2455,7 @@
       "label": "isOnline()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L620",
+      "source_location": "L621",
       "id": "frontend_profile_isonline",
       "community": 0,
       "norm_label": "isonline()"
@@ -2446,7 +2464,7 @@
       "label": "onlineDot()",
       "file_type": "code",
       "source_file": "frontend/profile.js",
-      "source_location": "L624",
+      "source_location": "L625",
       "id": "frontend_profile_onlinedot",
       "community": 0,
       "norm_label": "onlinedot()"
@@ -2473,7 +2491,7 @@
       "label": "goTo()",
       "file_type": "code",
       "source_file": "frontend/router.js",
-      "source_location": "L47",
+      "source_location": "L62",
       "id": "frontend_router_goto",
       "community": 0,
       "norm_label": "goto()"
@@ -2493,7 +2511,7 @@
       "source_file": "frontend/state.js",
       "source_location": "L25",
       "id": "frontend_state_savepersistedstate",
-      "community": 1,
+      "community": 0,
       "norm_label": "savepersistedstate()"
     },
     {
@@ -2581,7 +2599,7 @@
       "label": "copyInviteLink()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L160",
+      "source_location": "L173",
       "id": "frontend_teams_copyinvitelink",
       "community": 0,
       "norm_label": "copyinvitelink()"
@@ -2590,7 +2608,7 @@
       "label": "closeTeamChat()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L177",
+      "source_location": "L190",
       "id": "frontend_teams_closeteamchat",
       "community": 0,
       "norm_label": "closeteamchat()"
@@ -2599,7 +2617,7 @@
       "label": "appendTeamMessage()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L186",
+      "source_location": "L199",
       "id": "frontend_teams_appendteammessage",
       "community": 0,
       "norm_label": "appendteammessage()"
@@ -2608,7 +2626,7 @@
       "label": "loadTeamMessages()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L199",
+      "source_location": "L212",
       "id": "frontend_teams_loadteammessages",
       "community": 0,
       "norm_label": "loadteammessages()"
@@ -2617,7 +2635,7 @@
       "label": "sendTeamMessage()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L208",
+      "source_location": "L221",
       "id": "frontend_teams_sendteammessage",
       "community": 0,
       "norm_label": "sendteammessage()"
@@ -2626,7 +2644,7 @@
       "label": "leaveTeam()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L228",
+      "source_location": "L241",
       "id": "frontend_teams_leaveteam",
       "community": 0,
       "norm_label": "leaveteam()"
@@ -2635,7 +2653,7 @@
       "label": "deleteTeam()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L255",
+      "source_location": "L268",
       "id": "frontend_teams_deleteteam",
       "community": 0,
       "norm_label": "deleteteam()"
@@ -2644,7 +2662,7 @@
       "label": "renderShowcaseSkeletons()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L274",
+      "source_location": "L287",
       "id": "frontend_teams_rendershowcaseskeletons",
       "community": 0,
       "norm_label": "rendershowcaseskeletons()"
@@ -2653,7 +2671,7 @@
       "label": "loadShowcase()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L305",
+      "source_location": "L318",
       "id": "frontend_teams_loadshowcase",
       "community": 0,
       "norm_label": "loadshowcase()"
@@ -2662,7 +2680,7 @@
       "label": "showSubmitProject()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L364",
+      "source_location": "L377",
       "id": "frontend_teams_showsubmitproject",
       "community": 0,
       "norm_label": "showsubmitproject()"
@@ -2671,7 +2689,7 @@
       "label": "hideSubmitProject()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L384",
+      "source_location": "L397",
       "id": "frontend_teams_hidesubmitproject",
       "community": 0,
       "norm_label": "hidesubmitproject()"
@@ -2680,7 +2698,7 @@
       "label": "submitProject()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L388",
+      "source_location": "L401",
       "id": "frontend_teams_submitproject",
       "community": 0,
       "norm_label": "submitproject()"
@@ -2689,7 +2707,7 @@
       "label": "deleteProject()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L423",
+      "source_location": "L436",
       "id": "frontend_teams_deleteproject",
       "community": 0,
       "norm_label": "deleteproject()"
@@ -2698,7 +2716,7 @@
       "label": "showCreateTeammateModal()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L438",
+      "source_location": "L451",
       "id": "frontend_teams_showcreateteammatemodal",
       "community": 0,
       "norm_label": "showcreateteammatemodal()"
@@ -2707,7 +2725,7 @@
       "label": "hideCreateTeammateModal()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L442",
+      "source_location": "L455",
       "id": "frontend_teams_hidecreateteammatemodal",
       "community": 0,
       "norm_label": "hidecreateteammatemodal()"
@@ -2716,7 +2734,7 @@
       "label": "renderTeammateSkeletons()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L447",
+      "source_location": "L460",
       "id": "frontend_teams_renderteammateskeletons",
       "community": 0,
       "norm_label": "renderteammateskeletons()"
@@ -2725,7 +2743,7 @@
       "label": "fetchTeammates()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L469",
+      "source_location": "L482",
       "id": "frontend_teams_fetchteammates",
       "community": 0,
       "norm_label": "fetchteammates()"
@@ -2734,7 +2752,7 @@
       "label": "submitTeammateListing()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L518",
+      "source_location": "L531",
       "id": "frontend_teams_submitteammatelisting",
       "community": 0,
       "norm_label": "submitteammatelisting()"
@@ -2743,7 +2761,7 @@
       "label": "deleteTeammateListing()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L555",
+      "source_location": "L568",
       "id": "frontend_teams_deleteteammatelisting",
       "community": 0,
       "norm_label": "deleteteammatelisting()"
@@ -2752,7 +2770,7 @@
       "label": "markTeammateFilled()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L566",
+      "source_location": "L579",
       "id": "frontend_teams_markteammatefilled",
       "community": 0,
       "norm_label": "markteammatefilled()"
@@ -2761,7 +2779,7 @@
       "label": "showMatchmaker()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L577",
+      "source_location": "L590",
       "id": "frontend_teams_showmatchmaker",
       "community": 0,
       "norm_label": "showmatchmaker()"
@@ -2770,7 +2788,7 @@
       "label": "hideMatchmaker()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L582",
+      "source_location": "L595",
       "id": "frontend_teams_hidematchmaker",
       "community": 0,
       "norm_label": "hidematchmaker()"
@@ -2779,7 +2797,7 @@
       "label": "runMatchmaker()",
       "file_type": "code",
       "source_file": "frontend/teams.js",
-      "source_location": "L586",
+      "source_location": "L599",
       "id": "frontend_teams_runmatchmaker",
       "community": 0,
       "norm_label": "runmatchmaker()"
@@ -2830,10 +2848,19 @@
       "norm_label": "showtoast()"
     },
     {
-      "label": "openModal()",
+      "label": "trapFocus()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
       "source_location": "L14",
+      "id": "frontend_ui_trapfocus",
+      "community": 0,
+      "norm_label": "trapfocus()"
+    },
+    {
+      "label": "openModal()",
+      "file_type": "code",
+      "source_file": "frontend/ui.js",
+      "source_location": "L53",
       "id": "frontend_ui_openmodal",
       "community": 0,
       "norm_label": "openmodal()"
@@ -2842,7 +2869,7 @@
       "label": "closeModal()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
-      "source_location": "L22",
+      "source_location": "L63",
       "id": "frontend_ui_closemodal",
       "community": 0,
       "norm_label": "closemodal()"
@@ -2851,7 +2878,7 @@
       "label": "showBugReport()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
-      "source_location": "L33",
+      "source_location": "L82",
       "id": "frontend_ui_showbugreport",
       "community": 0,
       "norm_label": "showbugreport()"
@@ -2860,7 +2887,7 @@
       "label": "hideBugReport()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
-      "source_location": "L37",
+      "source_location": "L86",
       "id": "frontend_ui_hidebugreport",
       "community": 0,
       "norm_label": "hidebugreport()"
@@ -2869,16 +2896,43 @@
       "label": "submitBugReport()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
-      "source_location": "L45",
+      "source_location": "L94",
       "id": "frontend_ui_submitbugreport",
       "community": 0,
       "norm_label": "submitbugreport()"
     },
     {
+      "label": "showFeedback()",
+      "file_type": "code",
+      "source_file": "frontend/ui.js",
+      "source_location": "L125",
+      "id": "frontend_ui_showfeedback",
+      "community": 0,
+      "norm_label": "showfeedback()"
+    },
+    {
+      "label": "hideFeedback()",
+      "file_type": "code",
+      "source_file": "frontend/ui.js",
+      "source_location": "L131",
+      "id": "frontend_ui_hidefeedback",
+      "community": 0,
+      "norm_label": "hidefeedback()"
+    },
+    {
+      "label": "submitFeedback()",
+      "file_type": "code",
+      "source_file": "frontend/ui.js",
+      "source_location": "L141",
+      "id": "frontend_ui_submitfeedback",
+      "community": 0,
+      "norm_label": "submitfeedback()"
+    },
+    {
       "label": "toggleNavMenu()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
-      "source_location": "L76",
+      "source_location": "L171",
       "id": "frontend_ui_togglenavmenu",
       "community": 0,
       "norm_label": "togglenavmenu()"
@@ -2887,7 +2941,7 @@
       "label": "suggestTranslation()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
-      "source_location": "L83",
+      "source_location": "L178",
       "id": "frontend_ui_suggesttranslation",
       "community": 0,
       "norm_label": "suggesttranslation()"
@@ -2896,7 +2950,7 @@
       "label": "renderErrorRecovery()",
       "file_type": "code",
       "source_file": "frontend/ui.js",
-      "source_location": "L116",
+      "source_location": "L211",
       "id": "frontend_ui_rendererrorrecovery",
       "community": 0,
       "norm_label": "rendererrorrecovery()"
@@ -2907,7 +2961,7 @@
       "source_file": "jobs/alerts.job.js",
       "source_location": "L1",
       "id": "jobs_alerts_job_js",
-      "community": 35,
+      "community": 36,
       "norm_label": "alerts.job.js"
     },
     {
@@ -2916,7 +2970,7 @@
       "source_file": "jobs/alerts.job.js",
       "source_location": "L5",
       "id": "jobs_alerts_job_initalertjobs",
-      "community": 35,
+      "community": 36,
       "norm_label": "initalertjobs()"
     },
     {
@@ -2925,7 +2979,7 @@
       "source_file": "middleware/auth.js",
       "source_location": "L1",
       "id": "middleware_auth_js",
-      "community": 36,
+      "community": 37,
       "norm_label": "auth.js"
     },
     {
@@ -2934,7 +2988,7 @@
       "source_file": "middleware/auth.js",
       "source_location": "L9",
       "id": "middleware_auth_authenticate",
-      "community": 36,
+      "community": 37,
       "norm_label": "authenticate()"
     },
     {
@@ -2943,7 +2997,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L1",
       "id": "middleware_sanitize_js",
-      "community": 22,
+      "community": 23,
       "norm_label": "sanitize.js"
     },
     {
@@ -2952,7 +3006,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L11",
       "id": "middleware_sanitize_sanitizebody",
-      "community": 22,
+      "community": 23,
       "norm_label": "sanitizebody()"
     },
     {
@@ -2961,7 +3015,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L18",
       "id": "middleware_sanitize_sanitizeobject",
-      "community": 22,
+      "community": 23,
       "norm_label": "sanitizeobject()"
     },
     {
@@ -2970,7 +3024,7 @@
       "source_file": "middleware/sanitize.js",
       "source_location": "L41",
       "id": "middleware_sanitize_sanitizerichtext",
-      "community": 22,
+      "community": 23,
       "norm_label": "sanitizerichtext()"
     },
     {
@@ -2979,7 +3033,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L1",
       "id": "middleware_security_js",
-      "community": 26,
+      "community": 27,
       "norm_label": "security.js"
     },
     {
@@ -2988,7 +3042,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L60",
       "id": "middleware_security_botprotection",
-      "community": 26,
+      "community": 27,
       "norm_label": "botprotection()"
     },
     {
@@ -2997,7 +3051,7 @@
       "source_file": "middleware/security.js",
       "source_location": "L78",
       "id": "middleware_security_aipromptsanitycheck",
-      "community": 26,
+      "community": 27,
       "norm_label": "aipromptsanitycheck()"
     },
     {
@@ -3006,7 +3060,7 @@
       "source_file": "middleware/validate.js",
       "source_location": "L1",
       "id": "middleware_validate_js",
-      "community": 37,
+      "community": 38,
       "norm_label": "validate.js"
     },
     {
@@ -3015,7 +3069,7 @@
       "source_file": "middleware/validate.js",
       "source_location": "L7",
       "id": "middleware_validate_validate",
-      "community": 37,
+      "community": 38,
       "norm_label": "validate()"
     },
     {
@@ -3024,7 +3078,7 @@
       "source_file": "routes/ai.routes.js",
       "source_location": "L1",
       "id": "routes_ai_routes_js",
-      "community": 64,
+      "community": 65,
       "norm_label": "ai.routes.js"
     },
     {
@@ -3033,7 +3087,7 @@
       "source_file": "routes/auth.routes.js",
       "source_location": "L1",
       "id": "routes_auth_routes_js",
-      "community": 65,
+      "community": 66,
       "norm_label": "auth.routes.js"
     },
     {
@@ -3042,7 +3096,7 @@
       "source_file": "routes/chat.routes.js",
       "source_location": "L1",
       "id": "routes_chat_routes_js",
-      "community": 38,
+      "community": 39,
       "norm_label": "chat.routes.js"
     },
     {
@@ -3051,7 +3105,7 @@
       "source_file": "routes/chat.routes.js",
       "source_location": "L16",
       "id": "routes_chat_routes_includes",
-      "community": 38,
+      "community": 39,
       "norm_label": "includes()"
     },
     {
@@ -3060,7 +3114,7 @@
       "source_file": "routes/hackathons.routes.js",
       "source_location": "L1",
       "id": "routes_hackathons_routes_js",
-      "community": 66,
+      "community": 67,
       "norm_label": "hackathons.routes.js"
     },
     {
@@ -3069,7 +3123,7 @@
       "source_file": "routes/messaging.routes.js",
       "source_location": "L1",
       "id": "routes_messaging_routes_js",
-      "community": 67,
+      "community": 68,
       "norm_label": "messaging.routes.js"
     },
     {
@@ -3078,7 +3132,7 @@
       "source_file": "routes/teams.routes.js",
       "source_location": "L1",
       "id": "routes_teams_routes_js",
-      "community": 68,
+      "community": 69,
       "norm_label": "teams.routes.js"
     },
     {
@@ -3087,7 +3141,7 @@
       "source_file": "routes/users.routes.js",
       "source_location": "L1",
       "id": "routes_users_routes_js",
-      "community": 69,
+      "community": 70,
       "norm_label": "users.routes.js"
     },
     {
@@ -3096,7 +3150,7 @@
       "source_file": "schemas/ai.schema.js",
       "source_location": "L1",
       "id": "schemas_ai_schema_js",
-      "community": 70,
+      "community": 71,
       "norm_label": "ai.schema.js"
     },
     {
@@ -3105,7 +3159,7 @@
       "source_file": "schemas/auth.schema.js",
       "source_location": "L1",
       "id": "schemas_auth_schema_js",
-      "community": 71,
+      "community": 72,
       "norm_label": "auth.schema.js"
     },
     {
@@ -3114,7 +3168,7 @@
       "source_file": "schemas/hackathon.schema.js",
       "source_location": "L1",
       "id": "schemas_hackathon_schema_js",
-      "community": 72,
+      "community": 73,
       "norm_label": "hackathon.schema.js"
     },
     {
@@ -3123,7 +3177,7 @@
       "source_file": "schemas/profile.schema.js",
       "source_location": "L1",
       "id": "schemas_profile_schema_js",
-      "community": 73,
+      "community": 74,
       "norm_label": "profile.schema.js"
     },
     {
@@ -3132,7 +3186,7 @@
       "source_file": "schemas/team.schema.js",
       "source_location": "L1",
       "id": "schemas_team_schema_js",
-      "community": 74,
+      "community": 75,
       "norm_label": "team.schema.js"
     },
     {
@@ -3141,7 +3195,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L1",
       "id": "services_ai_service_js",
-      "community": 27,
+      "community": 28,
       "norm_label": "ai.service.js"
     },
     {
@@ -3150,7 +3204,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L4",
       "id": "services_ai_service_generateideas",
-      "community": 27,
+      "community": 28,
       "norm_label": "generateideas()"
     },
     {
@@ -3159,7 +3213,7 @@
       "source_file": "services/ai.service.js",
       "source_location": "L44",
       "id": "services_ai_service_analyzedifficulty",
-      "community": 27,
+      "community": 28,
       "norm_label": "analyzedifficulty()"
     },
     {
@@ -3168,7 +3222,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L1",
       "id": "services_auth_service_js",
-      "community": 8,
+      "community": 9,
       "norm_label": "auth.service.js"
     },
     {
@@ -3177,7 +3231,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L8",
       "id": "services_auth_service_resolvestoredpasswordhash",
-      "community": 8,
+      "community": 9,
       "norm_label": "resolvestoredpasswordhash()"
     },
     {
@@ -3186,7 +3240,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L14",
       "id": "services_auth_service_generatetokens",
-      "community": 8,
+      "community": 9,
       "norm_label": "generatetokens()"
     },
     {
@@ -3195,7 +3249,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L33",
       "id": "services_auth_service_storerefreshtoken",
-      "community": 8,
+      "community": 9,
       "norm_label": "storerefreshtoken()"
     },
     {
@@ -3204,7 +3258,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L53",
       "id": "services_auth_service_register",
-      "community": 8,
+      "community": 9,
       "norm_label": "register()"
     },
     {
@@ -3213,7 +3267,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L85",
       "id": "services_auth_service_login",
-      "community": 8,
+      "community": 9,
       "norm_label": "login()"
     },
     {
@@ -3222,7 +3276,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L103",
       "id": "services_auth_service_refresh",
-      "community": 8,
+      "community": 9,
       "norm_label": "refresh()"
     },
     {
@@ -3231,7 +3285,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L143",
       "id": "services_auth_service_logout",
-      "community": 8,
+      "community": 9,
       "norm_label": "logout()"
     },
     {
@@ -3240,7 +3294,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L149",
       "id": "services_auth_service_sendotp",
-      "community": 8,
+      "community": 9,
       "norm_label": "sendotp()"
     },
     {
@@ -3249,7 +3303,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L179",
       "id": "services_auth_service_verifyotp",
-      "community": 8,
+      "community": 9,
       "norm_label": "verifyotp()"
     },
     {
@@ -3258,7 +3312,7 @@
       "source_file": "services/auth.service.js",
       "source_location": "L195",
       "id": "services_auth_service_sendwelcomeemail",
-      "community": 8,
+      "community": 9,
       "norm_label": "sendwelcomeemail()"
     },
     {
@@ -3267,79 +3321,79 @@
       "source_file": "services/hackathons.service.js",
       "source_location": "L1",
       "id": "services_hackathons_service_js",
-      "community": 11,
+      "community": 12,
       "norm_label": "hackathons.service.js"
     },
     {
       "label": "getAll()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L19",
+      "source_location": "L25",
       "id": "services_hackathons_service_getall",
-      "community": 11,
+      "community": 12,
       "norm_label": "getall()"
     },
     {
       "label": "getById()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L29",
+      "source_location": "L35",
       "id": "services_hackathons_service_getbyid",
-      "community": 11,
+      "community": 12,
       "norm_label": "getbyid()"
     },
     {
       "label": "create()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L35",
+      "source_location": "L41",
       "id": "services_hackathons_service_create",
-      "community": 11,
+      "community": 12,
       "norm_label": "create()"
     },
     {
       "label": "update()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L41",
+      "source_location": "L47",
       "id": "services_hackathons_service_update",
-      "community": 11,
+      "community": 12,
       "norm_label": "update()"
     },
     {
       "label": "deleteHackathon()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L47",
+      "source_location": "L53",
       "id": "services_hackathons_service_deletehackathon",
-      "community": 11,
+      "community": 12,
       "norm_label": "deletehackathon()"
     },
     {
       "label": "getSaved()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L53",
+      "source_location": "L59",
       "id": "services_hackathons_service_getsaved",
-      "community": 11,
+      "community": 12,
       "norm_label": "getsaved()"
     },
     {
       "label": "save()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L64",
+      "source_location": "L70",
       "id": "services_hackathons_service_save",
-      "community": 11,
+      "community": 12,
       "norm_label": "save()"
     },
     {
       "label": "unsave()",
       "file_type": "code",
       "source_file": "services/hackathons.service.js",
-      "source_location": "L70",
+      "source_location": "L76",
       "id": "services_hackathons_service_unsave",
-      "community": 11,
+      "community": 12,
       "norm_label": "unsave()"
     },
     {
@@ -3348,7 +3402,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L1",
       "id": "services_messaging_service_js",
-      "community": 18,
+      "community": 19,
       "norm_label": "messaging.service.js"
     },
     {
@@ -3357,7 +3411,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L5",
       "id": "services_messaging_service_getconversations",
-      "community": 18,
+      "community": 19,
       "norm_label": "getconversations()"
     },
     {
@@ -3366,7 +3420,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L44",
       "id": "services_messaging_service_getmessages",
-      "community": 18,
+      "community": 19,
       "norm_label": "getmessages()"
     },
     {
@@ -3375,7 +3429,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L63",
       "id": "services_messaging_service_sendmessage",
-      "community": 18,
+      "community": 19,
       "norm_label": "sendmessage()"
     },
     {
@@ -3384,7 +3438,7 @@
       "source_file": "services/messaging.service.js",
       "source_location": "L87",
       "id": "services_messaging_service_markseen",
-      "community": 18,
+      "community": 19,
       "norm_label": "markseen()"
     },
     {
@@ -3393,7 +3447,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L1",
       "id": "services_realtime_service_js",
-      "community": 23,
+      "community": 24,
       "norm_label": "realtime.service.js"
     },
     {
@@ -3402,7 +3456,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L3",
       "id": "services_realtime_service_addclient",
-      "community": 23,
+      "community": 24,
       "norm_label": "addclient()"
     },
     {
@@ -3411,7 +3465,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L8",
       "id": "services_realtime_service_removeclient",
-      "community": 23,
+      "community": 24,
       "norm_label": "removeclient()"
     },
     {
@@ -3420,7 +3474,7 @@
       "source_file": "services/realtime.service.js",
       "source_location": "L14",
       "id": "services_realtime_service_broadcasttokey",
-      "community": 23,
+      "community": 24,
       "norm_label": "broadcasttokey()"
     },
     {
@@ -3492,7 +3546,7 @@
       "source_file": "services/users.service.js",
       "source_location": "L1",
       "id": "services_users_service_js",
-      "community": 9,
+      "community": 11,
       "norm_label": "users.service.js"
     },
     {
@@ -3501,7 +3555,7 @@
       "source_file": "services/users.service.js",
       "source_location": "L4",
       "id": "services_users_service_getprofile",
-      "community": 9,
+      "community": 11,
       "norm_label": "getprofile()"
     },
     {
@@ -3510,7 +3564,7 @@
       "source_file": "services/users.service.js",
       "source_location": "L10",
       "id": "services_users_service_updateprofile",
-      "community": 9,
+      "community": 11,
       "norm_label": "updateprofile()"
     },
     {
@@ -3519,7 +3573,7 @@
       "source_file": "services/users.service.js",
       "source_location": "L16",
       "id": "services_users_service_getfriends",
-      "community": 9,
+      "community": 11,
       "norm_label": "getfriends()"
     },
     {
@@ -3528,7 +3582,7 @@
       "source_file": "services/users.service.js",
       "source_location": "L38",
       "id": "services_users_service_removefriend",
-      "community": 9,
+      "community": 11,
       "norm_label": "removefriend()"
     },
     {
@@ -3537,7 +3591,7 @@
       "source_file": "services/users.service.js",
       "source_location": "L44",
       "id": "services_users_service_ping",
-      "community": 9,
+      "community": 11,
       "norm_label": "ping()"
     },
     {
@@ -3546,7 +3600,7 @@
       "source_file": "services/users.service.js",
       "source_location": "L52",
       "id": "services_users_service_getonline",
-      "community": 9,
+      "community": 11,
       "norm_label": "getonline()"
     },
     {
@@ -3555,7 +3609,7 @@
       "source_file": "utils/asyncHandler.js",
       "source_location": "L1",
       "id": "utils_asynchandler_js",
-      "community": 39,
+      "community": 40,
       "norm_label": "asynchandler.js"
     },
     {
@@ -3564,7 +3618,7 @@
       "source_file": "utils/asyncHandler.js",
       "source_location": "L1",
       "id": "utils_asynchandler_asynchandler",
-      "community": 39,
+      "community": 40,
       "norm_label": "asynchandler()"
     },
     {
@@ -3573,7 +3627,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L1",
       "id": "utils_errorhandler_js",
-      "community": 28,
+      "community": 29,
       "norm_label": "errorhandler.js"
     },
     {
@@ -3582,7 +3636,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L1",
       "id": "utils_errorhandler_apierror",
-      "community": 28,
+      "community": 29,
       "norm_label": "apierror"
     },
     {
@@ -3591,7 +3645,7 @@
       "source_file": "utils/errorHandler.js",
       "source_location": "L2",
       "id": "utils_errorhandler_apierror_constructor",
-      "community": 28,
+      "community": 29,
       "norm_label": ".constructor()"
     },
     {
@@ -3600,7 +3654,7 @@
       "source_file": "utils/helpers.js",
       "source_location": "L1",
       "id": "utils_helpers_js",
-      "community": 40,
+      "community": 41,
       "norm_label": "helpers.js"
     },
     {
@@ -3609,7 +3663,7 @@
       "source_file": "utils/helpers.js",
       "source_location": "L1",
       "id": "utils_helpers_formatresponse",
-      "community": 40,
+      "community": 41,
       "norm_label": "formatresponse()"
     },
     {
@@ -3618,7 +3672,7 @@
       "source_file": "validators/ai.validator.js",
       "source_location": "L1",
       "id": "validators_ai_validator_js",
-      "community": 41,
+      "community": 42,
       "norm_label": "ai.validator.js"
     },
     {
@@ -3627,7 +3681,7 @@
       "source_file": "validators/ai.validator.js",
       "source_location": "L5",
       "id": "validators_ai_validator_aisecuritycheck",
-      "community": 41,
+      "community": 42,
       "norm_label": "aisecuritycheck()"
     },
     {
@@ -3636,7 +3690,7 @@
       "source_file": "validators/profanity.validator.js",
       "source_location": "L1",
       "id": "validators_profanity_validator_js",
-      "community": 75,
+      "community": 76,
       "norm_label": "profanity.validator.js"
     },
     {
@@ -3645,7 +3699,7 @@
       "source_file": "web/eslint.config.mjs",
       "source_location": "L1",
       "id": "web_eslint_config_mjs",
-      "community": 76,
+      "community": 77,
       "norm_label": "eslint.config.mjs"
     },
     {
@@ -3654,7 +3708,7 @@
       "source_file": "web/next-env.d.ts",
       "source_location": "L1",
       "id": "web_next_env_d_ts",
-      "community": 77,
+      "community": 78,
       "norm_label": "next-env.d.ts"
     },
     {
@@ -3663,7 +3717,7 @@
       "source_file": "web/next.config.ts",
       "source_location": "L1",
       "id": "web_next_config_ts",
-      "community": 78,
+      "community": 79,
       "norm_label": "next.config.ts"
     },
     {
@@ -3672,7 +3726,7 @@
       "source_file": "web/postcss.config.mjs",
       "source_location": "L1",
       "id": "web_postcss_config_mjs",
-      "community": 79,
+      "community": 80,
       "norm_label": "postcss.config.mjs"
     },
     {
@@ -3681,7 +3735,7 @@
       "source_file": "web/src/middleware.ts",
       "source_location": "L1",
       "id": "web_src_middleware_ts",
-      "community": 24,
+      "community": 25,
       "norm_label": "middleware.ts"
     },
     {
@@ -3690,7 +3744,7 @@
       "source_file": "web/src/middleware.ts",
       "source_location": "L4",
       "id": "src_middleware_middleware",
-      "community": 24,
+      "community": 25,
       "norm_label": "middleware()"
     },
     {
@@ -3699,7 +3753,7 @@
       "source_file": "web/src/app/layout.tsx",
       "source_location": "L1",
       "id": "web_src_app_layout_tsx",
-      "community": 42,
+      "community": 43,
       "norm_label": "layout.tsx"
     },
     {
@@ -3708,7 +3762,7 @@
       "source_file": "web/src/app/layout.tsx",
       "source_location": "L20",
       "id": "app_layout_rootlayout",
-      "community": 42,
+      "community": 43,
       "norm_label": "rootlayout()"
     },
     {
@@ -3717,7 +3771,7 @@
       "source_file": "web/src/app/page.tsx",
       "source_location": "L1",
       "id": "web_src_app_page_tsx",
-      "community": 80,
+      "community": 81,
       "norm_label": "page.tsx"
     },
     {
@@ -3726,7 +3780,7 @@
       "source_file": "web/src/app/api/chat/route.ts",
       "source_location": "L1",
       "id": "web_src_app_api_chat_route_ts",
-      "community": 25,
+      "community": 26,
       "norm_label": "route.ts"
     },
     {
@@ -3735,7 +3789,7 @@
       "source_file": "web/src/app/api/chat/route.ts",
       "source_location": "L6",
       "id": "chat_route_post",
-      "community": 25,
+      "community": 26,
       "norm_label": "post()"
     },
     {
@@ -3744,7 +3798,7 @@
       "source_file": "web/src/components/chat-interface.tsx",
       "source_location": "L1",
       "id": "web_src_components_chat_interface_tsx",
-      "community": 19,
+      "community": 20,
       "norm_label": "chat-interface.tsx"
     },
     {
@@ -3753,7 +3807,7 @@
       "source_file": "web/src/components/ui/button.tsx",
       "source_location": "L1",
       "id": "web_src_components_ui_button_tsx",
-      "community": 19,
+      "community": 20,
       "norm_label": "button.tsx"
     },
     {
@@ -3762,7 +3816,7 @@
       "source_file": "web/src/components/ui/button.tsx",
       "source_location": "L52",
       "id": "ui_button_cn",
-      "community": 19,
+      "community": 20,
       "norm_label": "cn()"
     },
     {
@@ -3771,7 +3825,7 @@
       "source_file": "web/src/lib/utils.ts",
       "source_location": "L1",
       "id": "web_src_lib_utils_ts",
-      "community": 19,
+      "community": 20,
       "norm_label": "utils.ts"
     },
     {
@@ -3780,7 +3834,7 @@
       "source_file": "web/src/lib/utils.ts",
       "source_location": "L4",
       "id": "lib_utils_cn",
-      "community": 19,
+      "community": 20,
       "norm_label": "cn()"
     },
     {
@@ -3789,7 +3843,7 @@
       "source_file": "web/src/utils/supabase/client.ts",
       "source_location": "L1",
       "id": "web_src_utils_supabase_client_ts",
-      "community": 43,
+      "community": 44,
       "norm_label": "client.ts"
     },
     {
@@ -3798,7 +3852,7 @@
       "source_file": "web/src/utils/supabase/client.ts",
       "source_location": "L3",
       "id": "supabase_client_createclient",
-      "community": 43,
+      "community": 44,
       "norm_label": "createclient()"
     },
     {
@@ -3807,7 +3861,7 @@
       "source_file": "web/src/utils/supabase/middleware.ts",
       "source_location": "L1",
       "id": "web_src_utils_supabase_middleware_ts",
-      "community": 24,
+      "community": 25,
       "norm_label": "middleware.ts"
     },
     {
@@ -3816,7 +3870,7 @@
       "source_file": "web/src/utils/supabase/middleware.ts",
       "source_location": "L4",
       "id": "supabase_middleware_updatesession",
-      "community": 24,
+      "community": 25,
       "norm_label": "updatesession()"
     },
     {
@@ -3825,7 +3879,7 @@
       "source_file": "web/src/utils/supabase/server.ts",
       "source_location": "L1",
       "id": "web_src_utils_supabase_server_ts",
-      "community": 25,
+      "community": 26,
       "norm_label": "server.ts"
     },
     {
@@ -3834,7 +3888,7 @@
       "source_file": "web/src/utils/supabase/server.ts",
       "source_location": "L4",
       "id": "supabase_server_createclient",
-      "community": 25,
+      "community": 26,
       "norm_label": "createclient()"
     },
     {
@@ -3843,7 +3897,7 @@
       "source_file": "AGENTS.md",
       "source_location": "L1",
       "id": "agents_md",
-      "community": 44,
+      "community": 45,
       "norm_label": "agents.md"
     },
     {
@@ -3852,7 +3906,7 @@
       "source_file": "AGENTS.md",
       "source_location": "L1",
       "id": "hackito_old_agents_graphify",
-      "community": 44,
+      "community": 45,
       "norm_label": "graphify"
     },
     {
@@ -3861,7 +3915,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "claude_md",
-      "community": 45,
+      "community": 46,
       "norm_label": "claude.md"
     },
     {
@@ -3870,7 +3924,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "hackito_old_claude_graphify",
-      "community": 45,
+      "community": 46,
       "norm_label": "graphify"
     },
     {
@@ -4158,7 +4212,7 @@
       "source_file": "security_report.md",
       "source_location": "L1",
       "id": "security_report_md",
-      "community": 20,
+      "community": 21,
       "norm_label": "security_report.md"
     },
     {
@@ -4167,7 +4221,7 @@
       "source_file": "security_report.md",
       "source_location": "L1",
       "id": "hackito_old_security_report_api_security_refactor_report_hack_alert",
-      "community": 20,
+      "community": 21,
       "norm_label": "api security refactor report: hack/alert"
     },
     {
@@ -4176,7 +4230,7 @@
       "source_file": "security_report.md",
       "source_location": "L3",
       "id": "hackito_old_security_report_1_attacks_now_prevented",
-      "community": 20,
+      "community": 21,
       "norm_label": "1. attacks now prevented"
     },
     {
@@ -4185,7 +4239,7 @@
       "source_file": "security_report.md",
       "source_location": "L18",
       "id": "hackito_old_security_report_2_remaining_risks",
-      "community": 20,
+      "community": 21,
       "norm_label": "2. remaining risks"
     },
     {
@@ -4194,7 +4248,7 @@
       "source_file": "security_report.md",
       "source_location": "L26",
       "id": "hackito_old_security_report_3_production_readiness",
-      "community": 20,
+      "community": 21,
       "norm_label": "3. production readiness"
     },
     {
@@ -4203,7 +4257,7 @@
       "source_file": "web/AGENTS.md",
       "source_location": "L1",
       "id": "web_agents_md",
-      "community": 46,
+      "community": 47,
       "norm_label": "agents.md"
     },
     {
@@ -4212,7 +4266,7 @@
       "source_file": "web/AGENTS.md",
       "source_location": "L2",
       "id": "web_agents_this_is_not_the_next_js_you_know",
-      "community": 46,
+      "community": 47,
       "norm_label": "this is not the next.js you know"
     },
     {
@@ -4221,7 +4275,7 @@
       "source_file": "web/CLAUDE.md",
       "source_location": "L1",
       "id": "web_claude_md",
-      "community": 81,
+      "community": 82,
       "norm_label": "claude.md"
     },
     {
@@ -4230,7 +4284,7 @@
       "source_file": "web/README.md",
       "source_location": "L1",
       "id": "web_readme_md",
-      "community": 21,
+      "community": 22,
       "norm_label": "readme.md"
     },
     {
@@ -4239,7 +4293,7 @@
       "source_file": "web/README.md",
       "source_location": "L3",
       "id": "web_readme_getting_started",
-      "community": 21,
+      "community": 22,
       "norm_label": "getting started"
     },
     {
@@ -4248,7 +4302,7 @@
       "source_file": "web/README.md",
       "source_location": "L7",
       "id": "web_readme_codeblock_1",
-      "community": 21,
+      "community": 22,
       "norm_label": "code:bash (npm run dev)"
     },
     {
@@ -4257,7 +4311,7 @@
       "source_file": "web/README.md",
       "source_location": "L23",
       "id": "web_readme_learn_more",
-      "community": 21,
+      "community": 22,
       "norm_label": "learn more"
     },
     {
@@ -4266,7 +4320,7 @@
       "source_file": "web/README.md",
       "source_location": "L32",
       "id": "web_readme_deploy_on_vercel",
-      "community": 21,
+      "community": 22,
       "norm_label": "deploy on vercel"
     },
     {
@@ -9297,9 +9351,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_js",
-      "target": "frontend_ui_rendererrorrecovery",
-      "confidence_score": 1.0
+      "target": "frontend_ui_rendererrorrecovery"
     },
     {
       "relation": "imports",
@@ -9308,9 +9362,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_js",
-      "target": "frontend_state_loadpersistedstate",
-      "confidence_score": 1.0
+      "target": "frontend_state_loadpersistedstate"
     },
     {
       "relation": "imports",
@@ -9319,9 +9373,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_js",
-      "target": "frontend_state_savepersistedstate",
-      "confidence_score": 1.0
+      "target": "frontend_state_savepersistedstate"
     },
     {
       "relation": "contains",
@@ -9339,9 +9393,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_js",
-      "target": "frontend_hackathons_renderhackathonskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_hackathons_renderhackathonskeletons"
     },
     {
       "relation": "contains",
@@ -9349,9 +9403,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_js",
-      "target": "frontend_hackathons_restorepersistedfilters",
-      "confidence_score": 1.0
+      "target": "frontend_hackathons_restorepersistedfilters"
     },
     {
       "relation": "contains",
@@ -9734,9 +9788,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L131",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_fetchhackathons",
-      "target": "frontend_hackathons_renderhackathonskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_hackathons_renderhackathonskeletons"
     },
     {
       "relation": "calls",
@@ -9745,9 +9799,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_fetchhackathons",
-      "target": "frontend_hackathons_restorepersistedfilters",
-      "confidence_score": 1.0
+      "target": "frontend_hackathons_restorepersistedfilters"
     },
     {
       "relation": "calls",
@@ -9778,9 +9832,9 @@
       "source_file": "frontend/hackathons.js",
       "source_location": "L144",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_hackathons_fetchhackathons",
-      "target": "frontend_hackathons_applyadvancedfilters",
-      "confidence_score": 1.0
+      "target": "frontend_hackathons_applyadvancedfilters"
     },
     {
       "relation": "imports",
@@ -10306,9 +10360,9 @@
       "source_file": "frontend/main.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_main_js",
-      "target": "frontend_state_loadpersistedstate",
-      "confidence_score": 1.0
+      "target": "frontend_state_loadpersistedstate"
     },
     {
       "relation": "imports_from",
@@ -10949,6 +11003,59 @@
       "target": "frontend_ui_suggesttranslation"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/main.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "frontend_main_js",
+      "target": "frontend_ui_showfeedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/main.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "frontend_main_js",
+      "target": "frontend_ui_hidefeedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/main.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "frontend_main_js",
+      "target": "frontend_ui_submitfeedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/main.js",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "frontend_main_js",
+      "target": "frontend_main_startonlineuserspolling",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/main.js",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "frontend_main_js",
+      "target": "frontend_main_stoponlineuserspolling",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -11417,9 +11524,9 @@
       "source_file": "frontend/router.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_router_js",
-      "target": "frontend_state_savepersistedstate",
-      "confidence_score": 1.0
+      "target": "frontend_state_savepersistedstate"
     },
     {
       "relation": "imports_from",
@@ -11535,9 +11642,9 @@
       "source_file": "frontend/state.js",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_state_js",
-      "target": "frontend_state_savepersistedstate",
-      "confidence_score": 1.0
+      "target": "frontend_state_savepersistedstate"
     },
     {
       "relation": "contains",
@@ -11545,9 +11652,9 @@
       "source_file": "frontend/state.js",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_state_js",
-      "target": "frontend_state_loadpersistedstate",
-      "confidence_score": 1.0
+      "target": "frontend_state_loadpersistedstate"
     },
     {
       "relation": "imports_from",
@@ -11611,9 +11718,9 @@
       "source_file": "frontend/teams.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_teams_js",
-      "target": "frontend_ui_rendererrorrecovery",
-      "confidence_score": 1.0
+      "target": "frontend_ui_rendererrorrecovery"
     },
     {
       "relation": "contains",
@@ -11621,9 +11728,9 @@
       "source_file": "frontend/teams.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_teams_js",
-      "target": "frontend_teams_renderteamskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_teams_renderteamskeletons"
     },
     {
       "relation": "contains",
@@ -11761,9 +11868,9 @@
       "source_file": "frontend/teams.js",
       "source_location": "L274",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_teams_js",
-      "target": "frontend_teams_rendershowcaseskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_teams_rendershowcaseskeletons"
     },
     {
       "relation": "contains",
@@ -11841,9 +11948,9 @@
       "source_file": "frontend/teams.js",
       "source_location": "L447",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_teams_js",
-      "target": "frontend_teams_renderteammateskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_teams_renderteammateskeletons"
     },
     {
       "relation": "contains",
@@ -11922,9 +12029,9 @@
       "source_file": "frontend/teams.js",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_teams_loadteams",
-      "target": "frontend_teams_renderteamskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_teams_renderteamskeletons"
     },
     {
       "relation": "calls",
@@ -12021,9 +12128,9 @@
       "source_file": "frontend/teams.js",
       "source_location": "L309",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_teams_loadshowcase",
-      "target": "frontend_teams_rendershowcaseskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_teams_rendershowcaseskeletons"
     },
     {
       "relation": "calls",
@@ -12087,9 +12194,9 @@
       "source_file": "frontend/teams.js",
       "source_location": "L473",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_teams_fetchteammates",
-      "target": "frontend_teams_renderteammateskeletons",
-      "confidence_score": 1.0
+      "target": "frontend_teams_renderteammateskeletons"
     },
     {
       "relation": "calls",
@@ -12171,6 +12278,16 @@
       "source_file": "frontend/ui.js",
       "source_location": "L14",
       "weight": 1.0,
+      "source": "frontend_ui_js",
+      "target": "frontend_ui_trapfocus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
+      "source_location": "L14",
+      "weight": 1.0,
       "confidence_score": 1.0,
       "source": "frontend_ui_js",
       "target": "frontend_ui_openmodal"
@@ -12219,6 +12336,36 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/ui.js",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "frontend_ui_js",
+      "target": "frontend_ui_showfeedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "frontend_ui_js",
+      "target": "frontend_ui_hidefeedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "frontend_ui_js",
+      "target": "frontend_ui_submitfeedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
       "source_location": "L76",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -12241,9 +12388,9 @@
       "source_file": "frontend/ui.js",
       "source_location": "L116",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_ui_js",
-      "target": "frontend_ui_rendererrorrecovery",
-      "confidence_score": 1.0
+      "target": "frontend_ui_rendererrorrecovery"
     },
     {
       "relation": "calls",
@@ -12261,11 +12408,33 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "frontend/ui.js",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "frontend_ui_submitfeedback",
+      "target": "frontend_ui_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
       "source_location": "L84",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "frontend_ui_suggesttranslation",
       "target": "frontend_ui_showtoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "frontend_ui_openmodal",
+      "target": "frontend_ui_trapfocus",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -12283,6 +12452,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "frontend/ui.js",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "frontend_ui_showfeedback",
+      "target": "frontend_ui_openmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
       "source_location": "L38",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -12294,11 +12474,33 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "frontend/ui.js",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "frontend_ui_hidefeedback",
+      "target": "frontend_ui_closemodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
       "source_location": "L67",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "frontend_ui_submitbugreport",
       "target": "frontend_ui_hidebugreport"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/ui.js",
+      "source_location": "L162",
+      "weight": 1.0,
+      "source": "frontend_ui_submitfeedback",
+      "target": "frontend_ui_hidefeedback",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -13499,5 +13701,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "452fe2cf2c62c28956ca06a4967ee37f7dc5ec54"
+  "built_at_commit": "dfbaec965fa21e8d688d565331de200e75eac7af"
 }

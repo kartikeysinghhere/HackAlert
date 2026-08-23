@@ -158,9 +158,9 @@ export async function fetchHackathons() {
 
 export function createHackathonCard(hack, isDimmed = false) {
   const savedList = JSON.parse(localStorage.getItem('saved') || '[]');
-  let mode = "📍 In-Person";
-  if (hack.virtual) mode = "🌐 Online";
-  if (hack.hybrid) mode = "🔀 Hybrid";
+  let mode = "In-Person";
+  if (hack.virtual) mode = "Online";
+  if (hack.hybrid) mode = "Hybrid";
 
   const startDate = new Date(hack.start).toLocaleDateString(undefined, {
     month: 'short', day: 'numeric', year: 'numeric'
@@ -186,21 +186,21 @@ export function createHackathonCard(hack, isDimmed = false) {
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
       ${hack.logo
       ? `<img src="${escapeHTML(hack.logo)}" style="width:40px;height:40px;border-radius:8px;">`
-      : `<div class="feature-icon">💻</div>`}
+      : `<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>`}
       <h3>${escapeHTML(hack.name)}</h3>
     </div>
-    <p><strong>📅 Date:</strong> ${startDate}</p>
-    <p><strong>⏳ Deadline:</strong> <span data-countdown="${hack.start}">${getCountdown(hack.start)}</span></p>
-    <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : escapeHTML(location)}</p>
-    <p><strong>💻 Mode:</strong> ${mode}</p>
-    ${hack.state ? `<p><strong>📍 State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
-    ${hack.mlhAssociated ? `<p><strong>🎓 MLH:</strong> Associated</p>` : ''}
-    ${hack.hack_club_event ? `<p><strong>🏠 Hack Club:</strong> Official Event ✅</p>` : ''}
-    ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
+    <p><strong>Date:</strong> ${startDate}</p>
+    <p><strong>Deadline:</strong> <span data-countdown="${hack.start}">${getCountdown(hack.start)}</span></p>
+    <p><strong>Location:</strong> ${hack.virtual ? "Anywhere" : escapeHTML(location)}</p>
+    <p><strong>Mode:</strong> ${mode}</p>
+    ${hack.state ? `<p><strong>State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
+    ${hack.mlhAssociated ? `<p><strong>MLH:</strong> Associated</p>` : ''}
+    ${hack.hack_club_event ? `<p><strong>Hack Club:</strong> Official Event</p>` : ''}
+    ${hack.apac ? `<p><strong>Region:</strong> Asia Pacific</p>` : ''}
     <a href="${escapeHTML(hack.website)}" target="_blank">Visit Website →</a>
-    <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-    <button onclick="copyLink(this, '${safeJSString(hack.website)}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-    <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" data-website="${escapeHTML(hack.website)}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
+    <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="margin-left:8px;">WhatsApp</a>
+    <button onclick="copyLink(this, '${safeJSString(hack.website)}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">Copy</button>
+    <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" data-website="${escapeHTML(hack.website)}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? 'Saved' : 'Save'}</button>
   `);
   return card;
 }
@@ -212,7 +212,7 @@ export function renderHackathons(hackathons) {
 
   if (hackathons.length === 0) {
     const query = escapeHTML(document.getElementById('search-input')?.value || '');
-    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`);
+    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`);
     return;
   }
 
@@ -256,7 +256,7 @@ export function renderHackathonsSorted(matched, rest) {
 
   if (matched.length === 0 && rest.length === 0) {
     const query = escapeHTML(document.getElementById('search-input')?.value || '');
-    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found for "<strong>${query}</strong>"</div>`);
+    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">No hackathons found for "<strong>${query}</strong>"</div>`);
     return;
   }
 
@@ -495,11 +495,11 @@ export function toggleSave(btn) {
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
   const existingIndex = saved.findIndex(s => s.name === name);
 
-  showToast('🔖', existingIndex > -1 ? 'Removed' : 'Saved!', name);
+  showToast('bookmark', existingIndex > -1 ? 'Removed' : 'Saved!', name);
 
   if (existingIndex > -1) {
     saved.splice(existingIndex, 1);
-    btn.textContent = '🔖 Save';
+    btn.textContent = 'Save';
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
 
@@ -510,7 +510,7 @@ export function toggleSave(btn) {
     }).catch(err => console.error('Error deleting saved hackathon:', err));
   } else {
     saved.push({ name, start, website });
-    btn.textContent = '✅ Saved';
+    btn.textContent = 'Saved';
     btn.style.borderColor = 'var(--accent)';
     btn.style.color = 'var(--accent)';
 
@@ -523,7 +523,7 @@ export function toggleSave(btn) {
 
     requestNotificationPermission().then(permission => {
       if (permission === 'granted') {
-        new Notification("🔖 Hackathon Saved", {
+        new Notification("Hackathon Saved", {
           body: `"${name}" has been saved to your reminders.`
         });
         scheduleNotificationCheck();
@@ -557,7 +557,7 @@ export function scheduleNotificationCheck() {
     const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays === 2) {
-      new Notification("⏰ Hackathon Reminder", {
+      new Notification("Hackathon Reminder", {
         body: `"${hack.name}" is starting in 2 days!`,
         tag: `reminder-${hack.name}`
       });
@@ -568,7 +568,7 @@ export function scheduleNotificationCheck() {
 export function copyLink(btn, url) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(() => {
-      btn.textContent = '✅ Copied!';
+      btn.textContent = 'Copied!';
       btn.style.borderColor = 'var(--accent)';
       btn.style.color = 'var(--accent)';
     }).catch(() => {
@@ -578,7 +578,7 @@ export function copyLink(btn, url) {
     fallbackCopy(url, btn);
   }
   setTimeout(() => {
-    btn.textContent = '🔗 Copy';
+    btn.textContent = 'Copy';
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
   }, 2000);
@@ -593,7 +593,7 @@ export function fallbackCopy(text, btn) {
   ta.select();
   document.execCommand('copy');
   document.body.removeChild(ta);
-  btn.textContent = '✅ Copied!';
+  btn.textContent = 'Copied!';
   btn.style.borderColor = 'var(--accent)';
   btn.style.color = 'var(--accent)';
 }
@@ -673,33 +673,35 @@ export function selectCountry(country) {
 
 export function openHackModal(hack) {
   const startDate = new Date(hack.start).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
-  let mode = "📍 In-Person";
-  if (hack.virtual) mode = "🌐 Online";
-  if (hack.hybrid) mode = "🔀 Hybrid";
+  let mode = "In-Person";
+  if (hack.virtual) mode = "Online";
+  if (hack.hybrid) mode = "Hybrid";
 
   const modalContent = document.getElementById('modal-content');
   if (modalContent) {
     modalContent.innerHTML = safeHTML(`
       ${hack.banner ? `<img src="${escapeHTML(hack.banner)}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:20px;">` : ''}
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-        ${hack.logo ? `<img src="${escapeHTML(hack.logo)}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
+        ${hack.logo ? `<img src="${escapeHTML(hack.logo)}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:28px;display:flex;align-items:center;justify-content:center;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>'}
         <div>
           <h2 style="color:var(--text);margin:0;">${escapeHTML(hack.name)}</h2>
           <p style="color:var(--accent);font-family:var(--mono);font-size:12px;margin:4px 0;">${mode}</p>
         </div>
       </div>
       <div style="display:grid;gap:12px;font-size:14px;color:var(--muted);">
-        <p>📅 <strong style="color:var(--text);">Date:</strong> ${startDate}</p>
-        <p>⏳ <strong style="color:var(--text);">Deadline:</strong> ${getCountdown(hack.start)}</p>
-        <p>🌎 <strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${escapeHTML(hack.city)}, ${escapeHTML(hack.country)}` : "TBA")}</p>
-        ${hack.state ? `<p>📍 <strong style="color:var(--text);">State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
-        ${hack.mlhAssociated ? `<p>🎓 <strong style="color:var(--text);">MLH:</strong> Associated</p>` : ''}
-        ${hack.hack_club_event ? `<p>🏠 <strong style="color:var(--text);">Hack Club:</strong> Official Event ✅</p>` : ''}
-        ${hack.apac ? `<p>🌏 <strong style="color:var(--text);">Region:</strong> Asia Pacific</p>` : ''}
+        <p><strong style="color:var(--text);">Date:</strong> ${startDate}</p>
+        <p><strong style="color:var(--text);">Deadline:</strong> ${getCountdown(hack.start)}</p>
+        <p><strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${escapeHTML(hack.city)}, ${escapeHTML(hack.country)}` : "TBA")}</p>
+        ${hack.state ? `<p><strong style="color:var(--text);">State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
+        ${hack.mlhAssociated ? `<p><strong style="color:var(--text);">MLH:</strong> Associated</p>` : ''}
+        ${hack.hack_club_event ? `<p><strong style="color:var(--text);">Hack Club:</strong> Official Event</p>` : ''}
+        ${hack.apac ? `<p><strong style="color:var(--text);">Region:</strong> Asia Pacific</p>` : ''}
       </div>
       <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
         <a href="${escapeHTML(hack.website)}" target="_blank" style="background:var(--accent);color:#050508;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;font-family:var(--mono);">Register Now →</a>
-        <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">📲 WhatsApp</a>
+        <a href="https://wa.me/?text=${encodeURIComponent('Check out ' + hack.name + ' on Hack/Alert: ' + hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">WhatsApp</a>
+        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out ' + hack.name + ' on Hack/Alert!')}&url=${encodeURIComponent(hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">Twitter/X</a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">LinkedIn</a>
       </div>
     `);
   }
@@ -729,7 +731,7 @@ export function startCountdowns() {
 
       if (days > 0) el.textContent = `${days}d ${hours}h ${mins}m left`;
       else if (hours > 0) el.textContent = `${hours}h ${mins}m ${secs}s left`;
-      else el.textContent = `${mins}m ${secs}s left ⚡`;
+      else el.textContent = `${mins}m ${secs}s left`;
 
       if (days <= 1) el.style.color = '#ef4444';
       else if (days <= 5) el.style.color = '#f59e0b';
@@ -816,9 +818,15 @@ export function renderCalendar() {
   if (calGrid) calGrid.innerHTML = safeHTML(html);
 }
 
+function renderStarsSVG(count) {
+  return Array.from({length: 5}, (_, i) => `
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="${i < count ? '#f59e0b' : 'none'}" stroke="#f59e0b" stroke-width="1.5" style="display:inline-block;vertical-align:middle;margin-right:2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+  `).join('');
+}
+
 export function showReviewForm() {
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-  if (!isLoggedIn) { showToast('⚠️', 'Login Required', 'Please login to write a review.'); return; }
+  if (!isLoggedIn) { showToast('warning', 'Login Required', 'Please login to write a review.'); return; }
   const reviewForm = document.getElementById('review-form');
   const writeReviewBtn = document.getElementById('write-review-btn');
   if (reviewForm) reviewForm.style.display = 'block';
@@ -853,16 +861,16 @@ export async function loadReviews(hackathonName) {
     list.innerHTML = safeHTML(`
       <div style="margin-bottom:12px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;display:flex;align-items:center;gap:8px;">
         <span style="font-size:20px;font-weight:700;color:var(--accent);">${avg}</span>
-        <span style="color:#f59e0b;font-size:16px;">${'⭐'.repeat(Math.round(avg))}</span>
+        <span style="display:inline-flex;align-items:center;">${renderStarsSVG(Math.round(avg))}</span>
         <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">(${reviews.length} review${reviews.length !== 1 ? 's' : ''})</span>
       </div>
       ${reviews.map(r => `
         <div style="padding:10px 12px;margin-bottom:8px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="color:#f59e0b;font-size:14px;">${'⭐'.repeat(r.rating)}</span>
+            <span style="display:inline-flex;align-items:center;">${renderStarsSVG(r.rating)}</span>
             <div style="display:flex;align-items:center;gap:8px;">
               <span style="color:var(--muted);font-size:11px;font-family:var(--mono);">${escapeHTML(r.user_email)}</span>
-              ${r.user_email === userEmail ? `<button onclick="window.deleteReview('${safeJSString(hackathonName)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:11px;">✕</button>` : ''}
+              ${r.user_email === userEmail ? `<button onclick="window.deleteReview('${safeJSString(hackathonName)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:11px;">&times;</button>` : ''}
             </div>
           </div>
           ${r.review ? `<p style="font-size:13px;color:var(--muted);margin:0;">${escapeHTML(r.review)}</p>` : ''}
@@ -875,7 +883,7 @@ export async function loadReviews(hackathonName) {
 }
 
 export async function submitReview() {
-  if (!state.selectedStarRating) { showToast('⚠️', 'Select Rating', 'Please select a star rating.'); return; }
+  if (!state.selectedStarRating) { showToast('warning', 'Select Rating', 'Please select a star rating.'); return; }
   const review = document.getElementById('review-text').value.trim();
 
   try {
@@ -887,17 +895,17 @@ export async function submitReview() {
     });
     const data = await res.json();
     if (res.ok) {
-      showToast('⭐', 'Review Submitted!', 'Thanks for your feedback.');
+      showToast('star', 'Review Submitted!', 'Thanks for your feedback.');
       document.getElementById('review-form').style.display = 'none';
       document.getElementById('write-review-btn').style.display = 'block';
       document.getElementById('review-text').value = '';
       state.selectedStarRating = 0;
       loadReviews(state.currentReviewHackathon);
     } else {
-      showToast('❌', 'Error', data.error);
+      showToast('error', 'Error', data.error);
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not submit review.');
+    showToast('error', 'Error', 'Could not submit review.');
   }
 }
 
@@ -908,7 +916,7 @@ export async function deleteReview(hackathonName) {
     headers: authHeaders()
   });
   if (res.ok) {
-    showToast('✅', 'Deleted', 'Review removed.');
+    showToast('success', 'Deleted', 'Review removed.');
     loadReviews(hackathonName);
   }
 }

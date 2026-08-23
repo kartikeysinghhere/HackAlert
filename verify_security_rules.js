@@ -38,10 +38,32 @@ const authLimiter = rateLimit({
   message: { error: 'Too many authentication attempts. Please try again after 15 minutes.' }
 });
 
+const feedbackLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  statusCode: 429,
+  message: { error: 'Too many feedback submissions. Please try again after an hour.' }
+});
+
+const messageLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 30,
+  statusCode: 429,
+  message: { error: 'Too many messages sent. Please slow down.' }
+});
+
+const teamManagementLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  statusCode: 429,
+  message: { error: 'Too many team requests. Please try again after 15 minutes.' }
+});
+
+
 // 5. Slow down repeated requests using express-slow-down
 const speedLimiter = slowDown({
   windowMs: 15 * 60 * 1000,
-  delayAfter: 5, // Set to 5 for rapid testing in this verification script
+  delayAfter: 1000, // Set to 1000 to prevent delays during test run
   delayMs: (hits) => hits * 100
 });
 
@@ -79,7 +101,13 @@ app.post('/api/send-otp', otpLimiter, (req, res) => res.json({ ok: true }));
 app.post('/api/login', authLimiter, (req, res) => res.json({ ok: true }));
 app.post('/api/signup', authLimiter, (req, res) => res.json({ ok: true }));
 app.post('/api/register', authLimiter, (req, res) => res.json({ ok: true }));
+app.post('/api/feedback', feedbackLimiter, (req, res) => res.json({ ok: true }));
+app.post('/api/teams/:id/messages', messageLimiter, (req, res) => res.json({ ok: true }));
+app.post('/api/dm/:partner_email', messageLimiter, (req, res) => res.json({ ok: true }));
+app.post('/api/teams', teamManagementLimiter, (req, res) => res.json({ ok: true }));
+app.post('/api/teams/:id/members', teamManagementLimiter, (req, res) => res.json({ ok: true }));
 app.post('/api/normal', (req, res) => res.json({ ok: true }));
+
 
 // Error handler for body size limit
 app.use((err, req, res, next) => {
@@ -96,9 +124,9 @@ const server = app.listen(3001, async () => {
     await testSuspiciousHeaders();
     await testRequestSizeLimit();
     await testRateLimiting();
-    console.log('\n✅ All security & rate-limiting middleware checks passed perfectly! 🚀');
+    console.log('\n All security & rate-limiting middleware checks passed perfectly! ');
   } catch (err) {
-    console.error('\n❌ Validation failed:', err.message);
+    console.error('\n Validation failed:', err.message);
   } finally {
     server.close();
   }
@@ -192,4 +220,44 @@ async function testRateLimiting() {
     }
   }
   if (!hitLimit) throw new Error('OTP rate limiter failed to trigger at 3 requests');
+
+  // Test Feedback Limiter: Limit is 5. Let's make 6 requests.
+  console.log(' - Making 6 requests to /api/feedback...');
+  hitLimit = false;
+  for (let i = 1; i <= 6; i++) {
+    const res = await makeRequest('/api/feedback', 'POST');
+    if (res.status === 429) {
+      console.log(`   * Request ${i} rate limited (status: 429). Msg:`, res.body);
+      hitLimit = true;
+      break;
+    }
+  }
+  if (!hitLimit) throw new Error('Feedback rate limiter failed to trigger at 5 requests');
+
+  // Test Message Limiter: Limit is 30. Let's make 31 requests.
+  console.log(' - Making 31 requests to /api/teams/1/messages...');
+  hitLimit = false;
+  for (let i = 1; i <= 31; i++) {
+    const res = await makeRequest('/api/teams/1/messages', 'POST');
+    if (res.status === 429) {
+      console.log(`   * Request ${i} rate limited (status: 429). Msg:`, res.body);
+      hitLimit = true;
+      break;
+    }
+  }
+  if (!hitLimit) throw new Error('Message rate limiter failed to trigger at 30 requests');
+
+  // Test Team Management Limiter: Limit is 10. Let's make 11 requests.
+  console.log(' - Making 11 requests to /api/teams...');
+  hitLimit = false;
+  for (let i = 1; i <= 11; i++) {
+    const res = await makeRequest('/api/teams', 'POST');
+    if (res.status === 429) {
+      console.log(`   * Request ${i} rate limited (status: 429). Msg:`, res.body);
+      hitLimit = true;
+      break;
+    }
+  }
+  if (!hitLimit) throw new Error('Team management rate limiter failed to trigger at 10 requests');
 }
+

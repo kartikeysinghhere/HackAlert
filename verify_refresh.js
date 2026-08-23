@@ -20,7 +20,7 @@ async function runTests() {
   });
 
   if (res.status !== 201) {
-    console.error("❌ Registration failed:", res.status, await res.text());
+    console.error(" Registration failed:", res.status, await res.text());
     return;
   }
 
@@ -29,9 +29,9 @@ async function runTests() {
   let refreshToken1 = cookies.find(c => c.startsWith('refreshToken=')).split(';')[0];
 
   if (accessToken1 && refreshToken1) {
-    console.log("✅ accessToken and refreshToken cookies securely issued via HttpOnly.");
+    console.log(" accessToken and refreshToken cookies securely issued via HttpOnly.");
   } else {
-    console.error("❌ Missing cookies on login");
+    console.error(" Missing cookies on login");
     return;
   }
 
@@ -43,7 +43,7 @@ async function runTests() {
   });
 
   if (refreshRes.status !== 200) {
-    console.error("❌ Refresh failed:", refreshRes.status, await refreshRes.text());
+    console.error(" Refresh failed:", refreshRes.status, await refreshRes.text());
     return;
   }
 
@@ -52,9 +52,9 @@ async function runTests() {
   let refreshToken2 = newCookies.find(c => c.startsWith('refreshToken=')).split(';')[0];
 
   if (refreshToken1 !== refreshToken2) {
-    console.log("✅ Cookies correctly rotated. Old refreshToken replaced with new one.");
+    console.log(" Cookies correctly rotated. Old refreshToken replaced with new one.");
   } else {
-    console.error("❌ Cookies were not rotated!");
+    console.error(" Cookies were not rotated!");
   }
 
   // 3. Replay Attack Handling
@@ -66,7 +66,7 @@ async function runTests() {
   });
 
   if (replayRes.status === 403 || replayRes.status === 401) {
-    console.log(`✅ Replay attack successfully blocked (Status ${replayRes.status}).`);
+    console.log(` Replay attack successfully blocked (Status ${replayRes.status}).`);
     // After replay attack, ALL tokens for user should be invalidated.
     // Try using the NEW refresh token, it should now be revoked too!
     let breachRes = await fetch(baseUrl + '/api/refresh', {
@@ -74,12 +74,12 @@ async function runTests() {
       headers: { 'Cookie': refreshToken2 }
     });
     if (breachRes.status === 401 || breachRes.status === 403) {
-      console.log("✅ Security breach detected: ALL active sessions for this user were instantly invalidated.");
+      console.log(" Security breach detected: ALL active sessions for this user were instantly invalidated.");
     } else {
-      console.error("❌ Replay attack blocked, but active sessions were NOT invalidated!", breachRes.status);
+      console.error(" Replay attack blocked, but active sessions were NOT invalidated!", breachRes.status);
     }
   } else {
-    console.error("❌ Replay attack succeeded! Old token is still valid. Status:", replayRes.status);
+    console.error(" Replay attack succeeded! Old token is still valid. Status:", replayRes.status);
   }
 
   // 4. Multiple Sessions
@@ -109,9 +109,9 @@ async function runTests() {
   });
 
   if (refreshA.status === 200 && refreshB.status === 200) {
-    console.log("✅ Multiple sessions successfully managed independently.");
+    console.log(" Multiple sessions successfully managed independently.");
   } else {
-    console.error("❌ Multiple sessions failed:", refreshA.status, refreshB.status);
+    console.error(" Multiple sessions failed:", refreshA.status, refreshB.status);
   }
 
   // 5. Logout Handling
@@ -123,9 +123,9 @@ async function runTests() {
 
   let logoutCookies = logoutRes.headers.getSetCookie();
   if (logoutCookies.some(c => c.includes('Max-Age=-1') || c.includes('Expires=Thu, 01 Jan 1970'))) {
-    console.log("✅ Logout successfully clears HttpOnly cookies server-side.");
+    console.log(" Logout successfully clears HttpOnly cookies server-side.");
   } else {
-    console.error("❌ Logout did not clear cookies!");
+    console.error(" Logout did not clear cookies!");
   }
 
   console.log("\nAll Backend Tests Passed.");

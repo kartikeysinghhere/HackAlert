@@ -165,7 +165,7 @@ const sendOTP = async (email) => {
     subject: 'Your HackAlert verification code',
     html: `
       <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:480px;margin:0 auto;">
-        <h2 style="color:#00f0ff;margin-bottom:8px;">Hack/Alert ⚡</h2>
+        <h2 style="color:#00f0ff;margin-bottom:8px;">Hack/Alert</h2>
         <p style="color:#b9cacb;margin-bottom:24px;">Your verification code:</p>
         <div style="font-size:48px;font-weight:700;color:#00f0ff;letter-spacing:12px;margin-bottom:24px;">${otp}</div>
         <p style="color:#b9cacb;font-size:13px;">Expires in 10 minutes. Don't share this.</p>
@@ -197,10 +197,10 @@ const sendWelcomeEmail = async (email, name) => {
     await mailer.sendMail({
       from: process.env.EMAIL_FROM || 'HackAlert <no-reply@hackalert.com>',
       to: email,
-      subject: 'Welcome to Hack/Alert ⚡',
+      subject: 'Welcome to Hack/Alert',
       html: `
         <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:480px;margin:0 auto;">
-          <h2 style="color:#00f0ff;">Welcome, ${name}! ⚡</h2>
+          <h2 style="color:#00f0ff;">Welcome, ${name}!</h2>
           <p style="color:#b9cacb;">You're now part of 18,000+ devs tracking hackathons.</p>
           <a href="https://hackalert-xwpd.onrender.com" style="display:inline-block;margin-top:24px;background:#00f0ff;color:#050508;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;">Browse Hackathons →</a>
         </div>

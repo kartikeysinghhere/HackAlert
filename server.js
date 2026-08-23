@@ -1,3 +1,5 @@
+require("./instrument.js");
+const Sentry = require("@sentry/node");
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 require('./config/env');
@@ -440,7 +442,7 @@ app.post('/api/feedback', authenticate, feedbackLimiter, async (req, res) => {
       return handleError(res, error, 'Failed to submit feedback');
     }
 
-    res.status(201).json({ message: 'Feedback submitted successfully. Thank you for your support! ❤️' });
+    res.status(201).json({ message: 'Feedback submitted successfully. Thank you for your support!' });
   } catch (err) {
     handleError(res, err, 'Failed to submit feedback');
   }
@@ -567,7 +569,7 @@ app.post('/api/forgot-password', emailLimiter, async (req, res) => {
 
         await sendEmail({
           to: normalizedEmail,
-          subject: 'Password Reset Request 🔐',
+          subject: 'Password Reset Request',
           html: `
             <div style="font-family: sans-serif; max-width: 500px; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
               <h2>Password Reset</h2>
@@ -671,7 +673,7 @@ cron.schedule('0 9 * * *', async () => {
           <tr style="border-bottom:1px solid #00f0ff11;">
             <td style="padding:12px 0;color:#fff;font-weight:700;">${escapeEmailHTML(h.hackathon_name)}</td>
             <td style="padding:12px 0;color:#b9cacb;font-size:13px;text-align:right;">
-              📅 ${new Date(h.hackathon_start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+              ${new Date(h.hackathon_start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
             </td>
             <td style="padding:12px 0;text-align:right;width:100px;">
               <a href="${escapeEmailHTML(h.hackathon_website || '#')}" 
@@ -683,17 +685,17 @@ cron.schedule('0 9 * * *', async () => {
         `).join('');
 
         const subject = hacks.length === 1
-          ? `⏰ Reminder: ${hacks[0].hackathon_name} registration closes in 2 days!`
-          : `⏰ Reminder: ${hacks[0].hackathon_name} and ${hacks.length - 1} other${hacks.length - 1 > 1 ? 's' : ''} registration closes in 2 days!`;
+          ? `Reminder: ${hacks[0].hackathon_name} registration closes in 2 days!`
+          : `Reminder: ${hacks[0].hackathon_name} and ${hacks.length - 1} other${hacks.length - 1 > 1 ? 's' : ''} registration closes in 2 days!`;
 
         await sendEmail({
           to: user_email,
           subject,
           html: `
             <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:600px;margin:0 auto;">
-              <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert ⚡</h2>
+              <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert</h2>
               <p style="color:#b9cacb;font-size:13px;margin-bottom:24px;">Registration reminder for your saved events</p>
-              <h3 style="color:#fff;margin-bottom:16px;">⏰ Closing in 2 days!</h3>
+              <h3 style="color:#fff;margin-bottom:16px;">Closing in 2 days!</h3>
               <table style="width:100%;border-collapse:collapse;">
                 ${hackListHtml}
               </table>
@@ -751,8 +753,8 @@ cron.schedule('0 10 * * *', async () => {
     <tr>
       <td style="padding:12px;border-bottom:1px solid #1a1a2e;">
         <strong style="color:#00f0ff;">${escapeEmailHTML(h.name || '')}</strong><br>
-        <span style="color:#b9cacb;font-size:12px;">📅 ${new Date(h.start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-        ${h.city ? `<span style="color:#b9cacb;font-size:12px;"> · 📍 ${escapeEmailHTML(h.city)}</span>` : ''}
+        <span style="color:#b9cacb;font-size:12px;">Date: ${new Date(h.start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+        ${h.city ? `<span style="color:#b9cacb;font-size:12px;"> · Location: ${escapeEmailHTML(h.city)}</span>` : ''}
       </td>
       <td style="padding:12px;border-bottom:1px solid #1a1a2e;text-align:right;">
         <a href="${escapeEmailHTML(h.website || h.url || '#')}" 
@@ -768,12 +770,12 @@ cron.schedule('0 10 * * *', async () => {
     try {
       await sendEmail({
         to: user.email,
-        subject: `⚡ ${allUpcoming.length} Hackathons Coming Up — Daily Digest`,
+        subject: `${allUpcoming.length} Hackathons Coming Up — Daily Digest`,
         html: `
           <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:600px;margin:0 auto;">
-            <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert ⚡</h2>
+            <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert</h2>
             <p style="color:#b9cacb;font-size:13px;margin-bottom:24px;">Daily digest for ${new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
-            <h3 style="color:#fff;margin-bottom:16px;">🚀 ${allUpcoming.length} Hackathons in the next 30 days</h3>
+            <h3 style="color:#fff;margin-bottom:16px;">${allUpcoming.length} Hackathons in the next 30 days</h3>
             <table style="width:100%;border-collapse:collapse;">
               ${hackList}
             </table>
@@ -817,8 +819,8 @@ cron.schedule('0 * * * *', async () => {
   const hackList = newHacks.map(h => `
     <div style="background:#0a0a1a;border:1px solid #00f0ff33;border-radius:10px;padding:16px;margin-bottom:12px;">
       <h4 style="color:#00f0ff;margin:0 0 8px;">${escapeEmailHTML(h.name || '')}</h4>
-      <p style="color:#b9cacb;font-size:13px;margin:4px 0;">📅 ${new Date(h.start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-      ${h.city ? `<p style="color:#b9cacb;font-size:13px;margin:4px 0;">📍 ${escapeEmailHTML(h.city)}, ${escapeEmailHTML(h.country || '')}</p>` : ''}
+      <p style="color:#b9cacb;font-size:13px;margin:4px 0;">Date: ${new Date(h.start).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+      ${h.city ? `<p style="color:#b9cacb;font-size:13px;margin:4px 0;">Location: ${escapeEmailHTML(h.city)}, ${escapeEmailHTML(h.country || '')}</p>` : ''}
       <a href="${escapeEmailHTML(h.website || '#')}" style="display:inline-block;margin-top:10px;background:#00f0ff;color:#050508;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;">Register →</a>
     </div>
   `).join('');
@@ -827,12 +829,12 @@ cron.schedule('0 * * * *', async () => {
     try {
       await sendEmail({
         to: user.email,
-        subject: `🆕 ${newHacks.length} New Hackathon${newHacks.length > 1 ? 's' : ''} Just Listed on Hack/Alert!`,
+        subject: `${newHacks.length} New Hackathon${newHacks.length > 1 ? 's' : ''} Just Listed on Hack/Alert!`,
         html: `
           <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:600px;margin:0 auto;">
-            <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert ⚡</h2>
+            <h2 style="color:#00f0ff;margin-bottom:4px;">Hack/Alert</h2>
             <p style="color:#b9cacb;font-size:13px;margin-bottom:24px;">New hackathons just dropped!</p>
-            <h3 style="color:#fff;margin-bottom:16px;">🆕 ${newHacks.length} New Hackathon${newHacks.length > 1 ? 's' : ''}</h3>
+            <h3 style="color:#fff;margin-bottom:16px;">${newHacks.length} New Hackathon${newHacks.length > 1 ? 's' : ''}</h3>
             ${hackList}
             <div style="margin-top:24px;text-align:center;">
               <a href="https://hackalert-xwpd.onrender.com" 
@@ -852,7 +854,7 @@ cron.schedule('0 * * * *', async () => {
 
 // ── HACKATHON SYNC — runs every 4 hours ──
 async function syncHackathons() {
-  console.log('🔄 Syncing hackathons to cache...');
+  console.log('[Sync] Syncing hackathons to cache...');
   try {
     const hackClubRes = await fetch('https://hackathons.hackclub.com/api/events/upcoming');
     const hackClub = await hackClubRes.json();
@@ -931,7 +933,7 @@ async function syncHackathons() {
       console.warn('Database cache sync failed (optional step):', cacheErr.message);
     }
 
-    console.log(`✅ Cached ${unique.length} hackathons`);
+    console.log(`[Cache] Cached ${unique.length} hackathons`);
   } catch (err) {
     console.error("Hackathon sync error:", err);
   }
@@ -1150,7 +1152,7 @@ app.post('/api/send-otp', async (req, res) => {
       subject: 'Your HackAlert verification code',
       html: `
         <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:480px;margin:0 auto;">
-          <h2 style="color:#00f0ff;margin-bottom:8px;">Hack/Alert ⚡</h2>
+          <h2 style="color:#00f0ff;margin-bottom:8px;">Hack/Alert</h2>
           <p style="color:#b9cacb;margin-bottom:24px;">Your verification code:</p>
           <div style="font-size:48px;font-weight:700;color:#00f0ff;letter-spacing:12px;margin-bottom:24px;">${otp}</div>
           <p style="color:#b9cacb;font-size:13px;">Expires in 10 minutes. Don't share this with anyone.</p>
@@ -1228,10 +1230,10 @@ app.post('/api/signup', async (req, res) => {
   try {
     await sendEmail({
       to: email,
-      subject: 'Welcome to Hack/Alert ⚡',
+      subject: 'Welcome to Hack/Alert',
       html: `
         <div style="font-family:monospace;background:#0e0e0e;color:#e5e2e1;padding:40px;border-radius:12px;max-width:480px;margin:0 auto;">
-          <h2 style="color:#00f0ff;">Welcome, ${escapeEmailHTML(name)}! ⚡</h2>
+          <h2 style="color:#00f0ff;">Welcome, ${escapeEmailHTML(name)}!</h2>
           <p style="color:#b9cacb;">You're now part of 18,000+ devs tracking hackathons.</p>
           <a href="https://hackalert-xwpd.onrender.com" style="display:inline-block;margin-top:24px;background:#00f0ff;color:#050508;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;">Browse Hackathons →</a>
         </div>
@@ -1825,7 +1827,9 @@ app.get('/api/users/:username', async (req, res) => {
   res.json({ ...data, teams: teams || [], projects: projects || [] });
 });
 
+Sentry.setupExpressErrorHandler(app);
+
 app.listen(PORT, () => {
-  console.log(`✅ HackAlert running → http://localhost:${PORT}/realhackito.html`);
-  console.log(`✅ Supabase connected!`);
+  console.log(`[Server] HackAlert running → http://localhost:${PORT}/realhackito.html`);
+  console.log(`[Server] Supabase connected!`);
 });

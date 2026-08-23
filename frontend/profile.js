@@ -34,10 +34,10 @@ export function loadProfile() {
   const genderBadge = document.getElementById('profile-gender-badge');
   if (genderBadge) {
     if (gender === 'male') {
-      genderBadge.textContent = '♂';
+      genderBadge.textContent = 'Male';
       genderBadge.style.color = '#60a5fa';
     } else if (gender === 'female') {
-      genderBadge.textContent = '♀';
+      genderBadge.textContent = 'Female';
       genderBadge.style.color = '#f472b6';
     } else {
       genderBadge.textContent = '';
@@ -56,8 +56,8 @@ export function loadProfile() {
     } else {
       list.innerHTML = safeHTML(saved.map(hack => `
         <div style="padding:8px 12px;margin-bottom:8px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-          <span>🔖 ${escapeHTML(hack.name)}</span>
-          <button onclick="window.unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
+          <span>${escapeHTML(hack.name)}</span>
+          <button onclick="window.unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">Remove</button>
         </div>
       `).join(''));
     }
@@ -83,7 +83,7 @@ export function loadProfile() {
               <div>${dateString.split(' ')[0] || dateString.split('.')[1]}</div>
             </div>
             <div style="flex: 1; font-size: 14px;">${escapeHTML(hack.name)}</div>
-            <button onclick="window.unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
+            <button onclick="window.unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">&times;</button>
           </div>
         `;
       }).join(''));
@@ -120,13 +120,17 @@ export async function searchUsers(q) {
       const res = await fetch(`/api/users/search?q=a`, { headers: authHeaders(), credentials: 'include' });
       const users = await res.json();
       showUserResults(users);
-    } catch (e) { }
+    } catch (e) {
+      const resultsDiv = document.getElementById('user-search-results');
+      if (resultsDiv) resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">Error searching users.</p>';
+    }
     return;
   }
   searchUsersTimeout = setTimeout(async () => {
     try {
-      const res = await fetch(`/api/users/search?q=${encodeURIComponent(q)}`, {
-        headers: authHeaders()
+      const res = await fetch(`/api/users/search?q=${encodeURIComponent(q.trim())}`, {
+        headers: authHeaders(),
+        credentials: 'include'
       });
       const users = await res.json();
       showUserResults(users);
@@ -149,7 +153,6 @@ export function showUserResults(users) {
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:6px;">
           <strong onclick="window.openPublicProfile('${escapeHTML(safeJSString(u.username))}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
-          <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
           ${onlineDot(u.email, 8)}
         </div>
         <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
@@ -177,21 +180,21 @@ export async function sendFriendRequest(btn, to_email) {
     });
     const data = await res.json();
     if (res.ok) {
-      showToast('✅', 'Request Sent!', 'Friend request sent successfully.');
+      showToast('success', 'Request Sent!', 'Friend request sent successfully.');
       if (btn) {
         btn.innerText = 'Pending';
         btn.style.background = '#64748b';
         btn.style.color = '#fff';
       }
     } else {
-      showToast('❌', 'Error', data.error);
+      showToast('error', 'Error', data.error);
       if (btn) {
         btn.disabled = false;
         btn.innerText = '+ Add';
       }
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not send request.');
+    showToast('error', 'Error', 'Could not send request.');
     if (btn) {
       btn.disabled = false;
       btn.innerText = '+ Add';
@@ -205,7 +208,7 @@ export async function loadFriends() {
 
   if (friendsDiv) {
     friendsDiv.innerHTML = `
-      <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS</h4>
+      <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">FRIENDS</h4>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
         <div class="skeleton-card" aria-busy="true" aria-live="polite" style="min-height: 60px; padding: 10px; opacity: 0.85;">
           <div style="display:flex; align-items:center; gap: 8px;">
@@ -230,21 +233,27 @@ export async function loadFriends() {
   }
 
   try {
-    const reqRes = await fetch('/api/friends/requests', { headers: authHeaders(), credentials: 'include' });
-    const requests = await reqRes.json();
+    const [reqRes, friendRes] = await Promise.all([
+      fetch('/api/friends/requests', { headers: authHeaders(), credentials: 'include' }),
+      fetch('/api/friends', { headers: authHeaders(), credentials: 'include' })
+    ]);
+    const [requests, friends] = await Promise.all([
+      reqRes.json(),
+      friendRes.json()
+    ]);
 
     if (pendingDiv) {
       if (requests.length) {
         pendingDiv.innerHTML = `
-          <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:10px;">📬 PENDING REQUESTS (${requests.length})</h4>
+          <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:10px;">PENDING REQUESTS (${requests.length})</h4>
           ${requests.map(r => `
             <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);border-radius:10px;margin-bottom:8px;">
               <div style="flex:1;">
                 <strong style="color:#fff;font-size:13px;">${escapeHTML(r.from_email)}</strong>
                 <p style="color:var(--muted);font-size:11px;font-family:var(--mono);">wants to be your friend</p>
               </div>
-              <button onclick="window.respondRequest(${r.id}, 'accepted')" style="background:var(--accent);color:#050508;border:none;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;margin-right:4px;">✓ Accept</button>
-              <button onclick="window.respondRequest(${r.id}, 'declined')" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;">✕</button>
+              <button onclick="window.respondRequest(${r.id}, 'accepted')" style="background:var(--accent);color:#050508;border:none;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;margin-right:4px;">Accept</button>
+              <button onclick="window.respondRequest(${r.id}, 'declined')" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;">Decline</button>
             </div>
           `).join('')}
         `;
@@ -253,9 +262,6 @@ export async function loadFriends() {
       }
     }
 
-    const friendRes = await fetch('/api/friends', { headers: authHeaders(), credentials: 'include' });
-    const friends = await friendRes.json();
-
     if (friendsDiv) {
       if (!friends.length) {
         friendsDiv.innerHTML = '<p style="color:var(--muted);font-size:13px;">No friends yet. Search for hackers to connect!</p>';
@@ -263,7 +269,7 @@ export async function loadFriends() {
       }
 
       friendsDiv.innerHTML = `
-          <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS (${friends.length})</h4>
+          <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">FRIENDS (${friends.length})</h4>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
             ${friends.map(f => `
               <div style="padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
@@ -273,13 +279,12 @@ export async function loadFriends() {
                 <div style="flex:1;min-width:0;">
                   <div style="display:flex;align-items:center;gap:4px;">
                     <strong onclick="window.openPublicProfile('${escapeHTML(safeJSString(f.username))}')" style="color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
-                    <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
                     ${onlineDot(f.email, 8)}
                   </div>
                   <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
                 </div>
-                <button onclick="window.openDMChat('${escapeHTML(safeJSString(f.email))}','${escapeHTML(safeJSString(f.name))}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">💬</button>
-                <button onclick="window.removeFriend('${escapeHTML(safeJSString(f.email))}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
+                <button onclick="window.openDMChat('${escapeHTML(safeJSString(f.email))}','${escapeHTML(safeJSString(f.name))}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">Chat</button>
+                <button onclick="window.removeFriend('${escapeHTML(safeJSString(f.email))}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">&times;</button>
               </div>
             `).join('')}
           </div>
@@ -288,7 +293,7 @@ export async function loadFriends() {
   } catch (e) {
     console.error('Error loading friends:', e);
     if (friendsDiv) {
-      friendsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Failed to load friends.</p>';
+      friendsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">Failed to load friends.</p>';
     }
   }
 }
@@ -302,11 +307,11 @@ export async function respondRequest(id, status) {
       body: JSON.stringify({ status })
     });
     if (res.ok) {
-      showToast('✅', status === 'accepted' ? 'Friend Added!' : 'Declined', '');
+      showToast('success', status === 'accepted' ? 'Friend Added!' : 'Declined', '');
       loadFriends();
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not respond to request.');
+    showToast('error', 'Error', 'Could not respond to request.');
   }
 }
 
@@ -317,7 +322,7 @@ export async function removeFriend(friend_email) {
     headers: authHeaders()
   });
   if (res.ok) {
-    showToast('✅', 'Removed', 'Friend removed.');
+    showToast('success', 'Removed', 'Friend removed.');
     loadFriends();
   }
 }
@@ -325,7 +330,7 @@ export async function removeFriend(friend_email) {
 export async function openPublicProfile(username) {
   try {
     const res = await fetch(`/api/users/${encodeURIComponent(username)}`);
-    if (!res.ok) { showToast('❌', 'Not Found', 'User not found.'); return; }
+    if (!res.ok) { showToast('error', 'Not Found', 'User not found.'); return; }
     const user = await res.json();
 
     document.getElementById('pub-profile-title').textContent = user.name;
@@ -340,8 +345,8 @@ export async function openPublicProfile(username) {
 
     const genderEl = document.getElementById('pub-gender');
     if (genderEl) {
-      if (user.gender === 'male') { genderEl.textContent = '♂'; genderEl.style.color = '#60a5fa'; }
-      else if (user.gender === 'female') { genderEl.textContent = '♀'; genderEl.style.color = '#f472b6'; }
+      if (user.gender === 'male') { genderEl.textContent = 'Male'; genderEl.style.color = '#60a5fa'; }
+      else if (user.gender === 'female') { genderEl.textContent = 'Female'; genderEl.style.color = '#f472b6'; }
       else genderEl.textContent = '';
     }
 
@@ -358,8 +363,8 @@ export async function openPublicProfile(username) {
               ${p.tech_stack ? p.tech_stack.split(',').map(t => `<span class="tech-tag">${escapeHTML(t.trim())}</span>`).join('') : ''}
             </div>
             <div style="display:flex;gap:8px;margin-top:8px;">
-              ${p.github_link ? `<a href="${escapeHTML(p.github_link)}" target="_blank" class="project-link-btn github">⬡ GitHub</a>` : ''}
-              ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">▶ Demo</a>` : ''}
+              ${p.github_link ? `<a href="${escapeHTML(p.github_link)}" target="_blank" class="project-link-btn github">GitHub</a>` : ''}
+              ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">Demo</a>` : ''}
             </div>
           </div>
         `).join(''));
@@ -374,7 +379,7 @@ export async function openPublicProfile(username) {
         teamsDiv.innerHTML = safeHTML(user.teams.map(t => `
           <div style="padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
             <strong style="color:#fff;font-size:13px;">${escapeHTML(t.teams?.name || 'Team')}</strong>
-            <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">🏆 ${escapeHTML(t.teams?.hackathon || 'Open')}</span>
+            <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">${escapeHTML(t.teams?.hackathon || 'Open')}</span>
           </div>
         `).join(''));
       }
@@ -382,7 +387,7 @@ export async function openPublicProfile(username) {
 
     goTo('public-profile');
   } catch (err) {
-    showToast('❌', 'Error', 'Could not load profile.');
+    showToast('error', 'Error', 'Could not load profile.');
   }
 }
 
@@ -469,7 +474,7 @@ export async function loadConversations() {
   } catch (e) {
     console.error('Error loading conversations:', e);
     if (list) {
-      list.innerHTML = '<p style="padding:20px;color:#ef4444;font-size:13px;">⚠️ Failed to load conversations.</p>';
+      list.innerHTML = '<p style="padding:20px;color:#ef4444;font-size:13px;">Failed to load conversations.</p>';
     }
   }
 }
@@ -489,7 +494,7 @@ export async function openDMChat(partnerEmail, partnerName) {
       </div>
       <div>
         <strong style="color:#fff;">${escapeHTML(partnerName)}</strong>
-        <p style="color:${isOnline(partnerEmail) ? '#22c55e' : 'var(--muted)'};font-size:12px;font-family:var(--mono);">${isOnline(partnerEmail) ? '● Online' : '○ Offline'}</p>
+        <p style="color:${isOnline(partnerEmail) ? '#22c55e' : 'var(--muted)'};font-size:12px;font-family:var(--mono);">${isOnline(partnerEmail) ? 'Online' : 'Offline'}</p>
       </div>
     `);
   }
@@ -517,8 +522,6 @@ export async function openDMChat(partnerEmail, partnerName) {
       }
     }
   };
-
-  loadConversations();
 }
 
 export async function loadDMMessages(partnerEmail) {
@@ -588,11 +591,11 @@ export async function sendDM() {
 
     if (!res.ok) {
       const d = await res.json();
-      showToast('❌', 'Error', d.error);
+      showToast('error', 'Error', d.error);
       input.value = message;
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not send message.');
+    showToast('error', 'Error', 'Could not send message.');
     input.value = message;
   }
 }

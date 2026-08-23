@@ -18,6 +18,7 @@ export async function loginUser() {
     const data = await res.json();
     if (res.ok) {
       localStorage.setItem('loggedIn', 'true');
+      if (window.startOnlineUsersPolling) window.startOnlineUsersPolling();
       localStorage.setItem('userEmail', email);
       localStorage.setItem('userName', data.user?.name || '');
       localStorage.setItem('userUsername', data.user?.username || '');
@@ -53,13 +54,13 @@ export async function loginUser() {
       } else {
         goTo('dashboard');
       }
-      showToast('🎉', 'Login Successful!', `Welcome back, ${data.user?.name || 'user'}!`);
+      showToast('success', 'Login Successful!', `Welcome back, ${data.user?.name || 'user'}!`);
     } else {
-      showToast('❌', 'Login Failed', data.error || 'Something went wrong during login.');
+      showToast('error', 'Login Failed', data.error || 'Something went wrong during login.');
     }
   } catch (err) {
     console.error('Login error:', err);
-    showToast('❌', 'Server Error', 'Could not connect to the server. Please try again.');
+    showToast('error', 'Server Error', 'Could not connect to the server. Please try again.');
   }
 }
 
@@ -135,6 +136,7 @@ export async function verifyOTP() {
 
     if (res.ok) {
       localStorage.setItem('loggedIn', 'true');
+      if (window.startOnlineUsersPolling) window.startOnlineUsersPolling();
       localStorage.setItem('userName', state.pendingSignupData.name);
       localStorage.setItem('userEmail', email);
       localStorage.setItem('userUsername', state.pendingSignupData.username);
@@ -207,6 +209,7 @@ export function hideLogoutModal() {
 
 export async function confirmLogout() {
   closeModal('logout-modal');
+  if (window.stopOnlineUsersPolling) window.stopOnlineUsersPolling();
   try {
     await fetch('/api/logout', {
       method: 'POST',
@@ -265,7 +268,7 @@ export function selectGender(val) {
 export async function requestPasswordReset() {
   const email = document.getElementById('forgot-email').value.trim();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showToast('⚠️', 'Invalid Email', 'Please enter a valid email address.');
+    showToast('warning', 'Invalid Email', 'Please enter a valid email address.');
     return;
   }
 
@@ -276,12 +279,12 @@ export async function requestPasswordReset() {
       body: JSON.stringify({ email })
     });
     const data = await res.json();
-    showToast('📧', 'Request Sent', data.message);
+    showToast('info', 'Request Sent', data.message);
     if (res.ok) {
       document.getElementById('forgot-email').value = '';
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Failed to request password reset.');
+    showToast('error', 'Error', 'Failed to request password reset.');
   }
 }
 
@@ -292,17 +295,17 @@ export async function handlePasswordReset() {
   const token = params.get('reset_token');
 
   if (!token) {
-    showToast('❌', 'Invalid Link', 'Reset token is missing.');
+    showToast('error', 'Invalid Link', 'Reset token is missing.');
     return;
   }
 
   if (pass.length < 8) {
-    showToast('⚠️', 'Weak Password', 'Password must be at least 8 characters.');
+    showToast('warning', 'Weak Password', 'Password must be at least 8 characters.');
     return;
   }
 
   if (pass !== confirm) {
-    showToast('⚠️', 'Mismatch', 'Passwords do not match.');
+    showToast('warning', 'Mismatch', 'Passwords do not match.');
     return;
   }
 
@@ -314,13 +317,14 @@ export async function handlePasswordReset() {
     });
     const data = await res.json();
     if (res.ok) {
-      showToast('✅', 'Success!', 'Password has been reset. Please log in.');
+      showToast('success', 'Success!', 'Password has been reset. Please log in.');
       window.history.replaceState({}, '', window.location.pathname);
       goTo('login');
     } else {
-      showToast('❌', 'Reset Failed', data.error);
+      showToast('error', 'Reset Failed', data.error);
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Failed to reset password.');
+    showToast('error', 'Error', 'Failed to reset password.');
   }
 }
+

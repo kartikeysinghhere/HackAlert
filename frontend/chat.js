@@ -2,6 +2,11 @@ import { state } from './state.js';
 import { showToast } from './ui.js';
 import { censorMessage, escapeHTML, safeHTML } from './api.js';
 
+const BOT_AVATAR_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>`;
+const USER_AVATAR_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+const MIC_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>`;
+const RECORDING_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="7"></circle></svg>`;
+
 export function appendMessage(role, text, isHTML = false, saveHistory = true) {
   const area = document.getElementById('chat-area');
   if (!area) return;
@@ -18,7 +23,7 @@ export function appendMessage(role, text, isHTML = false, saveHistory = true) {
     displayText = escapeHTML(censorMessage(text));
   }
   msg.innerHTML = safeHTML(`
-    <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
+    <div class="msg-avatar">${role === 'bot' ? BOT_AVATAR_SVG : USER_AVATAR_SVG}</div>
     <div class="msg-bubble">${displayText}</div>
   `);
   area.appendChild(msg);
@@ -39,7 +44,7 @@ export function showTyping() {
   typing.className = 'msg bot';
   typing.id = 'typing-indicator';
   typing.innerHTML = safeHTML(`
-    <div class="msg-avatar">🤖</div>
+    <div class="msg-avatar">${BOT_AVATAR_SVG}</div>
     <div class="msg-bubble">
       <div class="typing-dots">
         <span></span><span></span><span></span>
@@ -62,7 +67,7 @@ export function showWelcomeMessage() {
         appendMessage(msg.role === 'user' ? 'user' : 'bot', msg.content, msg.isHTML || false, false);
       });
     } else {
-      const welcomeMsg = "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
+      const welcomeMsg = "Hello! I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or team building!";
       appendMessage('bot', welcomeMsg, true);
     }
   }, 600);
@@ -83,7 +88,7 @@ export async function sendChat() {
     const next = state.allHackathons[0];
     if (next) {
       removeTyping();
-      appendMessage('bot', `🏆 Nearest hackathon is <strong>${escapeHTML(next.name)}</strong> on 📅 ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? '🌐 Online' : `📍 ${escapeHTML(next.city)}, ${escapeHTML(next.country)}`}. <a href="${escapeHTML(next.website)}" target="_blank">Visit →</a>`, true);
+      appendMessage('bot', `Nearest hackathon is <strong>${escapeHTML(next.name)}</strong> on ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? 'Online' : `${escapeHTML(next.city)}, ${escapeHTML(next.country)}`}. <a href="${escapeHTML(next.website)}" target="_blank">Visit →</a>`, true);
       return;
     }
   }
@@ -111,7 +116,6 @@ export async function sendChat() {
     speakText(reply);
     
     if (data.action === 'filter' && data.payload) {
-      // Access filterCards globally or import it. We'll expose filterCards on window
       const pill = document.querySelector(`.filter-pill[onclick*="${data.payload}"]`);
       if (pill && window.filterCards) window.filterCards(pill, data.payload);
     } else if (data.action === 'navigate' && data.payload) {
@@ -119,7 +123,7 @@ export async function sendChat() {
     }
   } catch (err) {
     removeTyping();
-    appendMessage('bot', "😅 Oops! I took a quick nap — please try again in a moment!");
+    appendMessage('bot', "Unable to process request right now. Please try again in a moment.");
   }
 }
 
@@ -165,7 +169,7 @@ export function quickSend(btn) {
 
 export function initSpeechRecognition() {
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    showToast('⚠️', 'Not Supported', 'Voice input not supported in this browser.');
+    showToast('warning', 'Not Supported', 'Voice input not supported in this browser.');
     return null;
   }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -198,9 +202,9 @@ export function initSpeechRecognition() {
           const inp = document.getElementById('chat-input');
           if (inp) inp.value = finalText;
           setTimeout(() => sendChat(), 150);
-          showToast('✅', 'Got it!', 'Sending your message...');
+          showToast('success', 'Got it!', 'Sending your message...');
         } else {
-          showToast('🎤', 'Nothing heard', 'Try speaking again.');
+          showToast('info', 'Nothing heard', 'Try speaking again.');
         }
       }
     }, 5000);
@@ -209,7 +213,7 @@ export function initSpeechRecognition() {
   r.onerror = (ev) => {
     if (ev.error === 'no-speech') return;
     stopListening();
-    showToast('❌', 'Voice Error', 'Could not hear you. Try again.');
+    showToast('error', 'Voice Error', 'Could not hear you. Try again.');
   };
 
   r.onend = () => {
@@ -237,11 +241,11 @@ export function toggleVoiceInput() {
   }
   const btn = document.getElementById('mic-btn');
   if (btn) {
-    btn.textContent = '🔴';
+    btn.innerHTML = RECORDING_SVG;
     btn.style.borderColor = '#ef4444';
     btn.style.color = '#ef4444';
   }
-  showToast('🎤', 'Listening...', 'Speak freely — auto-sends after 5s pause');
+  showToast('info', 'Listening...', 'Speak freely — auto-sends after 5s pause');
 }
 
 export function stopListening(autoSend = false) {
@@ -254,7 +258,7 @@ export function stopListening(autoSend = false) {
   }
   const btn = document.getElementById('mic-btn');
   if (btn) {
-    btn.textContent = '🎤';
+    btn.innerHTML = MIC_SVG;
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
   }
@@ -263,7 +267,8 @@ export function stopListening(autoSend = false) {
     const input = document.getElementById('chat-input');
     if (input && input.value.trim()) {
       setTimeout(() => sendChat(), 150);
-      showToast('✅', 'Got it!', 'Sending your message...');
+      showToast('success', 'Got it!', 'Sending your message...');
     }
   }
 }
+

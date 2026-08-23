@@ -149,9 +149,9 @@ async function fetchHackathons() {
 // ── Create single hackathon card element ──
 function createHackathonCard(hack, isDimmed = false) {
   const savedList = JSON.parse(localStorage.getItem('saved') || '[]');
-  let mode = "📍 In-Person";
-  if (hack.virtual) mode = "🌐 Online";
-  if (hack.hybrid) mode = "🔀 Hybrid";
+  let mode = " In-Person";
+  if (hack.virtual) mode = " Online";
+  if (hack.hybrid) mode = " Hybrid";
 
   const startDate = new Date(hack.start).toLocaleDateString(undefined, {
     month: 'short', day: 'numeric', year: 'numeric'
@@ -177,21 +177,21 @@ function createHackathonCard(hack, isDimmed = false) {
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
       ${hack.logo
       ? `<img src="${escapeHTML(hack.logo)}" style="width:40px;height:40px;border-radius:8px;">`
-      : `<div class="feature-icon">💻</div>`}
+      : `<div class="feature-icon"></div>`}
       <h3>${escapeHTML(hack.name)}</h3>
     </div>
-    <p><strong>📅 Date:</strong> ${startDate}</p>
-    <p><strong>⏳ Deadline:</strong> <span data-countdown="${hack.start}">${getCountdown(hack.start)}</span></p>
-    <p><strong>🌎 Location:</strong> ${hack.virtual ? "Anywhere" : escapeHTML(location)}</p>
-    <p><strong>💻 Mode:</strong> ${mode}</p>
-    ${hack.state ? `<p><strong>📍 State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
-    ${hack.mlhAssociated ? `<p><strong>🎓 MLH:</strong> Associated</p>` : ''}
-    ${hack.hack_club_event ? `<p><strong>🏠 Hack Club:</strong> Official Event ✅</p>` : ''}
-    ${hack.apac ? `<p><strong>🌏 Region:</strong> Asia Pacific</p>` : ''}
+    <p><strong> Date:</strong> ${startDate}</p>
+    <p><strong> Deadline:</strong> <span data-countdown="${hack.start}">${getCountdown(hack.start)}</span></p>
+    <p><strong> Location:</strong> ${hack.virtual ? "Anywhere" : escapeHTML(location)}</p>
+    <p><strong> Mode:</strong> ${mode}</p>
+    ${hack.state ? `<p><strong> State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
+    ${hack.mlhAssociated ? `<p><strong> MLH:</strong> Associated</p>` : ''}
+    ${hack.hack_club_event ? `<p><strong> Hack Club:</strong> Official Event </p>` : ''}
+    ${hack.apac ? `<p><strong> Region:</strong> Asia Pacific</p>` : ''}
     <a href="${escapeHTML(hack.website)}" target="_blank">Visit Website →</a>
-    <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="margin-left:8px;">📲 WhatsApp</a>
-    <button onclick="copyLink(this, '${safeJSString(hack.website)}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">🔗 Copy</button>
-    <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" data-website="${escapeHTML(hack.website)}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? '✅ Saved' : '🔖 Save'}</button>
+    <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="margin-left:8px;"> WhatsApp</a>
+    <button onclick="copyLink(this, '${safeJSString(hack.website)}')" style="margin-left:8px;background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;"> Copy</button>
+    <button onclick="toggleSave(this)" data-name="${escapeHTML(hack.name)}" data-start="${hack.start}" data-website="${escapeHTML(hack.website)}" style="margin-left:8px;background:transparent;border:1px solid ${isSaved ? 'var(--accent)' : 'var(--border-light)'};color:${isSaved ? 'var(--accent)' : 'var(--muted)'};padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;">${isSaved ? ' Saved' : ' Save'}</button>
   `);
   return card;
 }
@@ -203,7 +203,7 @@ function renderHackathons(hackathons) {
 
   if (hackathons.length === 0) {
     const query = escapeHTML(document.getElementById('search-input')?.value || '');
-    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`);
+    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;"> No hackathons found${query ? ` for "<strong>${query}</strong>"` : ''}</div>`);
     return;
   }
 
@@ -248,7 +248,7 @@ function renderHackathonsSorted(matched, rest) {
 
   if (matched.length === 0 && rest.length === 0) {
     const query = escapeHTML(document.getElementById('search-input')?.value || '');
-    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;">🚫 No hackathons found for "<strong>${query}</strong>"</div>`);
+    grid.innerHTML = safeHTML(`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#aaa;font-size:16px;"> No hackathons found for "<strong>${query}</strong>"</div>`);
     return;
   }
 
@@ -556,7 +556,7 @@ window.addEventListener('hashchange', () => {
 async function requestPasswordReset() {
   const email = document.getElementById('forgot-email').value.trim();
   if (!email || !isValidEmail(email)) {
-    showToast('⚠️', 'Invalid Email', 'Please enter a valid email address.');
+    showToast('warning', 'Invalid Email', 'Please enter a valid email address.');
     return;
   }
 
@@ -567,12 +567,12 @@ async function requestPasswordReset() {
       body: JSON.stringify({ email })
     });
     const data = await res.json();
-    showToast('📧', 'Request Sent', data.message);
+    showToast('info', 'Request Sent', data.message);
     if (res.ok) {
       document.getElementById('forgot-email').value = '';
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Failed to request password reset.');
+    showToast('error', 'Error', 'Failed to request password reset.');
   }
 }
 
@@ -583,17 +583,17 @@ async function handlePasswordReset() {
   const token = params.get('reset_token');
 
   if (!token) {
-    showToast('❌', 'Invalid Link', 'Reset token is missing.');
+    showToast('error', 'Invalid Link', 'Reset token is missing.');
     return;
   }
 
   if (pass.length < 8) {
-    showToast('⚠️', 'Weak Password', 'Password must be at least 8 characters.');
+    showToast('warning', 'Weak Password', 'Password must be at least 8 characters.');
     return;
   }
 
   if (pass !== confirm) {
-    showToast('⚠️', 'Mismatch', 'Passwords do not match.');
+    showToast('warning', 'Mismatch', 'Passwords do not match.');
     return;
   }
 
@@ -605,15 +605,15 @@ async function handlePasswordReset() {
     });
     const data = await res.json();
     if (res.ok) {
-      showToast('✅', 'Success!', 'Password has been reset. Please log in.');
+      showToast('success', 'Success!', 'Password has been reset. Please log in.');
       // Clean URL
       window.history.replaceState({}, '', window.location.pathname);
       goTo('login');
     } else {
-      showToast('❌', 'Reset Failed', data.error);
+      showToast('error', 'Reset Failed', data.error);
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Failed to reset password.');
+    showToast('error', 'Error', 'Failed to reset password.');
   }
 }
 
@@ -633,7 +633,7 @@ function appendMessage(role, text, isHTML = false, saveHistory = true) {
     displayText = escapeHTML(censorMessage(text));
   }
   msg.innerHTML = safeHTML(`
-    <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
+    <div class="msg-avatar">${role === 'bot' ? '' : ''}</div>
     <div class="msg-bubble">${displayText}</div>
   `);
   area.appendChild(msg);
@@ -656,7 +656,7 @@ function showTyping() {
   typing.className = 'msg bot';
   typing.id = 'typing-indicator';
   typing.innerHTML = safeHTML(`
-    <div class="msg-avatar">🤖</div>
+    <div class="msg-avatar"></div>
     <div class="msg-bubble">
       <div class="typing-dots">
         <span></span><span></span><span></span>
@@ -680,7 +680,7 @@ function showWelcomeMessage() {
         appendMessage(msg.role === 'user' ? 'user' : 'bot', msg.content, msg.isHTML || false, false);
       });
     } else {
-      const welcomeMsg = "Hey! 👋 I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
+      const welcomeMsg = "Hey!  I'm <strong>HackBot</strong>. Ask me anything about hackathons — upcoming events, online ones, prizes, or anything else!";
       appendMessage('bot', welcomeMsg, true);
     }
   }, 600);
@@ -702,7 +702,7 @@ async function sendChat() {
     const next = allHackathons[0];
     if (next) {
       removeTyping();
-      appendMessage('bot', `🏆 Nearest hackathon is <strong>${escapeHTML(next.name)}</strong> on 📅 ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? '🌐 Online' : `📍 ${escapeHTML(next.city)}, ${escapeHTML(next.country)}`}. <a href="${escapeHTML(next.website)}" target="_blank">Visit →</a>`, true);
+      appendMessage('bot', ` Nearest hackathon is <strong>${escapeHTML(next.name)}</strong> on  ${new Date(next.start).toLocaleDateString()} — ${next.virtual ? ' Online' : ` ${escapeHTML(next.city)}, ${escapeHTML(next.country)}`}. <a href="${escapeHTML(next.website)}" target="_blank">Visit →</a>`, true);
       return;
     }
   }
@@ -736,7 +736,7 @@ async function sendChat() {
     }
   } catch (err) {
     removeTyping();
-    appendMessage('bot', "😅 Oops! I took a quick nap — please try again in a moment!");
+    appendMessage('bot', " Oops! I took a quick nap — please try again in a moment!");
   }
 }
 async function speakText(text) {
@@ -818,13 +818,13 @@ async function loginUser() {
         goTo('dashboard');
       }
       requestNotificationPermission();
-      showToast('🎉', 'Login Successful!', `Welcome back, ${data.user?.name || 'user'}!`);
+      showToast('', 'Login Successful!', `Welcome back, ${data.user?.name || 'user'}!`);
     } else {
-      showToast('❌', 'Login Failed', data.error || 'Something went wrong during login.');
+      showToast('error', 'Login Failed', data.error || 'Something went wrong during login.');
     }
   } catch (err) {
     console.error('Login error:', err);
-    showToast('❌', 'Server Error', 'Could not connect to the server. Please try again.');
+    showToast('error', 'Server Error', 'Could not connect to the server. Please try again.');
   }
 }
 
@@ -987,10 +987,10 @@ function loadProfile() {
   const genderBadge = document.getElementById('profile-gender-badge');
   if (genderBadge) {
     if (gender === 'male') {
-      genderBadge.textContent = '♂';
+      genderBadge.textContent = '';
       genderBadge.style.color = '#60a5fa';
     } else if (gender === 'female') {
-      genderBadge.textContent = '♀';
+      genderBadge.textContent = '';
       genderBadge.style.color = '#f472b6';
     } else {
       genderBadge.textContent = '';
@@ -1008,8 +1008,8 @@ function loadProfile() {
   } else {
     list.innerHTML = safeHTML(saved.map(hack => `
       <div style="padding:8px 12px;margin-bottom:8px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-        <span>🔖 ${escapeHTML(hack.name)}</span>
-        <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Remove</button>
+        <span> ${escapeHTML(hack.name)}</span>
+        <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;"> Remove</button>
       </div>
     `).join(''));
   }
@@ -1035,7 +1035,7 @@ function loadProfile() {
               <div>${dateString.split(' ')[0] || dateString.split('.')[1]}</div>
             </div>
             <div style="flex: 1; font-size: 14px;">${escapeHTML(hack.name)}</div>
-            <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕</button>
+            <button onclick="unsaveHackathon('${safeJSString(hack.name)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:12px;"></button>
           </div>
         `;
       }).join(''));
@@ -1179,11 +1179,11 @@ function toggleSave(btn) {
   let saved = JSON.parse(localStorage.getItem('saved') || '[]');
   const existingIndex = saved.findIndex(s => s.name === name);
 
-  showToast('🔖', existingIndex > -1 ? 'Removed' : 'Saved!', name);
+  showToast('bookmark', existingIndex > -1 ? 'Removed' : 'Saved!', name);
 
   if (existingIndex > -1) {
     saved.splice(existingIndex, 1);
-    btn.textContent = '🔖 Save';
+    btn.textContent = ' Save';
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
 
@@ -1195,7 +1195,7 @@ function toggleSave(btn) {
     }).catch(err => console.error('Error deleting saved hackathon:', err));
   } else {
     saved.push({ name, start, website });
-    btn.textContent = '✅ Saved';
+    btn.textContent = ' Saved';
     btn.style.borderColor = 'var(--accent)';
     btn.style.color = 'var(--accent)';
 
@@ -1210,7 +1210,7 @@ function toggleSave(btn) {
     // Browser Notification
     requestNotificationPermission().then(permission => {
       if (permission === 'granted') {
-        new Notification("🔖 Hackathon Saved", {
+        new Notification(" Hackathon Saved", {
           body: `"${name}" has been saved to your reminders.`
         });
         scheduleNotificationCheck();
@@ -1244,7 +1244,7 @@ function scheduleNotificationCheck() {
     const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays === 2) {
-      new Notification("⏰ Hackathon Reminder", {
+      new Notification(" Hackathon Reminder", {
         body: `"${hack.name}" is starting in 2 days!`,
         tag: `reminder-${hack.name}`
       });
@@ -1255,7 +1255,7 @@ function scheduleNotificationCheck() {
 function copyLink(btn, url) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(() => {
-      btn.textContent = '✅ Copied!';
+      btn.textContent = ' Copied!';
       btn.style.borderColor = 'var(--accent)';
       btn.style.color = 'var(--accent)';
     }).catch(() => {
@@ -1265,7 +1265,7 @@ function copyLink(btn, url) {
     fallbackCopy(url, btn);
   }
   setTimeout(() => {
-    btn.textContent = '🔗 Copy';
+    btn.textContent = ' Copy';
     btn.style.borderColor = 'var(--border-light)';
     btn.style.color = 'var(--muted)';
   }, 2000);
@@ -1280,7 +1280,7 @@ function fallbackCopy(text, btn) {
   ta.select();
   document.execCommand('copy');
   document.body.removeChild(ta);
-  btn.textContent = '✅ Copied!';
+  btn.textContent = ' Copied!';
   btn.style.borderColor = 'var(--accent)';
   btn.style.color = 'var(--accent)';
 }
@@ -1355,31 +1355,31 @@ function selectCountry(country) {
 
 function openHackModal(hack) {
   const startDate = new Date(hack.start).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
-  let mode = "📍 In-Person";
-  if (hack.virtual) mode = "🌐 Online";
-  if (hack.hybrid) mode = "🔀 Hybrid";
+  let mode = " In-Person";
+  if (hack.virtual) mode = " Online";
+  if (hack.hybrid) mode = " Hybrid";
 
   document.getElementById('modal-content').innerHTML = safeHTML(`
     ${hack.banner ? `<img src="${escapeHTML(hack.banner)}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:20px;">` : ''}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-      ${hack.logo ? `<img src="${escapeHTML(hack.logo)}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;">💻</div>'}
+      ${hack.logo ? `<img src="${escapeHTML(hack.logo)}" style="width:48px;height:48px;border-radius:10px;">` : '<div style="font-size:32px;"></div>'}
       <div>
         <h2 style="color:var(--text);margin:0;">${escapeHTML(hack.name)}</h2>
         <p style="color:var(--accent);font-family:var(--mono);font-size:12px;margin:4px 0;">${mode}</p>
       </div>
     </div>
     <div style="display:grid;gap:12px;font-size:14px;color:var(--muted);">
-      <p>📅 <strong style="color:var(--text);">Date:</strong> ${startDate}</p>
-      <p>⏳ <strong style="color:var(--text);">Deadline:</strong> ${getCountdown(hack.start)}</p>
-      <p>🌎 <strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${escapeHTML(hack.city)}, ${escapeHTML(hack.country)}` : "TBA")}</p>
-      ${hack.state ? `<p>📍 <strong style="color:var(--text);">State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
-      ${hack.mlhAssociated ? `<p>🎓 <strong style="color:var(--text);">MLH:</strong> Associated</p>` : ''}
-      ${hack.hack_club_event ? `<p>🏠 <strong style="color:var(--text);">Hack Club:</strong> Official Event ✅</p>` : ''}
-      ${hack.apac ? `<p>🌏 <strong style="color:var(--text);">Region:</strong> Asia Pacific</p>` : ''}
+      <p> <strong style="color:var(--text);">Date:</strong> ${startDate}</p>
+      <p> <strong style="color:var(--text);">Deadline:</strong> ${getCountdown(hack.start)}</p>
+      <p> <strong style="color:var(--text);">Location:</strong> ${hack.virtual ? "Anywhere" : (hack.city ? `${escapeHTML(hack.city)}, ${escapeHTML(hack.country)}` : "TBA")}</p>
+      ${hack.state ? `<p> <strong style="color:var(--text);">State:</strong> ${escapeHTML(hack.state)}</p>` : ''}
+      ${hack.mlhAssociated ? `<p> <strong style="color:var(--text);">MLH:</strong> Associated</p>` : ''}
+      ${hack.hack_club_event ? `<p> <strong style="color:var(--text);">Hack Club:</strong> Official Event </p>` : ''}
+      ${hack.apac ? `<p> <strong style="color:var(--text);">Region:</strong> Asia Pacific</p>` : ''}
     </div>
     <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
       <a href="${escapeHTML(hack.website)}" target="_blank" style="background:var(--accent);color:#050508;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;font-family:var(--mono);">Register Now →</a>
-      <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);">📲 WhatsApp</a>
+      <a href="https://wa.me/?text=Check out ${encodeURIComponent(hack.name)}: ${encodeURIComponent(hack.website)}" target="_blank" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:10px 20px;border-radius:10px;text-decoration:none;font-size:13px;font-family:var(--mono);"> WhatsApp</a>
     </div>
   `);
   openModal('hack-modal');
@@ -1410,22 +1410,22 @@ async function loadTeams() {
     grid.innerHTML = safeHTML(teams.map(t => `
       <div class="feature-card">
         <h3 style="margin-bottom: 8px;">${escapeHTML(t.name)}</h3>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">🏆 ${escapeHTML(t.hackathon || 'Open Hackathon')}</p>
-        <p style="font-size:13px;margin-bottom:4px;">🛠 ${escapeHTML(t.skills || 'Any skills welcome')}</p>
-        <p style="font-size:13px;margin-bottom:8px;">👥 ${t.slots_left} slots left / ${t.size} total</p>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:4px;"> ${escapeHTML(t.hackathon || 'Open Hackathon')}</p>
+        <p style="font-size:13px;margin-bottom:4px;"> ${escapeHTML(t.skills || 'Any skills welcome')}</p>
+        <p style="font-size:13px;margin-bottom:8px;"> ${t.slots_left} slots left / ${t.size} total</p>
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Leader: ${escapeHTML(t.leader_email)}</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           ${t.leader_email === currentUserEmail
         ? `<button onclick="deleteTeam(${t.id})" class="btn-primary" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Delete Team</button>`
         : `<button onclick="joinTeam(${t.id}, '${safeJSString(t.name)}')" class="btn-primary" style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Join Team</button>`
       }
-          <button onclick="openTeamChat(${t.id},'${safeJSString(t.name)}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;">💬 Chat</button>
+          <button onclick="openTeamChat(${t.id},'${safeJSString(t.name)}')" class="btn-secondary" style="background:transparent;border:1px solid var(--border-light);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;"> Chat</button>
         </div>
       </div>
     `).join(''));
   } catch (err) {
     console.error('Error loading teams:', err);
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:20px;">⚠️ Failed to load teams. Please try again.</p>';
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:20px;"> Failed to load teams. Please try again.</p>';
   }
 }
 
@@ -1442,7 +1442,7 @@ async function createTeam() {
   const skills = document.getElementById('team-skills').value.trim();
   const size = parseInt(document.getElementById('team-size').value);
   if (!name || isNaN(size) || size <= 0) {
-    showToast('❌', 'Error', 'Team Name and Team Size are required.');
+    showToast('error', 'Error', 'Team Name and Team Size are required.');
     return;
   }
   const res = await fetch('/api/teams', {
@@ -1451,7 +1451,7 @@ async function createTeam() {
     body: JSON.stringify({ name, hackathon, skills, size })
   });
   if (res.ok) { hideCreateTeam(); loadTeams(); }
-  else { const d = await res.json(); showToast('❌', 'Error creating team', d.error); }
+  else { const d = await res.json(); showToast('error', 'Error creating team', d.error); }
 }
 
 async function joinTeam(teamId, teamName) {
@@ -1462,10 +1462,10 @@ async function joinTeam(teamId, teamName) {
   });
   const d = await res.json();
   if (res.ok) {
-    showToast('✅', 'Joined Team!', `You have successfully joined ${teamName}.`);
+    showToast('success', 'Joined Team!', `You have successfully joined ${teamName}.`);
     loadTeams();
   } else {
-    showToast('❌', 'Failed to Join', d.error);
+    showToast('error', 'Failed to Join', d.error);
   }
 }
 
@@ -1491,7 +1491,7 @@ async function openTeamChat(teamId, teamName) {
 
     const membersListDiv = document.getElementById('team-members-list');
     if (membersListDiv) {
-      membersListDiv.innerHTML = '👥 ' + safeHTML(members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join(''));
+      membersListDiv.innerHTML = ' ' + safeHTML(members.map(m => `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">${escapeHTML(m.user_name || m.user_email)}</span>`).join(''));
     }
 
     const teamActionsDiv = document.getElementById('team-chat-actions');
@@ -1500,11 +1500,11 @@ async function openTeamChat(teamId, teamName) {
       if (isMember && !isLeader) {
         teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="leaveTeam(${teamId})" style="background:#f97316;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Leave Team</button>`);
       }
-      teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="copyInviteLink(${teamId})" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-left:8px;">🔗 Invite</button>`);
+      teamActionsDiv.insertAdjacentHTML('beforeend', `<button onclick="copyInviteLink(${teamId})" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-left:8px;"> Invite</button>`);
     }
   } catch (err) {
     console.error('Error loading team chat:', err);
-    showToast('⚠️', 'Error', 'Failed to load team details. Please try again.');
+    showToast('warning', 'Error', 'Failed to load team details. Please try again.');
   }
 
   if (chatEventSource) {
@@ -1523,7 +1523,7 @@ function copyInviteLink(teamId) {
   const url = `${window.location.origin}${window.location.pathname}?join_team=${teamId}`;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(() => {
-      showToast('✅', 'Copied!', 'Invite link copied to clipboard.');
+      showToast('success', 'Copied!', 'Invite link copied to clipboard.');
     });
   } else {
     // Fallback
@@ -1533,7 +1533,7 @@ function copyInviteLink(teamId) {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('✅', 'Copied!', 'Invite link copied to clipboard.');
+    showToast('success', 'Copied!', 'Invite link copied to clipboard.');
   }
 }
 
@@ -1579,7 +1579,7 @@ async function sendTeamMessage() {
 
   if (!res.ok) {
     const d = await res.json();
-    showToast('❌', 'Blocked', d.error);
+    showToast('error', 'Blocked', d.error);
     return;
   }
   input.value = '';
@@ -1590,7 +1590,7 @@ async function leaveTeam(teamId) {
 
   const user_email = localStorage.getItem('userEmail');
   if (!user_email) {
-    showToast('❌', 'Error', 'You must be logged in to leave a team.');
+    showToast('error', 'Error', 'You must be logged in to leave a team.');
     return;
   }
 
@@ -1602,15 +1602,15 @@ async function leaveTeam(teamId) {
 
     const data = await res.json();
     if (res.ok) {
-      showToast('✅', 'Left Team', 'You have successfully left the team.');
+      showToast('success', 'Left Team', 'You have successfully left the team.');
       closeTeamChat();
       loadTeams();
     } else {
-      showToast('❌', 'Failed to Leave', data.error);
+      showToast('error', 'Failed to Leave', data.error);
     }
   } catch (error) {
     console.error('Error leaving team:', error);
-    showToast('❌', 'Error', 'Server error while leaving team.');
+    showToast('error', 'Error', 'Server error while leaving team.');
   }
 }
 
@@ -1630,7 +1630,7 @@ async function deleteTeam(teamId) {
     headers: authHeaders()
   });
   if (res.ok) loadTeams();
-  else { const d = await res.json(); showToast('❌', 'Error', d.error); }
+  else { const d = await res.json(); showToast('error', 'Error', d.error); }
 }
 
 function showMatchmaker() {
@@ -1644,7 +1644,7 @@ function hideMatchmaker() {
 
 async function runMatchmaker() {
   const skills = document.getElementById('match-skills').value.trim();
-  if (!skills) { showToast('⚠️', 'Missing', 'Enter your skills first.'); return; }
+  if (!skills) { showToast('warning', 'Missing', 'Enter your skills first.'); return; }
 
   const experience = document.getElementById('match-experience').value;
   const availability = document.querySelector('input[name="match-availability"]:checked')?.value || 'weekends';
@@ -1658,7 +1658,7 @@ async function runMatchmaker() {
   const hackathon_type = document.getElementById('match-hackathon-type').value;
 
   const resultsDiv = document.getElementById('match-results');
-  resultsDiv.innerHTML = '<p style="color:var(--muted);font-family:var(--mono);font-size:13px;">🤖 Analyzing teams...</p>';
+  resultsDiv.innerHTML = '<p style="color:var(--muted);font-family:var(--mono);font-size:13px;"> Analyzing teams...</p>';
 
   try {
     const res = await fetch('/api/teams/match', {
@@ -1677,7 +1677,7 @@ async function runMatchmaker() {
     const data = await res.json();
 
     if (!res.ok) {
-      resultsDiv.innerHTML = safeHTML(`<p style="color:#ef4444;font-size:13px;">❌ ${escapeHTML(data.error)}</p>`);
+      resultsDiv.innerHTML = safeHTML(`<p style="color:#ef4444;font-size:13px;"> ${escapeHTML(data.error)}</p>`);
       return;
     }
 
@@ -1697,17 +1697,17 @@ async function runMatchmaker() {
             <strong style="color:var(--text);font-size:15px;">${escapeHTML(m.name)}</strong>
             <span style="background:rgba(0,240,255,0.1);color:var(--accent);font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:100px;border:1px solid rgba(0,240,255,0.3);">${m.match_score}% match</span>
           </div>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">🏆 ${escapeHTML(m.hackathon || 'Open')}</p>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">🛠 Looking for: ${escapeHTML(m.skills || 'Any')}</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:6px;"> ${escapeHTML(m.hackathon || 'Open')}</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:8px;"> Looking for: ${escapeHTML(m.skills || 'Any')}</p>
           
           <div style="display:flex;gap:12px;background:rgba(0,240,255,0.02);border:1px solid rgba(0,240,255,0.1);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);justify-content:space-between;flex-wrap:wrap;">
-            <div>📚 Overlap: <strong style="color:var(--text);">${escapeHTML(overlap)}</strong></div>
-            <div>👤 Role: <strong style="color:var(--accent2);">${escapeHTML(roleFit)}</strong></div>
-            <div>⏱️ Time: <strong style="color:var(--accent);">${escapeHTML(availMatch)}</strong></div>
+            <div> Overlap: <strong style="color:var(--text);">${escapeHTML(overlap)}</strong></div>
+            <div> Role: <strong style="color:var(--accent2);">${escapeHTML(roleFit)}</strong></div>
+            <div> Time: <strong style="color:var(--accent);">${escapeHTML(availMatch)}</strong></div>
           </div>
 
           <p style="font-size:13px;color:var(--accent3);font-style:italic;margin-bottom:12px;">"${escapeHTML(m.reason)}"</p>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">👥 ${m.slots_left} slot${m.slots_left !== 1 ? 's' : ''} left</p>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;"> ${m.slots_left} slot${m.slots_left !== 1 ? 's' : ''} left</p>
           <button onclick="joinTeam(${m.id},'${safeJSString(m.name)}')"
             style="background:var(--accent);color:#050508;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">
             Join Team →
@@ -1717,7 +1717,7 @@ async function runMatchmaker() {
     }).join(''));
 
   } catch (err) {
-    resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;">⚠️ Could not reach server.</p>';
+    resultsDiv.innerHTML = '<p style="color:#ef4444;font-size:13px;"> Could not reach server.</p>';
   }
 }
 
@@ -1818,7 +1818,7 @@ async function loadShowcase() {
     const projects = await res.json();
 
     if (!projects.length) {
-      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:40px;">No projects submitted yet. Be the first! 🚀</p>';
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#aaa;padding:40px;">No projects submitted yet. Be the first! </p>';
       return;
     }
 
@@ -1837,7 +1837,7 @@ async function loadShowcase() {
               <p style="font-family:var(--mono);font-size:11px;color:var(--accent);">by ${escapeHTML(p.teams?.name || 'Unknown Team')}</p>
             </div>
             <span style="font-family:var(--mono);font-size:10px;color:var(--muted);background:rgba(255,255,255,0.04);padding:4px 8px;border-radius:6px;border:1px solid var(--border);white-space:nowrap;">
-              🏆 ${escapeHTML(p.teams?.hackathon || 'Open')}
+               ${escapeHTML(p.teams?.hackathon || 'Open')}
             </span>
           </div>
 
@@ -1852,13 +1852,13 @@ async function loadShowcase() {
           <div class="project-links">
             ${p.github_link ? `<a href="${escapeHTML(p.github_link)}" target="_blank" class="project-link-btn github">⬡ GitHub</a>` : ''}
             ${p.demo_link ? `<a href="${escapeHTML(p.demo_link)}" target="_blank" class="project-link-btn demo">▶ Live Demo</a>` : ''}
-            ${p.submitted_by === currentUserEmail ? `<button onclick="deleteProject(${p.team_id})" class="project-link-btn" style="color:#ef4444;border-color:rgba(239,68,68,0.3);">✕ Delete</button>` : ''}
+            ${p.submitted_by === currentUserEmail ? `<button onclick="deleteProject(${p.team_id})" class="project-link-btn" style="color:#ef4444;border-color:rgba(239,68,68,0.3);"> Delete</button>` : ''}
           </div>
         </div>
       `;
     }).join(''));
   } catch (err) {
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:40px;">⚠️ Failed to load projects.</p>';
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ef4444;padding:40px;"> Failed to load projects.</p>';
   }
 }
 
@@ -1879,8 +1879,8 @@ async function submitProject() {
   const demo_link = document.getElementById('project-demo').value.trim();
   const tech_stack = document.getElementById('project-tech').value.trim();
 
-  if (!team_id) { showToast('❌', 'Error', 'Select a team.'); return; }
-  if (!title) { showToast('❌', 'Error', 'Project title is required.'); return; }
+  if (!team_id) { showToast('error', 'Error', 'Select a team.'); return; }
+  if (!title) { showToast('error', 'Error', 'Project title is required.'); return; }
 
   try {
     const res = await fetch(`/api/teams/${team_id}/project`, {
@@ -1892,7 +1892,7 @@ async function submitProject() {
 
     const data = await res.json();
     if (res.ok) {
-      showToast('🚀', 'Submitted!', 'Your project is now live in the showcase.');
+      showToast('submit', 'Submitted!', 'Your project is now live in the showcase.');
       hideSubmitProject();
       loadShowcase();
       // Clear fields
@@ -1900,10 +1900,10 @@ async function submitProject() {
         document.getElementById(id).value = '';
       });
     } else {
-      showToast('❌', 'Error', data.error);
+      showToast('error', 'Error', data.error);
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Could not submit project.');
+    showToast('error', 'Error', 'Could not submit project.');
   }
 }
 
@@ -1914,11 +1914,11 @@ async function deleteProject(teamId) {
     headers: authHeaders()
   });
   if (res.ok) {
-    showToast('✅', 'Deleted', 'Project removed.');
+    showToast('success', 'Deleted', 'Project removed.');
     loadShowcase();
   } else {
     const d = await res.json();
-    showToast('❌', 'Error', d.error);
+    showToast('error', 'Error', d.error);
   }
 }
 
@@ -1935,7 +1935,7 @@ function setRating(n) {
 
 function showReviewForm() {
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-  if (!isLoggedIn) { showToast('⚠️', 'Login Required', 'Please login to write a review.'); return; }
+  if (!isLoggedIn) { showToast('warning', 'Login Required', 'Please login to write a review.'); return; }
   document.getElementById('review-form').style.display = 'block';
   document.getElementById('write-review-btn').style.display = 'none';
 }
@@ -1960,16 +1960,16 @@ async function loadReviews(hackathonName) {
     list.innerHTML = safeHTML(`
       <div style="margin-bottom:12px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;display:flex;align-items:center;gap:8px;">
         <span style="font-size:20px;font-weight:700;color:var(--accent);">${avg}</span>
-        <span style="color:#f59e0b;font-size:16px;">${'⭐'.repeat(Math.round(avg))}</span>
+        <span style="color:#f59e0b;font-size:16px;">${''.repeat(Math.round(avg))}</span>
         <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">(${reviews.length} review${reviews.length !== 1 ? 's' : ''})</span>
       </div>
       ${reviews.map(r => `
         <div style="padding:10px 12px;margin-bottom:8px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="color:#f59e0b;font-size:14px;">${'⭐'.repeat(r.rating)}</span>
+            <span style="color:#f59e0b;font-size:14px;">${''.repeat(r.rating)}</span>
             <div style="display:flex;align-items:center;gap:8px;">
               <span style="color:var(--muted);font-size:11px;font-family:var(--mono);">${escapeHTML(r.user_email)}</span>
-              ${r.user_email === userEmail ? `<button onclick="deleteReview('${safeJSString(hackathonName)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:11px;">✕</button>` : ''}
+              ${r.user_email === userEmail ? `<button onclick="deleteReview('${safeJSString(hackathonName)}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:11px;"></button>` : ''}
             </div>
           </div>
           ${r.review ? `<p style="font-size:13px;color:var(--muted);margin:0;">${escapeHTML(r.review)}</p>` : ''}
@@ -1982,7 +1982,7 @@ async function loadReviews(hackathonName) {
 }
 
 async function submitReview() {
-  if (!selectedRating) { showToast('⚠️', 'Select Rating', 'Please select a star rating.'); return; }
+  if (!selectedRating) { showToast('warning', 'Select Rating', 'Please select a star rating.'); return; }
   const review = document.getElementById('review-text').value.trim();
 
   try {
@@ -1994,17 +1994,17 @@ async function submitReview() {
     });
     const data = await res.json();
     if (res.ok) {
-      showToast('⭐', 'Review Submitted!', 'Thanks for your feedback.');
+      showToast('star', 'Review Submitted!', 'Thanks for your feedback.');
       document.getElementById('review-form').style.display = 'none';
       document.getElementById('write-review-btn').style.display = 'block';
       document.getElementById('review-text').value = '';
       selectedRating = 0;
       loadReviews(currentReviewHackathon);
     } else {
-      showToast('❌', 'Error', data.error);
+      showToast('error', 'Error', data.error);
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not submit review.');
+    showToast('error', 'Error', 'Could not submit review.');
   }
 }
 
@@ -2014,7 +2014,7 @@ async function deleteReview(hackathonName) {
     method: 'DELETE',
     headers: authHeaders()
   });
-  if (res.ok) { showToast('✅', 'Deleted', 'Review removed.'); loadReviews(hackathonName); }
+  if (res.ok) { showToast('success', 'Deleted', 'Review removed.'); loadReviews(hackathonName); }
 }
 
 function selectGender(val) {
@@ -2092,7 +2092,7 @@ async function searchUsers(q) {
           <div style="flex:1;">
             <div style="display:flex;align-items:center;gap:6px;">
               <strong onclick="openPublicProfile('${escapeHTML(safeJSString(u.username))}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
-              <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
+              <span style="font-size:14px;">${u.gender === 'male' ? '' : u.gender === 'female' ? '' : ''}</span>
             </div>
             <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
             ${u.bio ? `<p style="color:var(--muted);font-size:12px;margin-top:2px;">${escapeHTML(u.bio)}</p>` : ''}
@@ -2120,7 +2120,7 @@ function showUserResults(users) {
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:6px;">
           <strong onclick="openPublicProfile('${escapeHTML(safeJSString(u.username))}')" style="cursor:pointer;color:#fff;font-size:14px;text-decoration:underline;text-decoration-color:var(--accent);">${escapeHTML(u.name)}</strong>
-          <span style="font-size:14px;">${u.gender === 'male' ? '♂' : u.gender === 'female' ? '♀' : ''}</span>
+          <span style="font-size:14px;">${u.gender === 'male' ? '' : u.gender === 'female' ? '' : ''}</span>
           ${onlineDot(u.email, 8)}
         </div>
         <p style="color:var(--accent);font-family:var(--mono);font-size:11px;">@${escapeHTML(u.username || '')}</p>
@@ -2148,21 +2148,21 @@ async function sendFriendRequest(btn, to_email) {
     });
     const data = await res.json();
     if (res.ok) {
-      showToast('✅', 'Request Sent!', 'Friend request sent successfully.');
+      showToast('success', 'Request Sent!', 'Friend request sent successfully.');
       if (btn) {
         btn.innerText = 'Pending';
         btn.style.background = '#64748b'; // Muted color
         btn.style.color = '#fff';
       }
     } else {
-      showToast('❌', 'Error', data.error);
+      showToast('error', 'Error', data.error);
       if (btn) {
         btn.disabled = false;
         btn.innerText = '+ Add';
       }
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not send request.');
+    showToast('error', 'Error', 'Could not send request.');
     if (btn) {
       btn.disabled = false;
       btn.innerText = '+ Add';
@@ -2179,15 +2179,15 @@ async function loadFriends() {
 
     if (requests.length) {
       pendingDiv.innerHTML = `
-        <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:10px;">📬 PENDING REQUESTS (${requests.length})</h4>
+        <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:10px;"> PENDING REQUESTS (${requests.length})</h4>
         ${requests.map(r => `
           <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);border-radius:10px;margin-bottom:8px;">
             <div style="flex:1;">
               <strong style="color:#fff;font-size:13px;">${escapeHTML(r.from_email)}</strong>
               <p style="color:var(--muted);font-size:11px;font-family:var(--mono);">wants to be your friend</p>
             </div>
-            <button onclick="respondRequest(${r.id}, 'accepted')" style="background:var(--accent);color:#050508;border:none;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;margin-right:4px;">✓ Accept</button>
-            <button onclick="respondRequest(${r.id}, 'declined')" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;">✕</button>
+            <button onclick="respondRequest(${r.id}, 'accepted')" style="background:var(--accent);color:#050508;border:none;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;margin-right:4px;"> Accept</button>
+            <button onclick="respondRequest(${r.id}, 'declined')" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;"></button>
           </div>
         `).join('')}
       `;
@@ -2206,7 +2206,7 @@ async function loadFriends() {
     }
 
     friendsDiv.innerHTML = `
-        <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;">🤝 FRIENDS (${friends.length})</h4>
+        <h4 style="color:var(--muted);font-family:var(--mono);font-size:12px;margin-bottom:10px;"> FRIENDS (${friends.length})</h4>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
           ${friends.map(f => `
             <div style="padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:10px;">
@@ -2216,13 +2216,13 @@ async function loadFriends() {
               <div style="flex:1;min-width:0;">
                 <div style="display:flex;align-items:center;gap:4px;">
                   <strong onclick="openPublicProfile('${escapeHTML(safeJSString(f.username))}')" style="color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(f.name)}</strong>
-                  <span style="font-size:12px;">${f.gender === 'male' ? '♂' : f.gender === 'female' ? '♀' : ''}</span>
+                  <span style="font-size:12px;">${f.gender === 'male' ? '' : f.gender === 'female' ? '' : ''}</span>
                   ${onlineDot(f.email, 8)}
                 </div>
                 <p style="color:var(--accent);font-family:var(--mono);font-size:10px;">@${escapeHTML(f.username || '')}</p>
               </div>
-              <button onclick="openDMChat('${escapeHTML(safeJSString(f.email))}','${escapeHTML(safeJSString(f.name))}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;">💬</button>
-              <button onclick="removeFriend('${escapeHTML(safeJSString(f.email))}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;">✕</button>
+              <button onclick="openDMChat('${escapeHTML(safeJSString(f.email))}','${escapeHTML(safeJSString(f.name))}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:10px;cursor:pointer;margin-right:4px;"></button>
+              <button onclick="removeFriend('${escapeHTML(safeJSString(f.email))}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;font-size:14px;"></button>
             </div>
           `).join('')}
         </div>
@@ -2241,11 +2241,11 @@ async function respondRequest(id, status) {
       body: JSON.stringify({ status })
     });
     if (res.ok) {
-      showToast('✅', status === 'accepted' ? 'Friend Added!' : 'Declined', '');
+      showToast('success', status === 'accepted' ? 'Friend Added!' : 'Declined', '');
       loadFriends();
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not respond to request.');
+    showToast('error', 'Error', 'Could not respond to request.');
   }
 }
 
@@ -2255,7 +2255,7 @@ async function removeFriend(friend_email) {
     method: 'DELETE',
     headers: authHeaders()
   });
-  if (res.ok) { showToast('✅', 'Removed', 'Friend removed.'); loadFriends(); }
+  if (res.ok) { showToast('success', 'Removed', 'Friend removed.'); loadFriends(); }
 }
 
 // ── AI TOOLS ──
@@ -2267,12 +2267,12 @@ async function generateIdeas() {
   const duration = document.getElementById('idea-duration').value;
   const skills = document.getElementById('idea-skills').value.trim();
 
-  if (!theme) { showToast('⚠️', 'Missing', 'Enter a hackathon theme.'); return; }
+  if (!theme) { showToast('warning', 'Missing', 'Enter a hackathon theme.'); return; }
 
   const output = document.getElementById('ideas-output');
   output.innerHTML = safeHTML(`
     <div style="text-align:center;padding:40px;">
-      <div style="font-size:32px;margin-bottom:12px;">🤖</div>
+      <div style="font-size:32px;margin-bottom:12px;"></div>
       <p style="color:var(--muted);font-family:var(--mono);font-size:13px;">Generating 5 unique project ideas...</p>
     </div>`);
 
@@ -2288,7 +2288,7 @@ async function generateIdeas() {
     if (!res.ok) { output.innerHTML = safeHTML(`<p style="color:#ef4444;">${escapeHTML(data.error)}</p>`); return; }
 
     output.innerHTML = safeHTML(`
-      <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">✨ 5 Project Ideas for "${escapeHTML(theme)}"</h4>
+      <h4 style="color:var(--accent);font-family:var(--mono);font-size:12px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;"> 5 Project Ideas for "${escapeHTML(theme)}"</h4>
       ${data.ideas.map((idea, i) => `
         <div class="idea-card">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
@@ -2323,19 +2323,19 @@ async function generateIdeas() {
           </div>
 
           <div style="margin-bottom:12px;">
-            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px;">🛠 TECH STACK</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px;"> TECH STACK</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px;">
               ${idea.tech_stack.map(t => `<span class="tech-tag">${escapeHTML(t)}</span>`).join('')}
             </div>
           </div>
 
           <div style="margin-bottom:12px;">
-            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px;">⚡ MVP FEATURES</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px;"> MVP FEATURES</div>
             ${idea.mvp_features.map(f => `<div style="font-size:12px;color:var(--text);padding:2px 0;">• ${escapeHTML(f)}</div>`).join('')}
           </div>
 
           <div style="background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.15);border-radius:8px;padding:10px 12px;">
-            <span style="font-size:11px;color:var(--accent);font-family:var(--mono);">🏆 WOW FACTOR: </span>
+            <span style="font-size:11px;color:var(--accent);font-family:var(--mono);"> WOW FACTOR: </span>
             <span style="font-size:12px;color:var(--text);">${escapeHTML(idea.wow_factor)}</span>
           </div>
         </div>
@@ -2351,12 +2351,12 @@ async function analyzeHackathon() {
   const details = document.getElementById('analyzer-details').value.trim();
   const skills = document.getElementById('analyzer-skills').value.trim();
 
-  if (!details) { showToast('⚠️', 'Missing', 'Paste hackathon details first.'); return; }
+  if (!details) { showToast('warning', 'Missing', 'Paste hackathon details first.'); return; }
 
   const output = document.getElementById('analyzer-output');
   output.innerHTML = safeHTML(`
     <div style="text-align:center;padding:40px;">
-      <div style="font-size:32px;margin-bottom:12px;">🔍</div>
+      <div style="font-size:32px;margin-bottom:12px;"></div>
       <p style="color:var(--muted);font-family:var(--mono);font-size:13px;">Analyzing hackathon difficulty...</p>
     </div>`);
 
@@ -2409,11 +2409,11 @@ async function analyzeHackathon() {
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
           <div>
-            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;">🛠 REQUIRED SKILLS</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;"> REQUIRED SKILLS</div>
             ${a.required_skills.map(s => `<div style="font-size:12px;color:var(--text);padding:2px 0;">• ${escapeHTML(s)}</div>`).join('')}
           </div>
           <div>
-            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;">⚡ RECOMMENDED STACK</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;"> RECOMMENDED STACK</div>
             <div style="display:flex;flex-wrap:wrap;gap:4px;">
               ${a.recommended_stack.map(t => `<span class="tech-tag">${escapeHTML(t)}</span>`).join('')}
             </div>
@@ -2422,17 +2422,17 @@ async function analyzeHackathon() {
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
           <div>
-            <div style="font-size:11px;color:#ef4444;font-family:var(--mono);margin-bottom:8px;">⚠️ KEY CHALLENGES</div>
+            <div style="font-size:11px;color:#ef4444;font-family:var(--mono);margin-bottom:8px;"> KEY CHALLENGES</div>
             ${a.key_challenges.map(c => `<div style="font-size:12px;color:var(--muted);padding:2px 0;">• ${escapeHTML(c)}</div>`).join('')}
           </div>
           <div>
-            <div style="font-size:11px;color:var(--accent);font-family:var(--mono);margin-bottom:8px;">✅ YOUR ADVANTAGES</div>
+            <div style="font-size:11px;color:var(--accent);font-family:var(--mono);margin-bottom:8px;"> YOUR ADVANTAGES</div>
             ${a.advantages.map(c => `<div style="font-size:12px;color:var(--muted);padding:2px 0;">• ${escapeHTML(c)}</div>`).join('')}
           </div>
         </div>
 
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;">📅 PREPARATION PLAN</div>
+          <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px;"> PREPARATION PLAN</div>
           ${a.preparation_plan.map((p, i) => `
             <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
               <span style="color:var(--accent);font-family:var(--mono);font-size:12px;flex-shrink:0;">${i + 1}.</span>
@@ -2442,7 +2442,7 @@ async function analyzeHackathon() {
         </div>
 
         <div style="background:rgba(208,91,255,0.06);border:1px solid rgba(208,91,255,0.2);border-radius:10px;padding:14px;">
-          <div style="font-size:11px;color:var(--accent2);font-family:var(--mono);margin-bottom:6px;">🤖 AI VERDICT</div>
+          <div style="font-size:11px;color:var(--accent2);font-family:var(--mono);margin-bottom:6px;"> AI VERDICT</div>
           <p style="font-size:13px;color:var(--text);line-height:1.6;">${escapeHTML(a.verdict)}</p>
         </div>
       </div>
@@ -2628,11 +2628,11 @@ async function sendDM() {
 
     if (!res.ok) {
       const d = await res.json();
-      showToast('❌', 'Error', d.error);
+      showToast('error', 'Error', d.error);
       input.value = message;
     }
   } catch (e) {
-    showToast('❌', 'Error', 'Could not send message.');
+    showToast('error', 'Error', 'Could not send message.');
     input.value = message;
   }
 }
@@ -2645,7 +2645,7 @@ let silenceTimer = null;
 
 function initSpeechRecognition() {
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    showToast('⚠️', 'Not Supported', 'Voice input not supported in this browser.');
+    showToast('warning', 'Not Supported', 'Voice input not supported in this browser.');
     return null;
   }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -2682,9 +2682,9 @@ function initSpeechRecognition() {
           const inp = document.getElementById('chat-input');
           if (inp) inp.value = finalText;
           setTimeout(() => sendChat(), 150);
-          showToast('✅', 'Got it!', 'Sending your message...');
+          showToast('success', 'Got it!', 'Sending your message...');
         } else {
-          showToast('🎤', 'Nothing heard', 'Try speaking again.');
+          showToast('info', 'Nothing heard', 'Try speaking again.');
         }
       }
     }, 5000);
@@ -2693,7 +2693,7 @@ function initSpeechRecognition() {
   r.onerror = (ev) => {
     if (ev.error === 'no-speech') return;
     stopListening();
-    showToast('❌', 'Voice Error', 'Could not hear you. Try again.');
+    showToast('error', 'Voice Error', 'Could not hear you. Try again.');
   };
 
   r.onend = () => {
@@ -2712,14 +2712,14 @@ function toggleVoiceInput() {
   isListening = true;
   try { recognition.start(); } catch (e) { isListening = false; return; }
   const btn = document.getElementById('mic-btn');
-  if (btn) { btn.textContent = '🔴'; btn.style.borderColor = '#ef4444'; btn.style.color = '#ef4444'; }
-  showToast('🎤', 'Listening...', 'Speak freely — auto-sends after 5s pause');
+  if (btn) { btn.textContent = ''; btn.style.borderColor = '#ef4444'; btn.style.color = '#ef4444'; }
+  showToast('info', 'Listening...', 'Speak freely — auto-sends after 5s pause');
 
   // Fallback: if user never speaks, stop after 5s
   silenceTimer = setTimeout(() => {
     if (isListening) {
       stopListening();
-      showToast('🎤', 'Nothing heard', 'Try speaking again.');
+      showToast('info', 'Nothing heard', 'Try speaking again.');
     }
   }, 5000);
 }
@@ -2730,13 +2730,13 @@ function stopListening(autoSend = false) {
   silenceTimer = null;
   if (recognition) { try { recognition.stop(); } catch (e) { } recognition = null; }
   const btn = document.getElementById('mic-btn');
-  if (btn) { btn.textContent = '🎤'; btn.style.borderColor = 'var(--border-light)'; btn.style.color = 'var(--muted)'; }
+  if (btn) { btn.textContent = ''; btn.style.borderColor = 'var(--border-light)'; btn.style.color = 'var(--muted)'; }
 
   if (autoSend) {
     const input = document.getElementById('chat-input');
     if (input && input.value.trim()) {
       setTimeout(() => sendChat(), 150);
-      showToast('✅', 'Got it!', 'Sending your message...');
+      showToast('success', 'Got it!', 'Sending your message...');
     }
   }
 }
@@ -2769,7 +2769,7 @@ function stopSpeech() {
   if (stopBtn) stopBtn.style.display = 'none';
 }
 function suggestTranslation() {
-  showToast('🌐', 'Translation', 'Right-click → Translate to your language, or use browser translation.');
+  showToast('info', 'Translation', 'Right-click → Translate to your language, or use browser translation.');
 }
 // ── LIVE COUNTDOWN ──
 function startCountdowns() {
@@ -2785,7 +2785,7 @@ function startCountdowns() {
 
       if (days > 0) el.textContent = `${days}d ${hours}h ${mins}m left`;
       else if (hours > 0) el.textContent = `${hours}h ${mins}m ${secs}s left`;
-      else el.textContent = `${mins}m ${secs}s left ⚡`;
+      else el.textContent = `${mins}m ${secs}s left `;
 
       // Color urgency
       if (days <= 1) el.style.color = '#ef4444';
@@ -2799,7 +2799,7 @@ function startCountdowns() {
 async function openPublicProfile(username) {
   try {
     const res = await fetch(`/api/users/${encodeURIComponent(username)}`);
-    if (!res.ok) { showToast('❌', 'Not Found', 'User not found.'); return; }
+    if (!res.ok) { showToast('error', 'Not Found', 'User not found.'); return; }
     const user = await res.json();
 
     // Set page title
@@ -2818,8 +2818,8 @@ async function openPublicProfile(username) {
 
     // Gender
     const genderEl = document.getElementById('pub-gender');
-    if (user.gender === 'male') { genderEl.textContent = '♂'; genderEl.style.color = '#60a5fa'; }
-    else if (user.gender === 'female') { genderEl.textContent = '♀'; genderEl.style.color = '#f472b6'; }
+    if (user.gender === 'male') { genderEl.textContent = ''; genderEl.style.color = '#60a5fa'; }
+    else if (user.gender === 'female') { genderEl.textContent = ''; genderEl.style.color = '#f472b6'; }
     else genderEl.textContent = '';
 
     // Projects
@@ -2850,14 +2850,14 @@ async function openPublicProfile(username) {
       teamsDiv.innerHTML = safeHTML(user.teams.map(t => `
         <div style="padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
           <strong style="color:#fff;font-size:13px;">${escapeHTML(t.teams?.name || 'Team')}</strong>
-          <span style="color:var(--muted);font-size:12px;font-family:var(--mono);">🏆 ${escapeHTML(t.teams?.hackathon || 'Open')}</span>
+          <span style="color:var(--muted);font-size:12px;font-family:var(--mono);"> ${escapeHTML(t.teams?.hackathon || 'Open')}</span>
         </div>
       `).join(''));
     }
 
     goTo('public-profile');
   } catch (err) {
-    showToast('❌', 'Error', 'Could not load profile.');
+    showToast('error', 'Error', 'Could not load profile.');
   }
 }
 
@@ -2881,7 +2881,7 @@ async function submitBugReport() {
   const screenshot_url = document.getElementById('bug-screenshot').value.trim();
 
   if (!title || !description) {
-    showToast('⚠️', 'Missing Info', 'Please provide a title and description.');
+    showToast('warning', 'Missing Info', 'Please provide a title and description.');
     return;
   }
 
@@ -2895,13 +2895,13 @@ async function submitBugReport() {
     const data = await res.json();
 
     if (res.ok) {
-      showToast('✅', 'Submitted!', data.message);
+      showToast('success', 'Submitted!', data.message);
       hideBugReport();
     } else {
-      showToast('❌', 'Error', data.error || 'Failed to submit report.');
+      showToast('error', 'Error', data.error || 'Failed to submit report.');
     }
   } catch (err) {
-    showToast('❌', 'Error', 'Failed to connect to server.');
+    showToast('error', 'Error', 'Failed to connect to server.');
   }
 }
 
@@ -2961,21 +2961,21 @@ async function fetchTeammates() {
 
     grid.innerHTML = data.map(tm => `<div class="feature-card" style="position:relative;display:flex;flex-direction:column;gap:12px;">
       ${tm.creator_email === localStorage.getItem('userEmail') ? `<div style="position:absolute;top:16px;right:16px;display:flex;gap:8px;">
-        <button onclick="markTeammateFilled('${tm.id}')" title="Mark as Filled" style="background:var(--accent);border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:#000;">✅ Filled</button>
-        <button onclick="deleteTeammateListing('${tm.id}')" title="Delete" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;">🗑️ Delete</button>
+        <button onclick="markTeammateFilled('${tm.id}')" title="Mark as Filled" style="background:var(--accent);border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:#000;"> Filled</button>
+        <button onclick="deleteTeammateListing('${tm.id}')" title="Delete" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;"> Delete</button>
       </div>` : ''}
       <div style="font-family:var(--mono);font-size:11px;color:var(--accent);">${safeHTML(tm.hackathon_name)}</div>
       <h3 style="color:#fff;margin:0;">${safeHTML(tm.required_role)}</h3>
       <p style="color:var(--muted);font-size:13px;margin:0;">${safeHTML(tm.description)}</p>
       
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">🛠 ${safeHTML(tm.tech_stack)}</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">⭐ ${safeHTML(tm.experience_level)}</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">👥 ${tm.team_size_remaining} spots</span>
-        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);">📍 ${safeHTML(tm.mode)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);"> ${safeHTML(tm.tech_stack)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);"> ${safeHTML(tm.experience_level)}</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);"> ${tm.team_size_remaining} spots</span>
+        <span style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;font-size:11px;color:var(--text);"> ${safeHTML(tm.mode)}</span>
       </div>
       <div style="margin-top:12px;">
-        <a href="mailto:${safeHTML(tm.creator_email)}" style="display:block;text-align:center;background:rgba(0,240,255,0.1);color:var(--accent);border:1px solid rgba(0,240,255,0.3);padding:8px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;">✉️ Contact ${safeHTML(tm.creator_email)}</a>
+        <a href="mailto:${safeHTML(tm.creator_email)}" style="display:block;text-align:center;background:rgba(0,240,255,0.1);color:var(--accent);border:1px solid rgba(0,240,255,0.3);padding:8px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;"> Contact ${safeHTML(tm.creator_email)}</a>
       </div>
     </div>`).join('');
   } catch (err) {
