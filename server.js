@@ -1827,6 +1827,10 @@ app.get('/api/users/:username', async (req, res) => {
   res.json({ ...data, teams: teams || [], projects: projects || [] });
 });
 
+app.get('/debug-sentry', function (req, res) {
+  throw new Error("My first Sentry error!");
+});
+
 Sentry.setupExpressErrorHandler(app);
 
 app.listen(PORT, () => {
