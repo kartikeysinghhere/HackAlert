@@ -361,6 +361,7 @@ app.use('/ask', aiLimiter);
 app.use('/api/ai/ideas', aiLimiter);
 app.use('/api/ai/analyze', aiLimiter);
 app.use('/api/send-otp', otpLimiter);
+app.use('/api/send-mobile-otp', otpLimiter);
 app.use('/api/login', authLimiter);
 app.use('/api/signup', authLimiter);
 app.use('/api/register', authLimiter);
@@ -1191,6 +1192,78 @@ app.post('/api/verify-otp', authLimiter, async (req, res) => {
   res.json({ verified: true });
 });
 
+app.post('/api/send-mobile-otp', async (req, res) => {
+  const mobile = String(req.body.mobile || '').trim();
+  if (!mobile) return res.status(400).json({ error: 'Mobile number required' });
+  if (!/^\+?\d{10,15}$/.test(mobile)) return res.status(400).json({ error: 'Invalid mobile number' });
+  if (!process.env.BREVO_API_KEY) return res.status(500).json({ error: 'SMS service not configured' });
+
+  const otp = crypto.randomInt(100000, 1000000).toString();
+  const expires_at = new Date(Date.now() + 10 * 60 * 1000);
+
+  await supabase.from('mobile_otps').delete().eq('mobile', mobile);
+
+  const { error } = await supabase.from('mobile_otps').insert([{
+    mobile,
+    otp,
+    expires_at: expires_at.toISOString(),
+    used: false
+  }]);
+
+  if (error) return res.status(500).json({ error: 'Failed to generate OTP' });
+
+  try {
+    const smsRes = await fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': process.env.BREVO_API_KEY
+      },
+      body: JSON.stringify({
+        type: 'transactional',
+        unicodeEnabled: true,
+        sender: 'HackAlert',
+        recipient: mobile,
+        content: `Your HackAlert verification code is ${otp}. Expires in 10 minutes.`
+      })
+    });
+    if (!smsRes.ok) {
+      const errData = await smsRes.json();
+      console.error('Brevo SMS error:', errData);
+      return res.status(500).json({ error: 'Failed to send SMS' });
+    }
+    res.json({ message: 'OTP sent' });
+  } catch (err) {
+    console.error('Brevo SMS error:', err);
+    res.status(500).json({ error: 'Failed to send SMS' });
+  }
+});
+
+app.post('/api/verify-mobile-otp', authLimiter, async (req, res) => {
+  const mobile = String(req.body.mobile || '').trim();
+  const otp = String(req.body.otp || '').trim();
+  if (!mobile || !otp) return res.status(400).json({ error: 'Mobile and OTP required' });
+  if (!/^\+?\d{10,15}$/.test(mobile) || !/^\d{6}$/.test(otp)) return res.status(400).json({ error: 'Invalid OTP' });
+
+  const { data, error } = await supabase
+    .from('mobile_otps')
+    .select('*')
+    .eq('mobile', mobile)
+    .eq('otp', otp)
+    .eq('used', false)
+    .single();
+
+  if (error || !data) return res.status(400).json({ error: 'Invalid OTP' });
+
+  if (new Date(data.expires_at) < new Date()) {
+    return res.status(400).json({ error: 'OTP expired. Request a new one.' });
+  }
+
+  await supabase.from('mobile_otps').update({ used: true }).eq('id', data.id);
+
+  res.json({ verified: true });
+});
+
 app.post('/api/signup', async (req, res) => {
   const { pass, gender } = req.body;
 
@@ -1218,6 +1291,18 @@ app.post('/api/signup', async (req, res) => {
     .limit(1)
     .maybeSingle();
   if (!verifiedOtp) return res.status(403).json({ error: 'Please verify your email before signup.' });
+  if (mobile) {
+    const { data: verifiedMobileOtp } = await supabase
+      .from('mobile_otps')
+      .select('id, expires_at')
+      .eq('mobile', mobile)
+      .eq('used', true)
+      .gte('expires_at', new Date().toISOString())
+      .order('expires_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (!verifiedMobileOtp) return res.status(403).json({ error: 'Please verify your mobile number before signup.' });
+  }
   const { data: existing } = await supabase.from('users').select('username').eq('username', username).single();
   if (existing) return res.status(400).json({ error: 'Username already taken.' });
   const hashed = await bcrypt.hash(pass, 10);
@@ -1227,6 +1312,7 @@ app.post('/api/signup', async (req, res) => {
     return handleError(res, error);
   }
   await supabase.from('email_otps').delete().eq('email', email);
+  if (mobile) await supabase.from('mobile_otps').delete().eq('mobile', mobile);
   try {
     await sendEmail({
       to: email,

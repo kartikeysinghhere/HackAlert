@@ -829,6 +829,22 @@ async function loginUser() {
 }
 
 let pendingSignupData = null;
+let mobileVerified = false;
+
+function togglePasswordVisibility() {
+  const passInput = document.getElementById('signup-pass');
+  const eyeOpen = document.getElementById('eye-icon-open');
+  const eyeClosed = document.getElementById('eye-icon-closed');
+  if (passInput.type === 'password') {
+    passInput.type = 'text';
+    eyeOpen.style.display = 'none';
+    eyeClosed.style.display = 'block';
+  } else {
+    passInput.type = 'password';
+    eyeOpen.style.display = 'block';
+    eyeClosed.style.display = 'none';
+  }
+}
 
 async function signupUser() {
   const name = document.getElementById('signup-name').value.trim();
@@ -842,6 +858,11 @@ async function signupUser() {
   const skills = document.getElementById('signup-skills').value.trim() || null;
 
   if (!name || !email || !pass || !username) return alert('Name, Email, Password and Username are required.');
+
+  if (mobile && !mobileVerified) {
+    showToast('Error', 'Mobile Not Verified', 'Please verify your mobile number before signing up, or remove it.');
+    return;
+  }
 
   pendingSignupData = { name, email, pass, mobile, college, username, gender, bio, skills };
 
@@ -955,6 +976,88 @@ async function resendOTP() {
     });
     const data = await res.json();
     if (res.ok) showToast('Email', 'Sent!', 'New OTP sent to your email.');
+    else showToast('Error', 'Error', data.error || 'Could not resend.');
+  } catch (err) {
+    showToast('Error', 'Error', 'Could not resend.');
+  }
+}
+
+async function sendMobileOTP() {
+  const mobile = document.getElementById('signup-mobile').value.trim();
+  if (!mobile || mobile.length < 10) {
+    showToast('Error', 'Invalid', 'Enter a valid mobile number.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/send-mobile-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mobile })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showToast('Error', 'OTP Failed', data.error || 'Could not send OTP.');
+      return;
+    }
+
+    document.getElementById('mobile-otp-display').textContent = `We sent a code to ${mobile}`;
+    openModal('mobile-otp-modal');
+    document.getElementById('mobile-otp-input').value = '';
+    document.getElementById('mobile-otp-input').focus();
+  } catch (err) {
+    console.error('Mobile OTP error:', err);
+    showToast('Error', 'Server Error', 'Could not send OTP. Please try again.');
+  }
+}
+
+async function verifyMobileOTP() {
+  const otp = document.getElementById('mobile-otp-input').value.trim();
+  if (!/^\d{6}$/.test(otp)) {
+    showToast('Invalid', 'Invalid', 'Enter the 6-digit code.');
+    return;
+  }
+
+  const mobile = document.getElementById('signup-mobile').value.trim();
+  if (!mobile) return;
+
+  try {
+    const verifyRes = await fetch('/api/verify-mobile-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ mobile, otp })
+    });
+    const verifyData = await verifyRes.json();
+    if (!verifyRes.ok) {
+      showToast('Error', 'Wrong Code', verifyData.error || 'Invalid OTP');
+      return;
+    }
+
+    mobileVerified = true;
+    closeModal('mobile-otp-modal');
+    document.getElementById('mobile-verify-btn').style.display = 'none';
+    document.getElementById('mobile-verified-badge').style.display = 'inline';
+    document.getElementById('signup-mobile').setAttribute('readonly', true);
+    showToast('Success', 'Verified!', 'Mobile number verified successfully.');
+  } catch (err) {
+    console.error('Mobile OTP verification error:', err);
+    showToast('Error', 'Error', 'Something went wrong.');
+  }
+}
+
+async function resendMobileOTP() {
+  const mobile = document.getElementById('signup-mobile').value.trim();
+  if (!mobile) return;
+
+  try {
+    const res = await fetch('/api/send-mobile-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mobile })
+    });
+    const data = await res.json();
+    if (res.ok) showToast('SMS', 'Sent!', 'New OTP sent to your mobile.');
     else showToast('Error', 'Error', data.error || 'Could not resend.');
   } catch (err) {
     showToast('Error', 'Error', 'Could not resend.');
