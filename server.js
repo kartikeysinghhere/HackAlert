@@ -1796,9 +1796,6 @@ app.get('/api/users/online', authenticate, async (req, res) => {
   res.json((data || []).map(u => u.email));
 });
 
-app.get('/debug-env', (req, res) => {
-  res.json({ has_groq: !!process.env.GROQ_API_KEY, has_jwt: !!process.env.JWT_SECRET, has_supabase_url: !!process.env.SUPABASE_URL, has_supabase_key: !!process.env.SUPABASE_KEY, has_supabase_service_role_key: !!process.env.SUPABASE_SERVICE_ROLE_KEY });
-});
 
 // ── Public Profile ──
 app.get('/api/users/:username', async (req, res) => {
@@ -1827,9 +1824,6 @@ app.get('/api/users/:username', async (req, res) => {
   res.json({ ...data, teams: teams || [], projects: projects || [] });
 });
 
-app.get('/debug-sentry', function (req, res) {
-  throw new Error("My first Sentry error!");
-});
 
 Sentry.setupExpressErrorHandler(app);
 
