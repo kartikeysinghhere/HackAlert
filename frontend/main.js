@@ -5,7 +5,8 @@ import { censorMessage, escapeHTML, safeJSString, safeHTML, authHeaders } from '
 import {
   loginUser, signupUser, verifyOTP, resendOTP, toggleChip,
   logout, hideLogoutModal, confirmLogout, selectGender,
-  requestPasswordReset, handlePasswordReset
+  requestPasswordReset, handlePasswordReset,
+  togglePasswordVisibility, sendMobileOTP, verifyMobileOTP, resendMobileOTP
 } from './auth.js';
 import {
   appendMessage, showWelcomeMessage, sendChat, quickSend,
@@ -61,6 +62,10 @@ window.confirmLogout = confirmLogout;
 window.selectGender = selectGender;
 window.requestPasswordReset = requestPasswordReset;
 window.handlePasswordReset = handlePasswordReset;
+window.togglePasswordVisibility = togglePasswordVisibility;
+window.sendMobileOTP = sendMobileOTP;
+window.verifyMobileOTP = verifyMobileOTP;
+window.resendMobileOTP = resendMobileOTP;
 window.appendMessage = appendMessage;
 window.showWelcomeMessage = showWelcomeMessage;
 window.sendChat = sendChat;
